@@ -32,8 +32,8 @@ else
 fi
 
 pretrain_exp=
-pretrain_model=SSAST-Base-Patch-400
-pretrain_path=./${pretrain_exp}/${pretrain_model}.pth
+pretrain_model=SSAST-Tiny-Patch-400
+pretrain_path=./${pretrain_model}.pth
 
 dataset=esc50
 dataset_mean=-6.6268077
@@ -54,7 +54,7 @@ fstride=10
 tstride=10
 
 task=ft_avgtok
-model_size=base
+model_size=tiny
 head_lr=1
 
 base_exp_dir=./exp/test01-${dataset}-f${fstride}-${fshape}-t${tstride}-${tshape}-b${batch_size}-lr${lr}-${task}-${model_size}-${pretrain_exp}-${pretrain_model}-${head_lr}x-noise${noise}

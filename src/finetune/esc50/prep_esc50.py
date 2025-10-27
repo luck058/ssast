@@ -39,7 +39,7 @@ def get_immediate_files(a_dir):
 # dataset provided in https://github.com/karolpiczak/ESC-50
 if os.path.exists('./data/ESC-50-master') == False:
     esc50_url = 'https://github.com/karoldvl/ESC-50/archive/master.zip'
-    wget.download(esc50_url, out='./data/')
+    # wget.download(esc50_url, out='./data/')
     with zipfile.ZipFile('./data/ESC-50-master.zip', 'r') as zip_ref:
         zip_ref.extractall('./data/')
     os.remove('./data/ESC-50-master.zip')
