@@ -12,7 +12,8 @@
 
 set -x
 # comment this line if not running on sls cluster
-. /data/sls/scratch/share-201907/slstoolchainrc
+# . /data/sls/scratch/share-201907/slstoolchainrc
+. /home/htang2/toolchain-20251006/toolchain.rc
 source ../../../venvssast/bin/activate
 export TORCH_HOME=../../pretrained_models
 mkdir exp
@@ -24,11 +25,11 @@ then
 else
     python prep_esc50.py
 fi
-if [ -e SSAST-Base-Patch-400.pth ]
+if [ -e SSAST-Tiny-Patch-400.pth ]
 then
     echo "pretrained model already downloaded."
 else
-    wget https://www.dropbox.com/s/ewrzpco95n9jdz6/SSAST-Base-Patch-400.pth?dl=1 -O SSAST-Base-Patch-400.pth
+    wget https://www.dropbox.com/s/ewrzpco95n9jdz6/SSAST-Tiny-Patch-400.pth?dl=1 -O SSAST-Tiny-Patch-400.pth
 fi
 
 pretrain_exp=
