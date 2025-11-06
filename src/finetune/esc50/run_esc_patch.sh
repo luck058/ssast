@@ -1,16 +1,14 @@
 #!/bin/bash
-##SBATCH -p sm
-##SBATCH -x sls-sm-1,sls-2080-[1,3],sls-1080-[2,3],sls-sm-5
-#SBATCH -p gpu
-#SBATCH -x sls-titan-[0-2]
-#SBATCH --gres=gpu:4
-#SBATCH -c 4
-#SBATCH -n 1
-#SBATCH --mem=30000
-#SBATCH --job-name="ast-esc50"
+#SBATCH --job-name="ssast-esc50"
+#SBATCH --partition=Teach-Standard
+#SBATCH --nodes=1
+#SBATCH --gres=gpu:1
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=16G
+#SBATCH --time=4:00:00
 #SBATCH --output=./slurm_log/log_%j.txt
 
-set -x
+
 # comment this line if not running on sls cluster
 # . /data/sls/scratch/share-201907/slstoolchainrc
 . /home/htang2/toolchain-20251006/toolchain.rc
