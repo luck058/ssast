@@ -430,6 +430,78 @@ class ASTModel(nn.Module):
         mse = torch.mean((pred - target) ** 2)
 
         return mse
+    
+    # masked patch pretraining with both discriminative and generative objective
+    def mpj(self, input, mask_patch, cluster, mpc_weight=1.0, mpg_weight=10.0):
+        input = self.unfold(input).transpose(1, 2)
+        B = input.shape[0]
+        input = self.v.patch_embed(input) # x is now patch embeddings
+
+        # encode_samples stores raw patch data for MPC loss
+        encode_samples = torch.empty((B, mask_patch, 256), device=input.device, requires_grad=False).float()
+        # g_target stores raw patch data for MPG loss
+        g_target = torch.empty((B, mask_patch, self.fshape * self.tshape), device=input.device).float() # e.g. size 12*100*256
+        
+        mask_index = torch.empty((B, mask_patch), device=input.device, requires_grad=False).long()
+        mask_dense = torch.ones([input.shape[0], input.shape[1], input.shape[2]], device=input.device)
+
+        # Generate mask and prepare targets for both losses
+        for i in range(B):
+            if cluster == True:
+                mask_index[i] = self.gen_maskid_patch(self.num_patches, mask_patch)
+            else:
+                mask_index[i] = self.gen_maskid_frame(self.num_patches, mask_patch)
+            
+            # Target for MPC (discriminative)
+            encode_samples[i] = input[i, mask_index[i], :].clone().detach()
+            # Target for MPG (generative)
+            g_target[i] = input[i, mask_index[i], :]
+            
+            # Apply mask
+            mask_dense[i, mask_index[i], :] = 0
+
+         # Apply mask to patch embeddings
+        mask_tokens = self.mask_embed.expand(B, input.shape[1], -1)
+        input = input * mask_dense + (1-mask_dense) * mask_tokens
+
+        # Transformer Forward Pass
+        cls_tokens = self.v.cls_token.expand(B, -1, -1)
+        dist_token = self.v.dist_token.expand(B, -1, -1)
+        input = torch.cat((cls_tokens, dist_token, input), dim=1)
+        input = input + self.v.pos_embed
+        input = self.v.pos_drop(input)
+        for blk in self.v.blocks:
+            input = blk(input)
+        x_transformer_out = self.v.norm(input) # Output from the transformer
+
+        # Calculate discriminative loss
+        c_pred = torch.empty((B, mask_patch, 256), device=input.device).float()
+        for i in range(B):
+            c_pred[i] = self.cpredlayer(x_transformer_out[i, mask_index[i] + self.cls_token_num, :])
+
+        nce = torch.tensor(0.0).to(input.device)
+        correct = torch.tensor(0.0).to(input.device)
+        for i in np.arange(0, B):
+            total = torch.mm(encode_samples[i], torch.transpose(c_pred[i], 0, 1))
+            correct += torch.sum(torch.eq(torch.argmax(self.softmax(total), dim=0), torch.arange(0, mask_patch, device=input.device)))
+            nce += torch.sum(torch.diag(self.lsoftmax(total)))
+        
+        acc = 1. * correct / (B * mask_patch)
+        nce_loss = nce / (-1. * B * mask_patch)
+
+        # Calculate generative loss
+        g_pred = torch.empty((B, mask_patch, self.fshape * self.tshape), device=input.device).float()
+        for i in range(B):
+            g_pred[i] = self.gpredlayer(x_transformer_out[i, mask_index[i] + self.cls_token_num, :])
+
+        mse_loss = torch.mean((g_pred - g_target) ** 2)
+
+        # Combine losses
+        # Weights are based on the original implementation's example
+        total_loss = (mpc_weight * nce_loss) + (mpg_weight * mse_loss)
+
+        # return total_loss, acc, nce_loss, mse_loss
+        return total_loss
 
     def forward(self, x, task, cluster=True, mask_patch=400):
         # expect input x = (batch_size, time_frame_num, frequency_bins), e.g., (12, 1024, 128)
@@ -449,6 +521,9 @@ class ASTModel(nn.Module):
         # pretraining, masked patch reconstruction (generative objective)
         elif task == 'pretrain_mpg':
             return self.mpg(x, mask_patch=mask_patch, cluster=cluster)
+        # pretraining, both discriminative and generative objective
+        elif task == 'pretrain_mpj':
+            return self.mpj(x, mask_patch=mask_patch, cluster=cluster)
         elif task == 'visualize_mask':
             return self.mpc(x, mask_patch=mask_patch, cluster=cluster, show_mask=True)
         else:
