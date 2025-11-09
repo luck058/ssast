@@ -6,12 +6,6 @@ SUBSET_ENABLED=true     # set to false to download the full split
 SUBSET_SIZE=20         # number of clips to download when SUBSET_ENABLED=true
 SUBSET_RANDOM=true      # true=random sample, false=first N rows
 
-echo "--- Installing dependencies (audioset-download) ---"
-# Optional: activate venv if you have one
-if [ -f "../venv/bin/activate" ]; then
-  source ../venv/bin/activate
-fi
-pip install -q audioset-download
 
 # --- 1. Create directories and download metadata ---
 echo "--- Downloading AudioSet metadata ---"
