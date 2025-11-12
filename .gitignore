@@ -17,3 +17,4 @@ src/models/ast_model_uni.py
 src/finetune/superb/s3prl-master/*
 .idea/*venvssast/
 /venvssast/
+*.tar.gz
