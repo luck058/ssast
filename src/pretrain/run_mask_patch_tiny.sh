@@ -16,8 +16,23 @@ export TORCH_HOME=../../pretrained_models
 mkdir exp
 mkdir slurm_log
 
-# Unzip librispeech dataset to scratch disk
-tar -xzf ~/ssast/src/prep_data/librispeech/LibriSpeech.tar.gz -C ~/../../disk/scratch/s2283874/librispeech/
+# Unzip librispeech dataset to scratch disk if not already done
+librispeech_dir=~/../../disk/scratch/s2283874/librispeech/train-clean-100
+if [ ! -d "$librispeech_dir" ]; then
+    echo "LibriSpeech directory not found. Extracting archive..."
+    tar -xzf ~/ssast/src/prep_data/librispeech/LibriSpeech.tar.gz -C ~/../../disk/scratch/s2283874/librispeech/
+else
+    echo "LibriSpeech directory already exists at $librispeech_dir. Skipping extraction."
+fi
+
+# Check if JSON file exists, if not, run prep_librispeech.py
+json_file=~/../../disk/scratch/s2283874/librispeech/librispeech_tr100_cut.json
+if [ ! -f "$json_file" ]; then
+    echo "JSON file not found. Running prep_librispeech.py..."
+    python ~/ssast/src/prep_data/librispeech/prep_librispeech.py
+else
+    echo "JSON file already exists at $json_file. Skipping preparation."
+fi
 
 task=pretrain_joint
 mask_patch=400
