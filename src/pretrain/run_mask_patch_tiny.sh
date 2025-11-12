@@ -39,8 +39,8 @@ mask_patch=400
 
 # audioset and librispeech
 dataset=asli
-tr_data=/data/sls/scratch/yuangong/sslast2/src/prep_data/audioset_librispeech.json
-te_data=/data/sls/scratch/yuangong/audioset/datafiles/eval_data.json
+tr_data=~/../../disk/scratch/s2283874/librispeech/librispeech_tr100_cut.json
+te_data=~/../../disk/scratch/s2283874/librispeech/librispeech_tr100_cut_test.json
 dataset_mean=-4.2677393
 dataset_std=4.5689974
 target_length=1024

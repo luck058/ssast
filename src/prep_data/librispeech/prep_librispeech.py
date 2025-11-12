@@ -8,8 +8,9 @@
 # prepare librispeech data for ssl pretraining
 
 import os,torchaudio,pickle,json,time
+import argparse
 
-def walk(path, name):
+def walk(path, name, testset_perc=None):
     sample_cnt = 0
     pathdata = os.walk(path)
     wav_list = []
@@ -33,9 +34,29 @@ def walk(path, name):
                     with open(name + '.json', 'w') as f:
                         json.dump({'data': wav_list}, f, indent=1)
                     print('file saved.')
-    print(sample_cnt)
-    with open(name + '.json', 'w') as f:
-        json.dump({'data': wav_list}, f, indent=1)
+                    
+    # Split into train and test if requested
+    if testset_perc is not None:
+        # Remove last n% of data for test set
+        split_idx = int(len(wav_list) * (1 - testset_perc))  # e.g., 90% train, 10% test
+        train_list = wav_list[:split_idx]
+        test_list = wav_list[split_idx:]
+        
+        # Save training set
+        with open(name + '.json', 'w') as f:
+            json.dump({'data': train_list}, f, indent=1)
+        print(f'Training set saved with {len(train_list)} samples.')
+        
+        # Save test set
+        test_name = name + '_test'
+        with open(test_name + '.json', 'w') as f:
+            json.dump({'data': test_list}, f, indent=1)
+        print(f'Test set saved with {len(test_list)} samples to {test_name}.json')
+    # Don't split, just save all data
+    else:
+        with open(name + '.json', 'w') as f:
+            json.dump({'data': wav_list}, f, indent=1)
+
 
 # combine json files
 def combine_json(file_list, name='librispeech_tr960'):
@@ -47,14 +68,22 @@ def combine_json(file_list, name='librispeech_tr960'):
     with open(name + '.json', 'w') as f:
         json.dump({'data': wav_list}, f, indent=1)
 
-# librispeech100_path = '/data/sls/scratch/yuangong/l2speak/data/librispeech/LibriSpeech/train-other-500/'
-# walk(librispeech100_path, 'librispeech_tr500_cut')
 
-# librispeech100_path = '/data/sls/scratch/yuangong/l2speak/data/librispeech/LibriSpeech/train-clean-360/'
-# walk(librispeech100_path, 'librispeech_tr360_cut')
 
-librispeech100_path = '~/../../disk/scratch/s2283874/librispeech/train-clean-100'
-save_loc = '~/../../disk/scratch/s2283874/librispeech/librispeech_tr100_cut.json'
-walk(librispeech100_path, save_loc)
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Prepare LibriSpeech data for SSL pretraining')
+    parser.add_argument('--testset_perc', type=float, default=None, 
+                        help='Percentage of data to use as test set (e.g., 0.1 for 10%%)')
+    args = parser.parse_args()
 
-# combine_json(['librispeech_tr500_cut', 'librispeech_tr360_cut', 'librispeech_tr100_cut'], name='librispeech_tr960_cut')
+    librispeech100_path = '~/../../disk/scratch/s2283874/librispeech/train-clean-100'
+    save_loc = '~/../../disk/scratch/s2283874/librispeech/librispeech_tr100_cut'
+    walk(librispeech100_path, save_loc, testset_perc=args.testset_perc)
+
+    # librispeech100_path = '/data/sls/scratch/yuangong/l2speak/data/librispeech/LibriSpeech/train-clean-360/'
+    # walk(librispeech100_path, 'librispeech_tr360_cut')
+    
+    # librispeech100_path = '/data/sls/scratch/yuangong/l2speak/data/librispeech/LibriSpeech/train-other-500/'
+    # walk(librispeech100_path, 'librispeech_tr500_cut')
+    
+    # combine_json(['librispeech_tr500_cut', 'librispeech_tr360_cut', 'librispeech_tr100_cut'], name='librispeech_tr960_cut')
