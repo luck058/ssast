@@ -54,6 +54,7 @@ def combine_json(file_list, name='librispeech_tr960'):
 # walk(librispeech100_path, 'librispeech_tr360_cut')
 
 librispeech100_path = '~/../../disk/scratch/s2283874/librispeech/train-clean-100'
-walk(librispeech100_path, 'librispeech_tr100_cut')
+save_loc = '~/../../disk/scratch/s2283874/librispeech/librispeech_tr100_cut.json'
+walk(librispeech100_path, save_loc)
 
 # combine_json(['librispeech_tr500_cut', 'librispeech_tr360_cut', 'librispeech_tr100_cut'], name='librispeech_tr960_cut')
