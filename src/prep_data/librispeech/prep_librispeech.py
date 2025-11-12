@@ -47,13 +47,13 @@ def combine_json(file_list, name='librispeech_tr960'):
     with open(name + '.json', 'w') as f:
         json.dump({'data': wav_list}, f, indent=1)
 
-librispeech100_path = '/data/sls/scratch/yuangong/l2speak/data/librispeech/LibriSpeech/train-other-500/'
-walk(librispeech100_path, 'librispeech_tr500_cut')
+# librispeech100_path = '/data/sls/scratch/yuangong/l2speak/data/librispeech/LibriSpeech/train-other-500/'
+# walk(librispeech100_path, 'librispeech_tr500_cut')
 
-librispeech100_path = '/data/sls/scratch/yuangong/l2speak/data/librispeech/LibriSpeech/train-clean-360/'
-walk(librispeech100_path, 'librispeech_tr360_cut')
+# librispeech100_path = '/data/sls/scratch/yuangong/l2speak/data/librispeech/LibriSpeech/train-clean-360/'
+# walk(librispeech100_path, 'librispeech_tr360_cut')
 
-librispeech100_path = '/data/sls/scratch/yuangong/l2speak/data/librispeech/LibriSpeech/train-clean-100/'
+librispeech100_path = '~/../../disk/scratch/s2283874/librispeech/train-clean-100'
 walk(librispeech100_path, 'librispeech_tr100_cut')
 
-combine_json(['librispeech_tr500_cut', 'librispeech_tr360_cut', 'librispeech_tr100_cut'], name='librispeech_tr960_cut')
+# combine_json(['librispeech_tr500_cut', 'librispeech_tr360_cut', 'librispeech_tr100_cut'], name='librispeech_tr960_cut')
