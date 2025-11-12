@@ -16,6 +16,9 @@ export TORCH_HOME=../../pretrained_models
 mkdir exp
 mkdir slurm_log
 
+# Unzip librispeech dataset to scratch disk
+tar -xzf ~/ssast/src/prep_data/librispeech/LibriSpeech.tar.gz -C ~/../../disk/scratch/s2283874/librispeech/
+
 task=pretrain_joint
 mask_patch=400
 
