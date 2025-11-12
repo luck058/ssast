@@ -76,9 +76,12 @@ if __name__ == '__main__':
                         help='Percentage of data to use as test set (e.g., 0.1 for 10%%)')
     args = parser.parse_args()
 
-    librispeech100_path = '~/../../disk/scratch/s2283874/librispeech/train-clean-100'
-    save_loc = '~/../../disk/scratch/s2283874/librispeech/librispeech_tr100_cut'
-    walk(librispeech100_path, save_loc, testset_perc=args.testset_perc)
+    librispeech_path = '~/../../disk/scratch/s2283874/librispeech/train-clean-360'
+    save_loc = '~/../../disk/scratch/s2283874/librispeech/librispeech_tr360_cut'
+    walk(librispeech_path, save_loc, testset_perc=args.testset_perc)
+    
+    # librispeech100_path = '/data/sls/scratch/yuangong/l2speak/data/librispeech/LibriSpeech/train-clean-100/'
+    # walk(librispeech100_path, 'librispeech_tr100_cut')
 
     # librispeech100_path = '/data/sls/scratch/yuangong/l2speak/data/librispeech/LibriSpeech/train-clean-360/'
     # walk(librispeech100_path, 'librispeech_tr360_cut')
