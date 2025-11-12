@@ -26,10 +26,11 @@ else
 fi
 
 # Check if JSON file exists, if not, run prep_librispeech.py
-json_file=~/../../disk/scratch/s2283874/librispeech/librispeech_tr100_cut.json
-if [ ! -f "$json_file" ]; then
+json_file=~/../../disk/scratch/s2283874/librispeech/librispeech_tr360_cut.json
+json_test_file=~/../../disk/scratch/s2283874/librispeech/librispeech_tr360_cut_test.json
+if [ ! -f "$json_file" ] || [ ! -f "$json_test_file" ]; then
     echo "JSON file not found. Running prep_librispeech.py..."
-    python ~/ssast/src/prep_data/librispeech/prep_librispeech.py
+    python ~/ssast/src/prep_data/librispeech/prep_librispeech.py --testset_perc 0.1
 else
     echo "JSON file already exists at $json_file. Skipping preparation."
 fi
@@ -39,8 +40,8 @@ mask_patch=400
 
 # audioset and librispeech
 dataset=asli
-tr_data=~/../../disk/scratch/s2283874/librispeech/librispeech_tr100_cut.json
-te_data=~/../../disk/scratch/s2283874/librispeech/librispeech_tr100_cut_test.json
+tr_data=~/../../disk/scratch/s2283874/librispeech/librispeech_tr360_cut.json
+te_data=~/../../disk/scratch/s2283874/librispeech/librispeech_tr360_cut_test.json
 dataset_mean=-4.2677393
 dataset_std=4.5689974
 target_length=1024
