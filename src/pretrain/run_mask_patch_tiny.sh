@@ -39,7 +39,8 @@ task=pretrain_joint
 mask_patch=400
 
 # audioset and librispeech
-dataset=asli
+# dataset=asli
+dataset=librispeech360
 tr_data=~/../../disk/scratch/s2283874/librispeech/librispeech_tr360_cut.json
 te_data=~/../../disk/scratch/s2283874/librispeech/librispeech_tr360_cut_test.json
 dataset_mean=-4.2677393
