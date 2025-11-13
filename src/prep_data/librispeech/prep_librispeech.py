@@ -96,7 +96,7 @@ if __name__ == '__main__':
     # Evaluation set
     librispeech100_path = '~/../../disk/scratch/s2283874/librispeech/train-clean-100'
     save_loc = '~/../../disk/scratch/s2283874/librispeech/librispeech_tr100_cut'
-    walk(librispeech100_path, save_loc, testset_perc=0.36, save_training=False)
+    walk(librispeech100_path, save_loc, testset_perc=0.36, save_train_set=False)
     
     # librispeech100_path = '/data/sls/scratch/yuangong/l2speak/data/librispeech/LibriSpeech/train-clean-100/'
     # walk(librispeech100_path, 'librispeech_tr100_cut')
