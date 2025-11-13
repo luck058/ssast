@@ -10,7 +10,15 @@
 import os,torchaudio,pickle,json,time
 import argparse
 
-def walk(path, name, testset_perc=None):
+def walk(path, name, testset_perc=None, save_train_set=True):
+    """Walk through the dataset directory and create a JSON file listing all audio files.
+
+    Args:
+        path (str): path to the dataset 
+        name (str): path to save the json file
+        testset_perc (float, optional): Percentage of data to use as test set. If None, saves all as training data. Defaults to None.
+        save_train_set (bool, optional): Whether to save the training set. Only used if testset_perc is not None. Defaults to True.
+    """
     sample_cnt = 0
     pathdata = os.walk(path)
     wav_list = []
@@ -39,15 +47,16 @@ def walk(path, name, testset_perc=None):
     if testset_perc is not None:
         # Remove last n% of data for test set
         split_idx = int(len(wav_list) * (1 - testset_perc))  # e.g., 90% train, 10% test
-        train_list = wav_list[:split_idx]
-        test_list = wav_list[split_idx:]
         
-        # Save training set
-        with open(name + '.json', 'w') as f:
-            json.dump({'data': train_list}, f, indent=1)
-        print(f'Training set saved with {len(train_list)} samples.')
+        if save_train_set:
+            # Save training set
+            train_list = wav_list[:split_idx]
+            with open(name + '.json', 'w') as f:
+                json.dump({'data': train_list}, f, indent=1)
+            print(f'Training set saved with {len(train_list)} samples.')
         
         # Save test set
+        test_list = wav_list[split_idx:]
         test_name = name + '_test'
         with open(test_name + '.json', 'w') as f:
             json.dump({'data': test_list}, f, indent=1)
@@ -76,9 +85,15 @@ if __name__ == '__main__':
                         help='Percentage of data to use as test set (e.g., 0.1 for 10%%)')
     args = parser.parse_args()
 
-    librispeech_path = '~/../../disk/scratch/s2283874/librispeech/train-clean-360'
+    # Train set
+    librispeech360_path = '~/../../disk/scratch/s2283874/librispeech/train-clean-360'
     save_loc = '~/../../disk/scratch/s2283874/librispeech/librispeech_tr360_cut'
-    walk(librispeech_path, save_loc, testset_perc=args.testset_perc)
+    walk(librispeech360_path, save_loc, testset_perc=None)
+    
+    # Evaluation set
+    librispeech100_path = '~/../../disk/scratch/s2283874/librispeech/train-clean-100'
+    save_loc = '~/../../disk/scratch/s2283874/librispeech/librispeech_tr100_cut'
+    walk(librispeech100_path, save_loc, testset_perc=0.36, save_training=False)
     
     # librispeech100_path = '/data/sls/scratch/yuangong/l2speak/data/librispeech/LibriSpeech/train-clean-100/'
     # walk(librispeech100_path, 'librispeech_tr100_cut')
