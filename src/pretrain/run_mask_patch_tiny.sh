@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name="ssast-esc50"
+#SBATCH --job-name="ssast-pretrain-maskpatch-tiny"
 #SBATCH --partition=Teach-Standard
 #SBATCH --nodes=1
 #SBATCH --gres=gpu:1
@@ -10,14 +10,15 @@
 set -x
 # comment this line if not running on sls cluster
 # . /data/sls/scratch/share-201907/slstoolchainrc
+# source /data/sls/scratch/yuangong/sslast2/sslast2/bin/activate
 . /home/htang2/toolchain-20251006/toolchain.rc
-source /data/sls/scratch/yuangong/sslast2/sslast2/bin/activate
+source ~/ssast/venvssast/bin/activate
 export TORCH_HOME=../../pretrained_models
 mkdir exp
 mkdir slurm_log
 
 # Unzip librispeech dataset to scratch disk if not already done
-librispeech_dir=~/../../disk/scratch/s2283874/librispeech/train-clean-100
+librispeech_dir=~/../../disk/scratch/s2283874/librispeech/train-clean-360
 if [ ! -d "$librispeech_dir" ]; then
     echo "LibriSpeech directory not found. Extracting archive..."
     tar -xzf ~/ssast/src/prep_data/librispeech/LibriSpeech.tar.gz -C ~/../../disk/scratch/s2283874/librispeech/
@@ -30,7 +31,7 @@ json_file=~/../../disk/scratch/s2283874/librispeech/librispeech_tr360_cut.json
 json_test_file=~/../../disk/scratch/s2283874/librispeech/librispeech_tr360_cut_test.json
 if [ ! -f "$json_file" ] || [ ! -f "$json_test_file" ]; then
     echo "JSON file not found. Running prep_librispeech.py..."
-    python ~/ssast/src/prep_data/librispeech/prep_librispeech.py --testset_perc 0.1
+    python ~/ssast/src/prep_data/librispeech/prep_librispeech.py
 else
     echo "JSON file already exists at $json_file. Skipping preparation."
 fi
@@ -42,7 +43,7 @@ mask_patch=400
 # dataset=asli
 dataset=librispeech360
 tr_data=~/../../disk/scratch/s2283874/librispeech/librispeech_tr360_cut.json
-te_data=~/../../disk/scratch/s2283874/librispeech/librispeech_tr360_cut_test.json
+te_data=~/../../disk/scratch/s2283874/librispeech/librispeech_tr100_cut_test.json
 dataset_mean=-4.2677393
 dataset_std=4.5689974
 target_length=1024

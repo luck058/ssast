@@ -80,10 +80,10 @@ def combine_json(file_list, name='librispeech_tr960'):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Prepare LibriSpeech data for SSL pretraining')
-    parser.add_argument('--testset_perc', type=float, default=None, 
-                        help='Percentage of data to use as test set (e.g., 0.1 for 10%%)')
-    args = parser.parse_args()
+    # parser = argparse.ArgumentParser(description='Prepare LibriSpeech data for SSL pretraining')
+    # parser.add_argument('--testset_perc', type=float, default=None, 
+    #                     help='Percentage of data to use as test set (e.g., 0.1 for 10%%)')
+    # args = parser.parse_args()
 
     # Train set
     librispeech360_path = '~/../../disk/scratch/s2283874/librispeech/train-clean-360'
