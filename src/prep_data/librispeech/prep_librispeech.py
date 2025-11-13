@@ -84,6 +84,9 @@ if __name__ == '__main__':
     # parser.add_argument('--testset_perc', type=float, default=None, 
     #                     help='Percentage of data to use as test set (e.g., 0.1 for 10%%)')
     # args = parser.parse_args()
+    
+    # Create save directory if it doesn't exist
+    os.makedirs(os.path.dirname('~/../../disk/scratch/s2283874/librispeech/'), exist_ok=True)
 
     # Train set
     librispeech360_path = '~/../../disk/scratch/s2283874/librispeech/train-clean-360'

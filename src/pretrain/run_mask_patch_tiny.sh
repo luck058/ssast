@@ -18,15 +18,18 @@ mkdir exp
 mkdir slurm_log
 
 # Unzip librispeech dataset to scratch disk if not already done
-librispeech_dir=~/../../disk/scratch/s2283874/librispeech/train-clean-360
-if [ ! -d "$librispeech_dir" ]; then
+librispeech360_dir=~/../../disk/scratch/s2283874/librispeech/train-clean-360
+librispeech100_dir=~/../../disk/scratch/s2283874/librispeech/train-clean-100
+if [ ! -d "$librispeech360_dir" ] || [ ! -d "$librispeech100_dir" ]; then
     echo "LibriSpeech directory not found. Extracting archive..."
-    tar -xzf ~/ssast/src/prep_data/librispeech/LibriSpeech.tar.gz -C ~/../../disk/scratch/s2283874/librispeech/
+    tar -xzf ~/ssast/src/prep_data/librispeech/train-clean-360.tar.gz -C ~/../../disk/scratch/s2283874/librispeech/
+    tar -xzf ~/ssast/src/prep_data/librispeech/train-clean-100.tar.gz -C ~/../../disk/scratch/s2283874/librispeech/
 else
     echo "LibriSpeech directory already exists at $librispeech_dir. Skipping extraction."
 fi
 
 # Check if JSON file exists, if not, run prep_librispeech.py
+'~/../../disk/scratch/s2283874/librispeech/train-clean-360'
 json_file=~/../../disk/scratch/s2283874/librispeech/librispeech_tr360_cut.json
 json_test_file=~/../../disk/scratch/s2283874/librispeech/librispeech_tr360_cut_test.json
 if [ ! -f "$json_file" ] || [ ! -f "$json_test_file" ]; then
