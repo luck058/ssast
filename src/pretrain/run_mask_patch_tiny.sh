@@ -60,11 +60,13 @@ fstride=${fshape}
 tstride=${tshape}
 # no class balancing as it implicitly uses label information
 bal=none
-batch_size=120
+# batch_size=120
+batch_size=64
 lr=5e-4
 # learning rate decreases if the pretext task performance does not improve on the validation set
 lr_patience=2
-epoch=10
+# epoch=10
+epoch=5
 # no spectrogram masking
 freqm=0
 timem=0
