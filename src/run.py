@@ -65,7 +65,7 @@ parser.add_argument("--fshape", type=int, help="shape of patch on the frequency 
 parser.add_argument("--tshape", type=int, help="shape of patch on the time dimension")
 parser.add_argument('--model_size', help='the size of AST models', type=str, default='base384')
 
-parser.add_argument("--task", type=str, default='ft_cls', help="pretraining or fine-tuning task", choices=["ft_avgtok", "ft_cls", "pretrain_mpc", "pretrain_mpg", "pretrain_joint"])
+parser.add_argument("--task", type=str, default='ft_cls', help="pretraining or fine-tuning task", choices=["ft_avgtok", "ft_cls", "pretrain_mpc", "pretrain_mpg", "pretrain_joint", "pretrain_mpj"])
 
 # pretraining augments
 #parser.add_argument('--pretrain_stage', help='True for self-supervised pretraining stage, False for fine-tuning stage', type=ast.literal_eval, default='False')
