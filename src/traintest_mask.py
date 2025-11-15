@@ -44,7 +44,7 @@ def trainmask(audio_model, train_loader, test_loader, args):
     optimizer = torch.optim.Adam(trainables, args.lr, weight_decay=5e-7, betas=(0.95, 0.999))
 
     # LR scheduler
-    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='max', factor=0.5, patience=args.lr_patience, verbose=True)
+    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='max', factor=0.5, patience=args.lr_patience)
     epoch += 1
 
     print("current #steps=%s, #epochs=%s" % (global_step, epoch))
