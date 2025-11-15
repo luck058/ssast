@@ -39,7 +39,7 @@ else
     echo "JSON file already exists at $json_file. Skipping preparation."
 fi
 
-task=pretrain_joint
+task=pretrain_mpj
 mask_patch=400
 
 # audioset and librispeech
