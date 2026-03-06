@@ -17,6 +17,7 @@ basepath = os.path.dirname(os.path.dirname(sys.path[0]))
 sys.path.append(basepath)
 import dataloader
 from models import ASTModel
+from models.probing_model import ProbingModel
 import numpy as np
 from traintest import train, validate
 from traintest_mask import trainmask
@@ -66,7 +67,7 @@ parser.add_argument("--fshape", type=int, help="shape of patch on the frequency 
 parser.add_argument("--tshape", type=int, help="shape of patch on the time dimension")
 parser.add_argument('--model_size', help='the size of AST models', type=str, default='base384')
 
-parser.add_argument("--task", type=str, default='ft_cls', help="pretraining or fine-tuning task", choices=["ft_avgtok", "ft_cls", "ft_asr", "pretrain_mpc", "pretrain_mpg", "pretrain_joint", "pretrain_mpj", "pretrain_mpmhb"])
+parser.add_argument("--task", type=str, default='ft_cls', help="pretraining or fine-tuning task", choices=["ft_avgtok", "ft_cls", "ft_asr", "pretrain_mpc", "pretrain_mpg", "pretrain_joint", "pretrain_mpj", "pretrain_mpmhb", "probe_asr", "probe_pr", "probe_sid"])
 
 # pretraining augments
 #parser.add_argument('--pretrain_stage', help='True for self-supervised pretraining stage, False for fine-tuning stage', type=ast.literal_eval, default='False')
@@ -143,6 +144,19 @@ if 'pretrain' in args.task:
                        input_fdim=args.num_mel_bins, input_tdim=args.target_length, model_size=args.model_size, pretrain_stage=True,
                        num_clusters=args.num_clusters, target_layer_idx=args.target_layer_idx, vocab_size=args.n_class)
 # in the fine-tuning stage
+elif args.task.startswith('probe_'):
+    ast_model = ASTModel(label_dim=args.n_class, fshape=args.fshape, tshape=args.tshape, fstride=args.fstride, tstride=args.tstride,
+                         input_fdim=args.num_mel_bins, input_tdim=args.target_length, model_size=args.model_size, pretrain_stage=False,
+                         load_pretrained_mdl_path=args.pretrained_mdl_path,
+                         num_clusters=args.num_clusters, vocab_size=args.n_class)
+    audio_model = ProbingModel(
+        frozen_ast_model=ast_model,
+        task=args.task,
+        n_class=args.n_class,
+        f_dim_out=ast_model.f_dim_out,
+        t_dim_out=ast_model.t_dim_out,
+        embed_dim=ast_model.original_embedding_dim,
+    )
 else:
     audio_model = ASTModel(label_dim=args.n_class, fshape=args.fshape, tshape=args.tshape, fstride=args.fstride, tstride=args.tstride,
                        input_fdim=args.num_mel_bins, input_tdim=args.target_length, model_size=args.model_size, pretrain_stage=False,
@@ -178,7 +192,7 @@ if args.data_eval != None:
     stats, _ = validate(audio_model, val_loader, args, 'valid_set')
 
     print('---------------evaluate on the validation set---------------')
-    if args.task == 'ft_asr':
+    if args.task in ('ft_asr', 'probe_asr', 'probe_pr'):
         # Assuming validate returns 'wer' in stats for ASR task
         val_acc = 0 # Not applicable
         val_mAUC = 0 # Not applicable
@@ -197,7 +211,7 @@ if args.data_eval != None:
     stats, _ = validate(audio_model, eval_loader, args, 'eval_set')
 
     print('---------------evaluate on the test set---------------')
-    if args.task == 'ft_asr':
+    if args.task in ('ft_asr', 'probe_asr', 'probe_pr'):
         eval_acc = 0
         eval_mAUC = 0
         eval_wer = stats[0]['wer']

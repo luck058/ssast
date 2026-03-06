@@ -430,6 +430,31 @@ class ASTModel(nn.Module):
                     break
             return x[:, self.cls_token_num:, :]
 
+    def get_all_intermediate_layers(self, x):
+        """
+        Single-pass extraction of all 13 layer outputs for probing.
+        Input: x in [B, 1, F, T] form (already transposed by caller).
+        Returns: list of 13 tensors, each [B, N_patches, embed_dim].
+          Index 0: patch_embed output (no CLS tokens).
+          Indices 1-12: transformer block outputs with CLS tokens stripped.
+        """
+        layer_outputs = []
+        x = self.v.patch_embed(x)
+        layer_outputs.append(x.clone())  # layer 0: patch embed [B, N, D]
+        B = x.shape[0]
+        cls_tokens = self.v.cls_token.expand(B, -1, -1)
+        if self.cls_token_num == 2:
+            dist_token = self.v.dist_token.expand(B, -1, -1)
+            x = torch.cat((cls_tokens, dist_token, x), dim=1)
+        else:
+            x = torch.cat((cls_tokens, x), dim=1)
+        x = x + self.v.pos_embed
+        x = self.v.pos_drop(x)
+        for blk in self.v.blocks:
+            x = blk(x)
+            layer_outputs.append(x[:, self.cls_token_num:, :].clone())  # layers 1-12
+        return layer_outputs  # list of 13 tensors, each [B, N_patches, D]
+
     @torch.no_grad()
     def get_cluster_labels(self, x):
         """Helper for Dataloader Labeling"""
