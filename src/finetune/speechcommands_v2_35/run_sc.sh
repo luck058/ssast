@@ -12,6 +12,7 @@ set -x
 # . /data/sls/scratch/share-201907/slstoolchainrc
 . /home/htang2/toolchain-20251006/toolchain.rc
 source ../../../venvssast/bin/activate
+export LD_LIBRARY_PATH=""
 export TORCH_HOME=../../pretrained_models
 mkdir -p ./exp
 
@@ -67,7 +68,7 @@ val_data=./data/datafiles/speechcommand_valid_data.json
 eval_data=./data/datafiles/speechcommand_eval_data.json
 
 bal=none
-lr=2.5e-4
+lr=2.5e-5
 freqm=48
 timem=48
 mixup=0.6
@@ -80,9 +81,9 @@ tstride=1
 
 task=ft_avgtok
 model_size="${2:-tiny}"
-head_lr=1
+head_lr=10
 
-exp_dir=./exp/test01-${dataset}-f$fstride-t$tstride-b$batch_size-lr${lr}-${task}-${model_size}-$pretrain_exp-${pretrain_model}-${head_lr}x-noise${noise}
+exp_dir=./exp/test01-${dataset}-f$fstride-t$tstride-b$batch_size-lr${lr}-${task}-${model_size}-${pretrain_model}-${head_lr}x-noise${noise}
 
 CUDA_CACHE_DISABLE=1 python -W ignore ../../run.py --dataset ${dataset} \
 --data-train ${tr_data} --data-val ${val_data} --data-eval ${eval_data} --exp-dir $exp_dir \

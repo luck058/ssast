@@ -1,0 +1,280 @@
++ . /home/htang2/toolchain-20251006/toolchain.rc
+++ ROOT=/home/htang2/toolchain-20251006
+++ export PATH=/home/htang2/toolchain-20251006/bin:/home/htang2/toolchain-20251006/opt/cuda/bin:/usr/games:/usr/local/games:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+++ PATH=/home/htang2/toolchain-20251006/bin:/home/htang2/toolchain-20251006/opt/cuda/bin:/usr/games:/usr/local/games:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+++ export LD_LIBRARY_PATH=/home/htang2/toolchain-20251006/lib:/home/htang2/toolchain-20251006/lib64:/home/htang2/toolchain-20251006/opt/cuda/lib:/home/htang2/toolchain-20251006/opt/cuda/lib64:/home/htang2/toolchain-20251006/opt/cuda/extras/CUPTI/lib64:
+++ LD_LIBRARY_PATH=/home/htang2/toolchain-20251006/lib:/home/htang2/toolchain-20251006/lib64:/home/htang2/toolchain-20251006/opt/cuda/lib:/home/htang2/toolchain-20251006/opt/cuda/lib64:/home/htang2/toolchain-20251006/opt/cuda/extras/CUPTI/lib64:
++ source /home/s2283874/ssast/venvssast/bin/activate
+++ deactivate nondestructive
+++ '[' -n '' ']'
+++ '[' -n '' ']'
+++ hash -r
+++ '[' -n '' ']'
+++ unset VIRTUAL_ENV
+++ unset VIRTUAL_ENV_PROMPT
+++ '[' '!' nondestructive = nondestructive ']'
+++ '[' linux-gnu = cygwin ']'
+++ '[' linux-gnu = msys ']'
+++ export VIRTUAL_ENV=/home/s2283874/ssast/venvssast
+++ VIRTUAL_ENV=/home/s2283874/ssast/venvssast
+++ _OLD_VIRTUAL_PATH=/home/htang2/toolchain-20251006/bin:/home/htang2/toolchain-20251006/opt/cuda/bin:/usr/games:/usr/local/games:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+++ PATH=/home/s2283874/ssast/venvssast/bin:/home/htang2/toolchain-20251006/bin:/home/htang2/toolchain-20251006/opt/cuda/bin:/usr/games:/usr/local/games:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+++ export PATH
+++ '[' -n '' ']'
+++ '[' -z '' ']'
+++ _OLD_VIRTUAL_PS1=
+++ PS1='(venvssast) '
+++ export PS1
+++ VIRTUAL_ENV_PROMPT='(venvssast) '
+++ export VIRTUAL_ENV_PROMPT
+++ hash -r
++ export TORCH_HOME=../../pretrained_models
++ TORCH_HOME=../../pretrained_models
++ mkdir exp
+mkdir: cannot create directory ‘exp’: File exists
++ mkdir slurm_log
+mkdir: cannot create directory ‘slurm_log’: File exists
++ librispeech360_dir=/home/s2283874/../../disk/scratch/s2283874/librispeech/train-clean-360
++ librispeech100_dir=/home/s2283874/../../disk/scratch/s2283874/librispeech/train-clean-100
++ '[' '!' -d /home/s2283874/../../disk/scratch/s2283874/librispeech/train-clean-360 ']'
++ mkdir -p /home/s2283874/../../disk/scratch/s2283874/librispeech/
++ echo 'LibriSpeech directory not found. Extracting archive...'
+LibriSpeech directory not found. Extracting archive...
++ tar -xzf /home/s2283874/ssast/src/prep_data/librispeech/train-clean-360.tar.gz -C /home/s2283874/../../disk/scratch/s2283874/librispeech/
++ tar -xzf /home/s2283874/ssast/src/prep_data/librispeech/train-clean-100.tar.gz -C /home/s2283874/../../disk/scratch/s2283874/librispeech/
++ json_file=/home/s2283874/../../disk/scratch/s2283874/librispeech/librispeech_tr360_cut.json
++ json_test_file=/home/s2283874/../../disk/scratch/s2283874/librispeech/librispeech_tr360_cut_test.json
++ '[' '!' -f /home/s2283874/../../disk/scratch/s2283874/librispeech/librispeech_tr360_cut.json ']'
++ echo 'JSON file not found. Running prep_librispeech.py...'
+JSON file not found. Running prep_librispeech.py...
++ python /home/s2283874/ssast/src/prep_data/librispeech/prep_librispeech.py
+find 1k .wav files, time eclipse: 0.0 seconds.
+find 2k .wav files, time eclipse: 0.0 seconds.
+find 3k .wav files, time eclipse: 0.0 seconds.
+find 4k .wav files, time eclipse: 0.0 seconds.
+find 5k .wav files, time eclipse: 0.0 seconds.
+find 6k .wav files, time eclipse: 0.0 seconds.
+find 7k .wav files, time eclipse: 0.0 seconds.
+find 8k .wav files, time eclipse: 0.0 seconds.
+find 9k .wav files, time eclipse: 0.0 seconds.
+find 10k .wav files, time eclipse: 0.0 seconds.
+file saved.
+find 11k .wav files, time eclipse: 0.0 seconds.
+find 12k .wav files, time eclipse: 0.0 seconds.
+find 13k .wav files, time eclipse: 0.0 seconds.
+find 14k .wav files, time eclipse: 0.0 seconds.
+find 15k .wav files, time eclipse: 0.0 seconds.
+find 16k .wav files, time eclipse: 0.0 seconds.
+find 17k .wav files, time eclipse: 0.0 seconds.
+find 18k .wav files, time eclipse: 0.0 seconds.
+find 19k .wav files, time eclipse: 0.0 seconds.
+find 20k .wav files, time eclipse: 0.0 seconds.
+file saved.
+find 21k .wav files, time eclipse: 0.1 seconds.
+find 22k .wav files, time eclipse: 0.0 seconds.
+find 23k .wav files, time eclipse: 0.0 seconds.
+find 24k .wav files, time eclipse: 0.0 seconds.
+find 25k .wav files, time eclipse: 0.0 seconds.
+find 26k .wav files, time eclipse: 0.0 seconds.
+find 27k .wav files, time eclipse: 0.0 seconds.
+find 28k .wav files, time eclipse: 0.0 seconds.
+find 29k .wav files, time eclipse: 0.0 seconds.
+find 30k .wav files, time eclipse: 0.0 seconds.
+file saved.
+find 31k .wav files, time eclipse: 0.1 seconds.
+find 32k .wav files, time eclipse: 0.0 seconds.
+find 33k .wav files, time eclipse: 0.0 seconds.
+find 34k .wav files, time eclipse: 0.0 seconds.
+find 35k .wav files, time eclipse: 0.0 seconds.
+find 36k .wav files, time eclipse: 0.0 seconds.
+find 37k .wav files, time eclipse: 0.0 seconds.
+find 38k .wav files, time eclipse: 0.0 seconds.
+find 39k .wav files, time eclipse: 0.0 seconds.
+find 40k .wav files, time eclipse: 0.0 seconds.
+file saved.
+find 41k .wav files, time eclipse: 0.1 seconds.
+find 42k .wav files, time eclipse: 0.0 seconds.
+find 43k .wav files, time eclipse: 0.0 seconds.
+find 44k .wav files, time eclipse: 0.0 seconds.
+find 45k .wav files, time eclipse: 0.0 seconds.
+find 46k .wav files, time eclipse: 0.0 seconds.
+find 47k .wav files, time eclipse: 0.0 seconds.
+find 48k .wav files, time eclipse: 0.0 seconds.
+find 49k .wav files, time eclipse: 0.0 seconds.
+find 50k .wav files, time eclipse: 0.0 seconds.
+file saved.
+find 51k .wav files, time eclipse: 0.2 seconds.
+find 52k .wav files, time eclipse: 0.0 seconds.
+find 53k .wav files, time eclipse: 0.0 seconds.
+find 54k .wav files, time eclipse: 0.0 seconds.
+find 55k .wav files, time eclipse: 0.0 seconds.
+find 56k .wav files, time eclipse: 0.0 seconds.
+find 57k .wav files, time eclipse: 0.0 seconds.
+find 58k .wav files, time eclipse: 0.0 seconds.
+find 59k .wav files, time eclipse: 0.0 seconds.
+find 60k .wav files, time eclipse: 0.0 seconds.
+file saved.
+find 61k .wav files, time eclipse: 0.2 seconds.
+find 62k .wav files, time eclipse: 0.0 seconds.
+find 63k .wav files, time eclipse: 0.0 seconds.
+find 64k .wav files, time eclipse: 0.0 seconds.
+find 65k .wav files, time eclipse: 0.0 seconds.
+find 66k .wav files, time eclipse: 0.0 seconds.
+find 67k .wav files, time eclipse: 0.0 seconds.
+find 68k .wav files, time eclipse: 0.0 seconds.
+find 69k .wav files, time eclipse: 0.0 seconds.
+find 70k .wav files, time eclipse: 0.0 seconds.
+file saved.
+find 71k .wav files, time eclipse: 0.3 seconds.
+find 72k .wav files, time eclipse: 0.0 seconds.
+find 73k .wav files, time eclipse: 0.0 seconds.
+find 74k .wav files, time eclipse: 0.0 seconds.
+find 75k .wav files, time eclipse: 0.0 seconds.
+find 76k .wav files, time eclipse: 0.0 seconds.
+find 77k .wav files, time eclipse: 0.0 seconds.
+find 78k .wav files, time eclipse: 0.0 seconds.
+find 79k .wav files, time eclipse: 0.0 seconds.
+find 80k .wav files, time eclipse: 0.0 seconds.
+file saved.
+find 81k .wav files, time eclipse: 0.3 seconds.
+find 82k .wav files, time eclipse: 0.0 seconds.
+find 83k .wav files, time eclipse: 0.0 seconds.
+find 84k .wav files, time eclipse: 0.0 seconds.
+find 85k .wav files, time eclipse: 0.0 seconds.
+find 86k .wav files, time eclipse: 0.0 seconds.
+find 87k .wav files, time eclipse: 0.0 seconds.
+find 88k .wav files, time eclipse: 0.0 seconds.
+find 89k .wav files, time eclipse: 0.0 seconds.
+find 90k .wav files, time eclipse: 0.0 seconds.
+file saved.
+find 91k .wav files, time eclipse: 0.3 seconds.
+find 92k .wav files, time eclipse: 0.0 seconds.
+find 93k .wav files, time eclipse: 0.0 seconds.
+find 94k .wav files, time eclipse: 0.0 seconds.
+find 95k .wav files, time eclipse: 0.0 seconds.
+find 96k .wav files, time eclipse: 0.0 seconds.
+find 97k .wav files, time eclipse: 0.0 seconds.
+find 98k .wav files, time eclipse: 0.0 seconds.
+find 99k .wav files, time eclipse: 0.0 seconds.
+find 100k .wav files, time eclipse: 0.0 seconds.
+file saved.
+find 101k .wav files, time eclipse: 0.4 seconds.
+find 102k .wav files, time eclipse: 0.0 seconds.
+find 103k .wav files, time eclipse: 0.0 seconds.
+find 104k .wav files, time eclipse: 0.0 seconds.
+find 1k .wav files, time eclipse: 0.0 seconds.
+find 2k .wav files, time eclipse: 0.0 seconds.
+find 3k .wav files, time eclipse: 0.0 seconds.
+find 4k .wav files, time eclipse: 0.0 seconds.
+find 5k .wav files, time eclipse: 0.0 seconds.
+find 6k .wav files, time eclipse: 0.0 seconds.
+find 7k .wav files, time eclipse: 0.0 seconds.
+find 8k .wav files, time eclipse: 0.0 seconds.
+find 9k .wav files, time eclipse: 0.0 seconds.
+find 10k .wav files, time eclipse: 0.0 seconds.
+file saved.
+find 11k .wav files, time eclipse: 0.0 seconds.
+find 12k .wav files, time eclipse: 0.0 seconds.
+find 13k .wav files, time eclipse: 0.0 seconds.
+find 14k .wav files, time eclipse: 0.0 seconds.
+find 15k .wav files, time eclipse: 0.0 seconds.
+find 16k .wav files, time eclipse: 0.0 seconds.
+find 17k .wav files, time eclipse: 0.0 seconds.
+find 18k .wav files, time eclipse: 0.0 seconds.
+find 19k .wav files, time eclipse: 0.0 seconds.
+find 20k .wav files, time eclipse: 0.0 seconds.
+file saved.
+find 21k .wav files, time eclipse: 0.1 seconds.
+find 22k .wav files, time eclipse: 0.0 seconds.
+find 23k .wav files, time eclipse: 0.0 seconds.
+find 24k .wav files, time eclipse: 0.0 seconds.
+find 25k .wav files, time eclipse: 0.0 seconds.
+find 26k .wav files, time eclipse: 0.0 seconds.
+find 27k .wav files, time eclipse: 0.0 seconds.
+find 28k .wav files, time eclipse: 0.0 seconds.
+Test set saved with 10275 samples to /home/s2283874/../../disk/scratch/s2283874/librispeech/librispeech_tr100_cut_test.json
++ task=pretrain_mpmhb
++ mask_patch=400
++ num_clusters=512
++ mpmhb_weight=0.0
++ mpg_weight=10.0
++ mpc_weight=1.0
++ target_layer_idx=-1
++ cluster_update_freq=-1
++ dataset=librispeech360
++ tr_data=/home/s2283874/../../disk/scratch/s2283874/librispeech/librispeech_tr360_cut.json
++ te_data=/home/s2283874/../../disk/scratch/s2283874/librispeech/librispeech_tr100_cut_test.json
++ dataset_mean=-4.2677393
++ dataset_std=4.5689974
++ target_length=1024
++ num_mel_bins=128
++ model_size=tiny
++ fshape=128
++ tshape=2
++ fstride=128
++ tstride=2
++ bal=none
++ batch_size=64
++ lr=5e-4
++ lr_patience=2
++ epoch=5
++ freqm=0
++ timem=0
++ mixup=0
++ num_workers=8
++ exp_dir=./exp/mask01-tiny-f128-t2-b64-lr5e-4-m400-e5-pretrain_mpmhb-librispeech360
++ CUDA_CACHE_DISABLE=1
++ python -W ignore ../run.py --dataset librispeech360 --data-train /home/s2283874/../../disk/scratch/s2283874/librispeech/librispeech_tr360_cut.json --data-val /home/s2283874/../../disk/scratch/s2283874/librispeech/librispeech_tr100_cut_test.json --exp-dir ./exp/mask01-tiny-f128-t2-b64-lr5e-4-m400-e5-pretrain_mpmhb-librispeech360 --label-csv ./data/class_labels_indices.csv --lr 5e-4 --n-epochs 5 --batch-size 64 --save_model False --freqm 0 --timem 0 --mixup 0 --bal none --tstride 2 --fstride 128 --fshape 128 --tshape 2 --dataset_mean -4.2677393 --dataset_std 4.5689974 --target_length 1024 --num_mel_bins 128 --model_size tiny --mask_patch 400 --n-print-steps 100 --task pretrain_mpmhb --lr_patience 2 --epoch_iter 800 --num_clusters 512 --mpmhb_weight 0.0 --mpg_weight 10.0 --mpc_weight 1.0 --target_layer_idx -1 --cluster_update_freq -1 --num-workers 8
+I am process 970738, running on crannog06.inf.ed.ac.uk: starting (Mon Jan 26 17:56:03 2026)
+balanced sampler is not used
+---------------the train dataloader---------------
+now using following mask: 0 freq, 0 time
+now using mix-up with rate 0.000000
+now process librispeech360
+use dataset mean -4.268 and std 4.569 to normalize the input.
+number of classes is 527
+---------------the evaluation dataloader---------------
+now using following mask: 0 freq, 0 time
+now using mix-up with rate 0.000000
+now process librispeech360
+use dataset mean -4.268 and std 4.569 to normalize the input.
+number of classes is 527
+Now train with librispeech360 with 104014 training samples, evaluate with 10275 samples
+The num_mel_bins 128 and fshape 128 are same, masking a typical time frame, not using cluster masking.
+pretraining patch split stride: frequency=128, time=2
+pretraining patch shape: frequency=128, time=2
+pretraining patch array dimension: frequency=1, time=512
+pretraining number of patches=512
+
+Creating experiment directory: ./exp/mask01-tiny-f128-t2-b64-lr5e-4-m400-e5-pretrain_mpmhb-librispeech360
+Now starting self-supervised pretraining for 5 epochs
+Now running on : cuda
+Total parameter number is : 6.145106000 million
+Total trainable parameter number is : 6.145104000 million
+current #steps=0, #epochs=1
+start training...
+2026-01-26 17:56:05.693996
+
+--- Epoch 1: Updating Clusters & Re-labeling Dataset ---
+Updating centroids based on Layer -1 features...
+Running K-Means on 6553600 patches...
+Centroids updated.
+Generating cluster labels for the entire dataset (Teacher Pass)...
+Labeled batch 0/813
+Labeled batch 100/813
+Labeled batch 200/813
+Labeled batch 300/813
+Labeled batch 400/813
+Labeled batch 500/813
+Labeled batch 600/813
+Labeled batch 700/813
+Labeled batch 800/813
+Finished labeling. Stored IDs shape: torch.Size([104014, 512])
+warm-up learning rate is 0.000000
+Traceback (most recent call last):
+  File "/home/s2283874/ssast/src/pretrain/../run.py", line 164, in <module>
+    trainmask(audio_model, train_loader, val_loader, args)
+  File "/home/s2283874/ssast/src/traintest_mask.py", line 195, in trainmask
+    loss_args = {'mpg_weight': args.mpg_weight, 'mhb_weight': args.mhb_weight}
+                                                              ^^^^^^^^^^^^^^^
+AttributeError: 'Namespace' object has no attribute 'mhb_weight'. Did you mean: 'mpc_weight'?

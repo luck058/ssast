@@ -1,0 +1,136 @@
++ . /home/htang2/toolchain-20251006/toolchain.rc
+++ ROOT=/home/htang2/toolchain-20251006
+++ export PATH=/home/htang2/toolchain-20251006/bin:/home/htang2/toolchain-20251006/opt/cuda/bin:/home/htang2/toolchain-20251006/bin:/home/htang2/toolchain-20251006/opt/cuda/bin:/home/s2283874/ssast/venvssast/bin:/usr/games:/usr/local/games:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+++ PATH=/home/htang2/toolchain-20251006/bin:/home/htang2/toolchain-20251006/opt/cuda/bin:/home/htang2/toolchain-20251006/bin:/home/htang2/toolchain-20251006/opt/cuda/bin:/home/s2283874/ssast/venvssast/bin:/usr/games:/usr/local/games:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+++ export LD_LIBRARY_PATH=/home/htang2/toolchain-20251006/lib:/home/htang2/toolchain-20251006/lib64:/home/htang2/toolchain-20251006/opt/cuda/lib:/home/htang2/toolchain-20251006/opt/cuda/lib64:/home/htang2/toolchain-20251006/opt/cuda/extras/CUPTI/lib64:/home/htang2/toolchain-20251006/lib:/home/htang2/toolchain-20251006/lib64:/home/htang2/toolchain-20251006/opt/cuda/lib:/home/htang2/toolchain-20251006/opt/cuda/lib64:/home/htang2/toolchain-20251006/opt/cuda/extras/CUPTI/lib64:
+++ LD_LIBRARY_PATH=/home/htang2/toolchain-20251006/lib:/home/htang2/toolchain-20251006/lib64:/home/htang2/toolchain-20251006/opt/cuda/lib:/home/htang2/toolchain-20251006/opt/cuda/lib64:/home/htang2/toolchain-20251006/opt/cuda/extras/CUPTI/lib64:/home/htang2/toolchain-20251006/lib:/home/htang2/toolchain-20251006/lib64:/home/htang2/toolchain-20251006/opt/cuda/lib:/home/htang2/toolchain-20251006/opt/cuda/lib64:/home/htang2/toolchain-20251006/opt/cuda/extras/CUPTI/lib64:
++ source ../../../venvssast/bin/activate
+++ deactivate nondestructive
+++ '[' -n '' ']'
+++ '[' -n '' ']'
+++ hash -r
+++ '[' -n '' ']'
+++ unset VIRTUAL_ENV
+++ unset VIRTUAL_ENV_PROMPT
+++ '[' '!' nondestructive = nondestructive ']'
+++ '[' linux-gnu = cygwin ']'
+++ '[' linux-gnu = msys ']'
+++ export VIRTUAL_ENV=/home/s2283874/ssast/venvssast
+++ VIRTUAL_ENV=/home/s2283874/ssast/venvssast
+++ _OLD_VIRTUAL_PATH=/home/htang2/toolchain-20251006/bin:/home/htang2/toolchain-20251006/opt/cuda/bin:/home/htang2/toolchain-20251006/bin:/home/htang2/toolchain-20251006/opt/cuda/bin:/home/s2283874/ssast/venvssast/bin:/usr/games:/usr/local/games:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+++ PATH=/home/s2283874/ssast/venvssast/bin:/home/htang2/toolchain-20251006/bin:/home/htang2/toolchain-20251006/opt/cuda/bin:/home/htang2/toolchain-20251006/bin:/home/htang2/toolchain-20251006/opt/cuda/bin:/home/s2283874/ssast/venvssast/bin:/usr/games:/usr/local/games:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+++ export PATH
+++ '[' -n '' ']'
+++ '[' -z '' ']'
+++ _OLD_VIRTUAL_PS1=
+++ PS1='(venvssast) '
+++ export PS1
+++ VIRTUAL_ENV_PROMPT='(venvssast) '
+++ export VIRTUAL_ENV_PROMPT
+++ hash -r
++ export TORCH_HOME=../../pretrained_models
++ TORCH_HOME=../../pretrained_models
++ mkdir -p ./exp
++ mkdir -p ./slurm_log
++ SOURCE_TAR=/home/s2283874/ssast/src/prep_data/librispeech/train-clean-100.tar.gz
++ SCRATCH_ROOT=/disk/scratch/s2283874/librispeech100
++ echo 'Source: /home/s2283874/ssast/src/prep_data/librispeech/train-clean-100.tar.gz'
+Source: /home/s2283874/ssast/src/prep_data/librispeech/train-clean-100.tar.gz
++ echo 'Scratch Target: /disk/scratch/s2283874/librispeech100'
+Scratch Target: /disk/scratch/s2283874/librispeech100
++ '[' -d /disk/scratch/s2283874/librispeech100/LibriSpeech ']'
++ echo 'Data directory /disk/scratch/s2283874/librispeech100/LibriSpeech already exists. Skipping unzip.'
+Data directory /disk/scratch/s2283874/librispeech100/LibriSpeech already exists. Skipping unzip.
++ echo 'Generating JSON files and Label CSV...'
+Generating JSON files and Label CSV...
++ python prep_ls.py --dataset_path /disk/scratch/s2283874/librispeech100/LibriSpeech
+Scanning /disk/scratch/s2283874/librispeech100/LibriSpeech/train-clean-100...
+Total samples found: 28539
+Dropped 8203 samples (28.74%) longer than 15.0s
+Vocab size: 29. Saved to vocab.json
+Saved train: 16270 samples
+Saved validation: 2033 samples
+Saved eval: 2033 samples
++ pretrain_exp=./../../pretrain/exp/
++ pretrain_model=mask01-tiny-f128-t2-b64-lr5e-4-m400-e75-pretrain_mpmhb-librispeech360-mpmhb0.0-mpg0.0-mpc1.0
++ pretrain_path=././../../pretrain/exp//mask01-tiny-f128-t2-b64-lr5e-4-m400-e75-pretrain_mpmhb-librispeech360-mpmhb0.0-mpg0.0-mpc1.0/models/best_audio_model.pth
++ '[' '!' -f ././../../pretrain/exp//mask01-tiny-f128-t2-b64-lr5e-4-m400-e75-pretrain_mpmhb-librispeech360-mpmhb0.0-mpg0.0-mpc1.0/models/best_audio_model.pth ']'
++ dataset=librispeech
++ dataset_mean=-4.2677393
++ dataset_std=4.5689974
++ target_length=1024
++ noise=False
++ tr_data=./data/datafiles/librispeech_train_data.json
++ val_data=./data/datafiles/librispeech_validation_data.json
++ eval_data=./data/datafiles/librispeech_eval_data.json
++ label_csv=./data/datafiles/vocab.json
++ bal=none
++ lr=1e-4
++ freqm=48
++ timem=48
++ mixup=0.5
++ epoch=30
++ batch_size=24
++ fshape=128
++ tshape=2
++ fstride=10
++ tstride=10
++ task=ft_asr
++ model_size=tiny
++ head_lr=10
+++ python -c 'import json; print(len(json.load(open('\''./data/datafiles/vocab.json'\''))))'
++ n_class=29
++ echo 'Detected 29 classes (vocab size).'
+Detected 29 classes (vocab size).
++ exp_dir=./exp/test-ls100-f10-t10-b24-lr1e-4-ft_asr-tiny-noiseFalse
++ echo 'Starting Training...'
+Starting Training...
++ CUDA_CACHE_DISABLE=1
++ python -W ignore ../../run.py --dataset librispeech --data-train ./data/datafiles/librispeech_train_data.json --data-val ./data/datafiles/librispeech_validation_data.json --data-eval ./data/datafiles/librispeech_eval_data.json --exp-dir ./exp/test-ls100-f10-t10-b24-lr1e-4-ft_asr-tiny-noiseFalse --label-csv ./data/datafiles/vocab.json --n_class 29 --lr 1e-4 --n-epochs 30 --batch-size 24 --save_model True --freqm 48 --timem 48 --mixup 0.5 --bal none --tstride 10 --fstride 10 --fshape 128 --tshape 2 --warmup True --task ft_asr --model_size tiny --adaptschedule True --pretrained_mdl_path ././../../pretrain/exp//mask01-tiny-f128-t2-b64-lr5e-4-m400-e75-pretrain_mpmhb-librispeech360-mpmhb0.0-mpg0.0-mpc1.0/models/best_audio_model.pth --dataset_mean -4.2677393 --dataset_std 4.5689974 --target_length 1024 --num_mel_bins 128 --head_lr 10 --noise False --lrscheduler_start 5 --lrscheduler_step 1 --lrscheduler_decay 0.85 --wa False --loss CTC --metrics wer
+I am process 2080129, running on herman.inf.ed.ac.uk: starting (Mon Feb 16 22:20:26 2026)
+balanced sampler is not used
+---------------the train dataloader---------------
+now using following mask: 48 freq, 48 time
+now using mix-up with rate 0.500000
+now process librispeech
+use dataset mean -4.268 and std 4.569 to normalize the input.
+ASR task detected. Using vocab from ./data/datafiles/vocab.json
+---------------the evaluation dataloader---------------
+now using following mask: 0 freq, 0 time
+now using mix-up with rate 0.000000
+now process librispeech
+use dataset mean -4.268 and std 4.569 to normalize the input.
+ASR task detected. Using vocab from ./data/datafiles/vocab.json
+Now train with librispeech with 16270 training samples, evaluate with 2033 samples
+Removing unused cluster_centroids from checkpoint to avoid shape mismatch.
+now load a SSL pretrained models from ././../../pretrain/exp//mask01-tiny-f128-t2-b64-lr5e-4-m400-e75-pretrain_mpmhb-librispeech360-mpmhb0.0-mpg0.0-mpc1.0/models/best_audio_model.pth
+pretraining patch split stride: frequency=128, time=2
+pretraining patch shape: frequency=128, time=2
+pretraining patch array dimension: frequency=1, time=512
+pretraining number of patches=512
+fine-tuning patch split stride: frequncey=10, time=10
+fine-tuning number of patches=103
+Traceback (most recent call last):
+  File "/home/s2283874/ssast/src/finetune/librispeech/../../run.py", line 152, in <module>
+    audio_model = torch.nn.DataParallel(audio_model)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/s2283874/ssast/venvssast/lib/python3.12/site-packages/torch/nn/parallel/data_parallel.py", line 171, in __init__
+    self.module.to(self.src_device_obj)
+  File "/home/s2283874/ssast/venvssast/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1381, in to
+    return self._apply(convert)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/s2283874/ssast/venvssast/lib/python3.12/site-packages/torch/nn/modules/module.py", line 933, in _apply
+    module._apply(fn)
+  File "/home/s2283874/ssast/venvssast/lib/python3.12/site-packages/torch/nn/modules/rnn.py", line 292, in _apply
+    self._init_flat_weights()
+  File "/home/s2283874/ssast/venvssast/lib/python3.12/site-packages/torch/nn/modules/rnn.py", line 216, in _init_flat_weights
+    self.flatten_parameters()
+  File "/home/s2283874/ssast/venvssast/lib/python3.12/site-packages/torch/nn/modules/rnn.py", line 248, in flatten_parameters
+    or not torch.backends.cudnn.is_acceptable(fw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/s2283874/ssast/venvssast/lib/python3.12/site-packages/torch/backends/cudnn/__init__.py", line 139, in is_acceptable
+    if not _init():
+           ^^^^^^^
+  File "/home/s2283874/ssast/venvssast/lib/python3.12/site-packages/torch/backends/cudnn/__init__.py", line 72, in _init
+    raise RuntimeError(
+RuntimeError: cuDNN version incompatibility: PyTorch was compiled  against (9, 10, 2) but found runtime version (9, 7, 0). PyTorch already comes bundled with cuDNN. One option to resolving this error is to ensure PyTorch can find the bundled cuDNN. Looks like your LD_LIBRARY_PATH contains incompatible version of cudnn. Please either remove it from the path or install cudnn (9, 10, 2)

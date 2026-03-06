@@ -5,6 +5,7 @@ sys.path.append(os.path.dirname(os.path.dirname(sys.path[0])))
 from utilities import *
 import time
 import torch
+import torch.nn as nn
 import numpy as np
 import pickle
 from sklearn.cluster import MiniBatchKMeans
@@ -40,8 +41,9 @@ def update_cluster_centroids(audio_model, train_loader, args):
         
     model.eval()
     with torch.no_grad():
-        # Iterate over loader (unpacking 3 items: input, label, target_id)
-        for i, (audio_input, _, _) in enumerate(train_loader): 
+        # Iterate over loader
+        for i, batch in enumerate(train_loader):
+            audio_input = batch[0]
             if i >= num_batches_to_sample: break
             
             audio_input = audio_input.to(device)
@@ -148,8 +150,13 @@ def trainmask(audio_model, train_loader, test_loader, args):
                 )
                 audio_model.train()
 
-
-        for i, (audio_input, _, cluster_target) in enumerate(train_loader):
+        for i, batch_data in enumerate(train_loader):
+            if args.task == 'ft_asr':
+                audio_input, _, _, _ = batch_data
+                cluster_target = None
+            else:
+                audio_input, _, cluster_target = batch_data
+                
             # measure data loading time
             B = audio_input.size(0)
             audio_input = audio_input.to(device, non_blocking=True)
@@ -270,9 +277,10 @@ def trainmask(audio_model, train_loader, test_loader, args):
                 # if the task is generation, stop after eval mse loss stop improve
                 if args.task == 'pretrain_mpg':
                     # acc_eval is in fact the mse loss, it is dirty code
-                    scheduler.step(-acc_eval)
+                    # Cast to float for scheduler compatibility
+                    scheduler.step(-float(acc_eval))
                 else:
-                    scheduler.step(acc_eval)
+                    scheduler.step(float(acc_eval))
 
                 print('# {:d}, step {:d}-{:d}, lr: {:e}'.format(equ_epoch, global_step-epoch_iteration, global_step, optimizer.param_groups[0]['lr']))
 
@@ -307,7 +315,8 @@ def validatemask(audio_model, val_loader, args, epoch):
     A_acc = []
     A_nce = []
     with torch.no_grad():
-        for i, (audio_input, _, _) in enumerate(val_loader):
+        for i, batch in enumerate(val_loader):
+            audio_input = batch[0]
             audio_input = audio_input.to(device)
 
             # use cluster masking only when masking patches, not frames
@@ -330,6 +339,8 @@ def validatemask(audio_model, val_loader, args, epoch):
             elif args.task == 'pretrain_joint':
                 acc, _ = audio_model(audio_input, 'pretrain_mpc', mask_patch=400, cluster=cluster)
                 mse = audio_model(audio_input, 'pretrain_mpg', mask_patch=400, cluster=cluster)
+                A_acc.append(torch.mean(acc).cpu())
+                A_nce.append(torch.mean(mse).cpu()) # Tracking MSE in the 'nce' slot for reporting
             elif args.task == 'pretrain_mpmhb':
                 acc, _ = audio_model(audio_input, 'pretrain_mpc', mask_patch=400, cluster=cluster)
                 mse = audio_model(audio_input, 'pretrain_mpg', mask_patch=400, cluster=cluster)
@@ -337,10 +348,6 @@ def validatemask(audio_model, val_loader, args, epoch):
                 A_nce.append(torch.mean(mse).cpu()) # Tracking MSE in the 'nce' slot for reporting
             else:
                 raise Exception("No such pretraining task {}".format(args.task))
-
-                A_acc.append(torch.mean(acc).cpu())
-                # A_nce then tracks the mse loss
-                A_nce.append(torch.mean(mse).cpu())
 
         acc = np.mean(A_acc)
         nce = np.mean(A_nce)

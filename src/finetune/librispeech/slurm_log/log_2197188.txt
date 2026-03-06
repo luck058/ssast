@@ -1,0 +1,127 @@
++ . /home/htang2/toolchain-20251006/toolchain.rc
+++ ROOT=/home/htang2/toolchain-20251006
+++ export PATH=/home/htang2/toolchain-20251006/bin:/home/htang2/toolchain-20251006/opt/cuda/bin:/usr/games:/usr/local/games:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+++ PATH=/home/htang2/toolchain-20251006/bin:/home/htang2/toolchain-20251006/opt/cuda/bin:/usr/games:/usr/local/games:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+++ export LD_LIBRARY_PATH=/home/htang2/toolchain-20251006/lib:/home/htang2/toolchain-20251006/lib64:/home/htang2/toolchain-20251006/opt/cuda/lib:/home/htang2/toolchain-20251006/opt/cuda/lib64:/home/htang2/toolchain-20251006/opt/cuda/extras/CUPTI/lib64:
+++ LD_LIBRARY_PATH=/home/htang2/toolchain-20251006/lib:/home/htang2/toolchain-20251006/lib64:/home/htang2/toolchain-20251006/opt/cuda/lib:/home/htang2/toolchain-20251006/opt/cuda/lib64:/home/htang2/toolchain-20251006/opt/cuda/extras/CUPTI/lib64:
++ source ../../../venvssast/bin/activate
+++ deactivate nondestructive
+++ '[' -n '' ']'
+++ '[' -n '' ']'
+++ hash -r
+++ '[' -n '' ']'
+++ unset VIRTUAL_ENV
+++ unset VIRTUAL_ENV_PROMPT
+++ '[' '!' nondestructive = nondestructive ']'
+++ '[' linux-gnu = cygwin ']'
+++ '[' linux-gnu = msys ']'
+++ export VIRTUAL_ENV=/home/s2283874/ssast/venvssast
+++ VIRTUAL_ENV=/home/s2283874/ssast/venvssast
+++ _OLD_VIRTUAL_PATH=/home/htang2/toolchain-20251006/bin:/home/htang2/toolchain-20251006/opt/cuda/bin:/usr/games:/usr/local/games:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+++ PATH=/home/s2283874/ssast/venvssast/bin:/home/htang2/toolchain-20251006/bin:/home/htang2/toolchain-20251006/opt/cuda/bin:/usr/games:/usr/local/games:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+++ export PATH
+++ '[' -n '' ']'
+++ '[' -z '' ']'
+++ _OLD_VIRTUAL_PS1=
+++ PS1='(venvssast) '
+++ export PS1
+++ VIRTUAL_ENV_PROMPT='(venvssast) '
+++ export VIRTUAL_ENV_PROMPT
+++ hash -r
++ export TORCH_HOME=../../pretrained_models
++ TORCH_HOME=../../pretrained_models
++ mkdir -p ./exp
++ mkdir -p ./slurm_log
++ SOURCE_TAR=/home/s2283874/ssast/src/prep_data/librispeech/train-clean-100.tar.gz
++ SCRATCH_ROOT=/disk/scratch/s2283874/librispeech100
++ echo 'Source: /home/s2283874/ssast/src/prep_data/librispeech/train-clean-100.tar.gz'
+Source: /home/s2283874/ssast/src/prep_data/librispeech/train-clean-100.tar.gz
++ echo 'Scratch Target: /disk/scratch/s2283874/librispeech100'
+Scratch Target: /disk/scratch/s2283874/librispeech100
++ '[' -d /disk/scratch/s2283874/librispeech100/LibriSpeech ']'
++ echo 'Unzipping dataset to Scratch...'
+Unzipping dataset to Scratch...
++ mkdir -p /disk/scratch/s2283874/librispeech100
++ '[' -f /home/s2283874/ssast/src/prep_data/librispeech/train-clean-100.tar.gz ']'
++ tar -xzf /home/s2283874/ssast/src/prep_data/librispeech/train-clean-100.tar.gz -C /disk/scratch/s2283874/librispeech100
++ echo 'Unzip complete.'
+Unzip complete.
++ echo 'Generating JSON files and Label CSV...'
+Generating JSON files and Label CSV...
++ python prep_ls.py --dataset_path /disk/scratch/s2283874/librispeech100/LibriSpeech
+Scanning /disk/scratch/s2283874/librispeech100/LibriSpeech/train-clean-100...
+Traceback (most recent call last):
+  File "/home/s2283874/ssast/src/finetune/librispeech/prep_ls.py", line 128, in <module>
+    main()
+  File "/home/s2283874/ssast/src/finetune/librispeech/prep_ls.py", line 69, in main
+    all_samples = get_transcripts(data_root)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/s2283874/ssast/src/finetune/librispeech/prep_ls.py", line 44, in get_transcripts
+    info = torchaudio.info(wav_path)
+           ^^^^^^^^^^^^^^^
+AttributeError: module 'torchaudio' has no attribute 'info'
++ pretrain_exp=./../../pretrain/exp/
++ pretrain_model=mask01-tiny-f128-t2-b64-lr5e-4-m400-e75-pretrain_mpmhb-librispeech360-mpmhb0.0-mpg0.0-mpc1.0
++ pretrain_path=././../../pretrain/exp//mask01-tiny-f128-t2-b64-lr5e-4-m400-e75-pretrain_mpmhb-librispeech360-mpmhb0.0-mpg0.0-mpc1.0/models/best_audio_model.pth
++ '[' '!' -f ././../../pretrain/exp//mask01-tiny-f128-t2-b64-lr5e-4-m400-e75-pretrain_mpmhb-librispeech360-mpmhb0.0-mpg0.0-mpc1.0/models/best_audio_model.pth ']'
++ dataset=librispeech
++ dataset_mean=-4.2677393
++ dataset_std=4.5689974
++ target_length=1024
++ noise=False
++ tr_data=./data/datafiles/librispeech_train_data.json
++ val_data=./data/datafiles/librispeech_validation_data.json
++ eval_data=./data/datafiles/librispeech_eval_data.json
++ label_csv=./data/datafiles/vocab.json
++ bal=none
++ lr=1e-4
++ freqm=48
++ timem=48
++ mixup=0.5
++ epoch=30
++ batch_size=24
++ fshape=16
++ tshape=16
++ fstride=10
++ tstride=10
++ task=ft_asr
++ model_size=tiny
++ head_lr=10
+++ python -c 'import json; print(len(json.load(open('\''./data/datafiles/vocab.json'\''))))'
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+FileNotFoundError: [Errno 2] No such file or directory: './data/datafiles/vocab.json'
++ n_class=
++ echo 'Detected  classes (vocab size).'
+Detected  classes (vocab size).
++ exp_dir=./exp/test-ls100-f10-t10-b24-lr1e-4-ft_asr-tiny-noiseFalse
++ echo 'Starting Training...'
+Starting Training...
++ CUDA_CACHE_DISABLE=1
++ python -W ignore ../../run.py --dataset librispeech --data-train ./data/datafiles/librispeech_train_data.json --data-val ./data/datafiles/librispeech_validation_data.json --data-eval ./data/datafiles/librispeech_eval_data.json --exp-dir ./exp/test-ls100-f10-t10-b24-lr1e-4-ft_asr-tiny-noiseFalse --label-csv ./data/datafiles/vocab.json --n_class --lr 1e-4 --n-epochs 30 --batch-size 24 --save_model True --freqm 48 --timem 48 --mixup 0.5 --bal none --tstride 10 --fstride 10 --fshape 16 --tshape 16 --warmup True --task ft_asr --model_size tiny --adaptschedule True --pretrained_mdl_path ././../../pretrain/exp//mask01-tiny-f128-t2-b64-lr5e-4-m400-e75-pretrain_mpmhb-librispeech360-mpmhb0.0-mpg0.0-mpc1.0/models/best_audio_model.pth --dataset_mean -4.2677393 --dataset_std 4.5689974 --target_length 1024 --num_mel_bins 128 --head_lr 10 --noise False --lrscheduler_start 5 --lrscheduler_step 1 --lrscheduler_decay 0.85 --wa False --loss CTC --metrics wer
+usage: run.py [-h] [--data-train DATA_TRAIN] [--data-val DATA_VAL]
+              [--data-eval DATA_EVAL] [--label-csv LABEL_CSV]
+              [--n_class N_CLASS] [--dataset DATASET]
+              [--dataset_mean DATASET_MEAN] [--dataset_std DATASET_STD]
+              [--target_length TARGET_LENGTH] [--num_mel_bins NUM_MEL_BINS]
+              [--exp-dir EXP_DIR] [--lr LR] [--warmup WARMUP]
+              [--optim {sgd,adam}] [-b N] [-w NW] [--n-epochs N_EPOCHS]
+              [--lr_patience LR_PATIENCE] [--adaptschedule ADAPTSCHEDULE]
+              [--n-print-steps N_PRINT_STEPS] [--save_model SAVE_MODEL]
+              [--freqm FREQM] [--timem TIMEM] [--mixup MIXUP] [--bal BAL]
+              [--fstride FSTRIDE] [--tstride TSTRIDE] [--fshape FSHAPE]
+              [--tshape TSHAPE] [--model_size MODEL_SIZE]
+              [--task {ft_avgtok,ft_cls,ft_asr,pretrain_mpc,pretrain_mpg,pretrain_joint,pretrain_mpj,pretrain_mpmhb}]
+              [--mask_patch MASK_PATCH] [--cluster_factor CLUSTER_FACTOR]
+              [--epoch_iter EPOCH_ITER] [--num_clusters NUM_CLUSTERS]
+              [--mpmhb_weight MPMHB_WEIGHT] [--mpg_weight MPG_WEIGHT]
+              [--mpc_weight MPC_WEIGHT] [--target_layer_idx TARGET_LAYER_IDX]
+              [--cluster_update_freq CLUSTER_UPDATE_FREQ]
+              [--pretrained_mdl_path PRETRAINED_MDL_PATH] [--head_lr HEAD_LR]
+              [--noise NOISE] [--metrics {mAP,acc,wer}]
+              [--lrscheduler_start LRSCHEDULER_START]
+              [--lrscheduler_step LRSCHEDULER_STEP]
+              [--lrscheduler_decay LRSCHEDULER_DECAY] [--wa WA]
+              [--wa_start WA_START] [--wa_end WA_END] [--loss {BCE,CE,CTC}]
+run.py: error: argument --n_class: expected one argument
+I am process 230221, running on crannog06.inf.ed.ac.uk: starting (Sat Feb 14 10:59:42 2026)

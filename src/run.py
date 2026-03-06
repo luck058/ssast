@@ -20,6 +20,7 @@ from models import ASTModel
 import numpy as np
 from traintest import train, validate
 from traintest_mask import trainmask
+import json
 
 print("I am process %s, running on %s: starting (%s)" % (os.getpid(), os.uname()[1], time.asctime()))
 
@@ -65,7 +66,7 @@ parser.add_argument("--fshape", type=int, help="shape of patch on the frequency 
 parser.add_argument("--tshape", type=int, help="shape of patch on the time dimension")
 parser.add_argument('--model_size', help='the size of AST models', type=str, default='base384')
 
-parser.add_argument("--task", type=str, default='ft_cls', help="pretraining or fine-tuning task", choices=["ft_avgtok", "ft_cls", "pretrain_mpc", "pretrain_mpg", "pretrain_joint", "pretrain_mpj", "pretrain_mpmhb"])
+parser.add_argument("--task", type=str, default='ft_cls', help="pretraining or fine-tuning task", choices=["ft_avgtok", "ft_cls", "ft_asr", "pretrain_mpc", "pretrain_mpg", "pretrain_joint", "pretrain_mpj", "pretrain_mpmhb"])
 
 # pretraining augments
 #parser.add_argument('--pretrain_stage', help='True for self-supervised pretraining stage, False for fine-tuning stage', type=ast.literal_eval, default='False')
@@ -85,14 +86,15 @@ parser.add_argument("--cluster_update_freq", type=int, default=5, help="Update c
 parser.add_argument("--pretrained_mdl_path", type=str, default=None, help="the ssl pretrained models path")
 parser.add_argument("--head_lr", type=int, default=1, help="the factor of mlp-head_lr/lr, used in some fine-tuning experiments only")
 parser.add_argument("--noise", help='if augment noise in finetuning', type=ast.literal_eval)
-parser.add_argument("--metrics", type=str, default="mAP", help="the main evaluation metrics in finetuning", choices=["mAP", "acc"])
+parser.add_argument("--metrics", type=str, default="mAP", help="the main evaluation metrics in finetuning", choices=["mAP", "acc", "wer"])
 parser.add_argument("--lrscheduler_start", default=10, type=int, help="when to start decay in finetuning")
 parser.add_argument("--lrscheduler_step", default=5, type=int, help="the number of step to decrease the learning rate in finetuning")
 parser.add_argument("--lrscheduler_decay", default=0.5, type=float, help="the learning rate decay ratio in finetuning")
 parser.add_argument("--wa", help='if do weight averaging in finetuning', type=ast.literal_eval)
 parser.add_argument("--wa_start", type=int, default=16, help="which epoch to start weight averaging in finetuning")
 parser.add_argument("--wa_end", type=int, default=30, help="which epoch to end weight averaging in finetuning")
-parser.add_argument("--loss", type=str, default="BCE", help="the loss function for finetuning, depend on the task", choices=["BCE", "CE"])
+parser.add_argument("--loss", type=str, default="BCE", help="the loss function for finetuning, depend on the task", choices=["BCE", "CE", "CTC"])
+
 
 args = parser.parse_args()
 
@@ -139,13 +141,13 @@ if 'pretrain' in args.task:
     # no label dimension needed as it is self-supervised, fshape=fstride and tshape=tstride
     audio_model = ASTModel(fshape=args.fshape, tshape=args.tshape, fstride=args.fshape, tstride=args.tshape,
                        input_fdim=args.num_mel_bins, input_tdim=args.target_length, model_size=args.model_size, pretrain_stage=True,
-                       num_clusters=args.num_clusters, target_layer_idx=args.target_layer_idx)
+                       num_clusters=args.num_clusters, target_layer_idx=args.target_layer_idx, vocab_size=args.n_class)
 # in the fine-tuning stage
 else:
     audio_model = ASTModel(label_dim=args.n_class, fshape=args.fshape, tshape=args.tshape, fstride=args.fstride, tstride=args.tstride,
                        input_fdim=args.num_mel_bins, input_tdim=args.target_length, model_size=args.model_size, pretrain_stage=False,
                        load_pretrained_mdl_path=args.pretrained_mdl_path,
-                       num_clusters=args.num_clusters)
+                       num_clusters=args.num_clusters, vocab_size=args.n_class)
 
 if not isinstance(audio_model, torch.nn.DataParallel):
     audio_model = torch.nn.DataParallel(audio_model)
@@ -173,24 +175,37 @@ if args.data_eval != None:
     audio_model.load_state_dict(sd, strict=False)
 
     # best models on the validation set
-    args.loss_fn = torch.nn.BCEWithLogitsLoss()
     stats, _ = validate(audio_model, val_loader, args, 'valid_set')
-    # note it is NOT mean of class-wise accuracy
-    val_acc = stats[0]['acc']
-    val_mAUC = np.mean([stat['auc'] for stat in stats])
+
     print('---------------evaluate on the validation set---------------')
-    print("Accuracy: {:.6f}".format(val_acc))
-    print("AUC: {:.6f}".format(val_mAUC))
+    if args.task == 'ft_asr':
+        # Assuming validate returns 'wer' in stats for ASR task
+        val_acc = 0 # Not applicable
+        val_mAUC = 0 # Not applicable
+        val_wer = stats[0]['wer']
+        print("WER: {:.6f}".format(val_wer))
+    else:
+        val_acc = stats[0]['acc']
+        val_mAUC = np.mean([stat['auc'] for stat in stats])
+        print("Accuracy: {:.6f}".format(val_acc))
+        print("AUC: {:.6f}".format(val_mAUC))
 
     # test the models on the evaluation set
     eval_loader = torch.utils.data.DataLoader(
         dataloader.AudioDataset(args.data_eval, label_csv=args.label_csv, audio_conf=val_audio_conf),
         batch_size=args.batch_size*2, shuffle=False, num_workers=args.num_workers, pin_memory=True)
     stats, _ = validate(audio_model, eval_loader, args, 'eval_set')
-    eval_acc = stats[0]['acc']
-    eval_mAUC = np.mean([stat['auc'] for stat in stats])
-    print('---------------evaluate on the test set---------------')
-    print("Accuracy: {:.6f}".format(eval_acc))
-    print("AUC: {:.6f}".format(eval_mAUC))
-    np.savetxt(args.exp_dir + '/eval_result.csv', [val_acc, val_mAUC, eval_acc, eval_mAUC])
 
+    print('---------------evaluate on the test set---------------')
+    if args.task == 'ft_asr':
+        eval_acc = 0
+        eval_mAUC = 0
+        eval_wer = stats[0]['wer']
+        print("WER: {:.6f}".format(eval_wer))
+        np.savetxt(args.exp_dir + '/eval_result.csv', [val_wer, eval_wer])
+    else:
+        eval_acc = stats[0]['acc']
+        eval_mAUC = np.mean([stat['auc'] for stat in stats])
+        print("Accuracy: {:.6f}".format(eval_acc))
+        print("AUC: {:.6f}".format(eval_mAUC))
+        np.savetxt(args.exp_dir + '/eval_result.csv', [val_acc, val_mAUC, eval_acc, eval_mAUC])

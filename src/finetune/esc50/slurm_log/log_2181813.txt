@@ -1,0 +1,280 @@
++ . /home/htang2/toolchain-20251006/toolchain.rc
+++ ROOT=/home/htang2/toolchain-20251006
+++ export PATH=/home/htang2/toolchain-20251006/bin:/home/htang2/toolchain-20251006/opt/cuda/bin:/usr/games:/usr/local/games:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+++ PATH=/home/htang2/toolchain-20251006/bin:/home/htang2/toolchain-20251006/opt/cuda/bin:/usr/games:/usr/local/games:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+++ export LD_LIBRARY_PATH=/home/htang2/toolchain-20251006/lib:/home/htang2/toolchain-20251006/lib64:/home/htang2/toolchain-20251006/opt/cuda/lib:/home/htang2/toolchain-20251006/opt/cuda/lib64:/home/htang2/toolchain-20251006/opt/cuda/extras/CUPTI/lib64:
+++ LD_LIBRARY_PATH=/home/htang2/toolchain-20251006/lib:/home/htang2/toolchain-20251006/lib64:/home/htang2/toolchain-20251006/opt/cuda/lib:/home/htang2/toolchain-20251006/opt/cuda/lib64:/home/htang2/toolchain-20251006/opt/cuda/extras/CUPTI/lib64:
++ source ../../../venvssast/bin/activate
+++ deactivate nondestructive
+++ '[' -n '' ']'
+++ '[' -n '' ']'
+++ hash -r
+++ '[' -n '' ']'
+++ unset VIRTUAL_ENV
+++ unset VIRTUAL_ENV_PROMPT
+++ '[' '!' nondestructive = nondestructive ']'
+++ '[' linux-gnu = cygwin ']'
+++ '[' linux-gnu = msys ']'
+++ export VIRTUAL_ENV=/home/s2283874/ssast/venvssast
+++ VIRTUAL_ENV=/home/s2283874/ssast/venvssast
+++ _OLD_VIRTUAL_PATH=/home/htang2/toolchain-20251006/bin:/home/htang2/toolchain-20251006/opt/cuda/bin:/usr/games:/usr/local/games:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+++ PATH=/home/s2283874/ssast/venvssast/bin:/home/htang2/toolchain-20251006/bin:/home/htang2/toolchain-20251006/opt/cuda/bin:/usr/games:/usr/local/games:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+++ export PATH
+++ '[' -n '' ']'
+++ '[' -z '' ']'
+++ _OLD_VIRTUAL_PS1=
+++ PS1='(venvssast) '
+++ export PS1
+++ VIRTUAL_ENV_PROMPT='(venvssast) '
+++ export VIRTUAL_ENV_PROMPT
+++ hash -r
++ export TORCH_HOME=../../pretrained_models
++ TORCH_HOME=../../pretrained_models
++ mkdir exp
+mkdir: cannot create directory ‘exp’: File exists
++ '[' -e data/datafiles ']'
++ echo 'esc-50 already downloaded and processed.'
+esc-50 already downloaded and processed.
++ pretrain_exp=./../../pretrain/exp/mask01-tiny-f16-t16-b64-lr5e-4-m400-e200-pretrain_mpj-librispeech360
++ pretrain_model=SSAST-Tiny-Patch-400-pretrain_mpmhb
++ pretrain_path=././../../pretrain/exp/mask01-tiny-f16-t16-b64-lr5e-4-m400-e200-pretrain_mpj-librispeech360/models/best_audio_model.pth
++ num_workers=4
++ dataset=esc50
++ dataset_mean=-6.6268077
++ dataset_std=5.358466
++ target_length=512
++ noise=True
++ bal=none
++ lr=1e-4
++ freqm=24
++ timem=96
++ mixup=0
++ epoch=50
++ batch_size=48
++ fshape=16
++ tshape=16
++ fstride=10
++ tstride=10
++ task=ft_avgtok
++ model_size=tiny
++ head_lr=1
++ base_exp_dir=./exp/test01-esc50-f10-16-t10-16-b48-lr1e-4-ft_avgtok-tiny-./../../pretrain/exp/mask01-tiny-f16-t16-b64-lr5e-4-m400-e200-pretrain_mpj-librispeech360-SSAST-Tiny-Patch-400-pretrain_mpmhb-1x-noiseTrue
++ (( fold=1 ))
++ (( fold<=5 ))
++ echo 'now process fold1'
+now process fold1
++ exp_dir=./exp/test01-esc50-f10-16-t10-16-b48-lr1e-4-ft_avgtok-tiny-./../../pretrain/exp/mask01-tiny-f16-t16-b64-lr5e-4-m400-e200-pretrain_mpj-librispeech360-SSAST-Tiny-Patch-400-pretrain_mpmhb-1x-noiseTrue/fold1
++ tr_data=./data/datafiles/esc_train_data_1.json
++ te_data=./data/datafiles/esc_eval_data_1.json
++ CUDA_CACHE_DISABLE=1
++ python -W ignore ../../run.py --dataset esc50 --data-train ./data/datafiles/esc_train_data_1.json --data-val ./data/datafiles/esc_eval_data_1.json --exp-dir ./exp/test01-esc50-f10-16-t10-16-b48-lr1e-4-ft_avgtok-tiny-./../../pretrain/exp/mask01-tiny-f16-t16-b64-lr5e-4-m400-e200-pretrain_mpj-librispeech360-SSAST-Tiny-Patch-400-pretrain_mpmhb-1x-noiseTrue/fold1 --label-csv ./data/esc_class_labels_indices.csv --n_class 50 --lr 1e-4 --n-epochs 50 --batch-size 48 --save_model False --freqm 24 --timem 96 --mixup 0 --bal none --tstride 10 --fstride 10 --fshape 16 --tshape 16 --warmup False --task ft_avgtok --model_size tiny --adaptschedule False --pretrained_mdl_path ././../../pretrain/exp/mask01-tiny-f16-t16-b64-lr5e-4-m400-e200-pretrain_mpj-librispeech360/models/best_audio_model.pth --dataset_mean -6.6268077 --dataset_std 5.358466 --target_length 512 --num_mel_bins 128 --head_lr 1 --noise True --lrscheduler_start 6 --lrscheduler_step 1 --lrscheduler_decay 0.85 --wa False --loss CE --metrics acc --num-workers 4
+I am process 1122248, running on scotia03.inf.ed.ac.uk: starting (Sun Jan 25 00:22:19 2026)
+balanced sampler is not used
+---------------the train dataloader---------------
+now using following mask: 24 freq, 96 time
+now using mix-up with rate 0.000000
+now process esc50
+use dataset mean -6.627 and std 5.358 to normalize the input.
+now use noise augmentation
+number of classes is 50
+---------------the evaluation dataloader---------------
+now using following mask: 0 freq, 0 time
+now using mix-up with rate 0.000000
+now process esc50
+use dataset mean -6.627 and std 5.358 to normalize the input.
+number of classes is 50
+Now train with esc50 with 1600 training samples, evaluate with 400 samples
+now load a SSL pretrained models from ././../../pretrain/exp/mask01-tiny-f16-t16-b64-lr5e-4-m400-e200-pretrain_mpj-librispeech360/models/best_audio_model.pth
+pretraining patch split stride: frequency=16, time=16
+pretraining patch shape: frequency=16, time=16
+pretraining patch array dimension: frequency=8, time=64
+pretraining number of patches=512
+Traceback (most recent call last):
+  File "/home/s2283874/ssast/src/finetune/esc50/../../run.py", line 144, in <module>
+    audio_model = ASTModel(label_dim=args.n_class, fshape=args.fshape, tshape=args.tshape, fstride=args.fstride, tstride=args.tstride,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/s2283874/ssast/src/models/ast_models.py", line 182, in __init__
+    audio_model.load_state_dict(sd, strict=False)
+  File "/home/s2283874/ssast/venvssast/lib/python3.12/site-packages/torch/nn/modules/module.py", line 2629, in load_state_dict
+    raise RuntimeError(
+RuntimeError: Error(s) in loading state_dict for DataParallel:
+	size mismatch for module.cluster_centroids: copying a param with shape torch.Size([512, 256]) from checkpoint, the shape in current model is torch.Size([512, 192]).
++ (( fold++ ))
++ (( fold<=5 ))
++ echo 'now process fold2'
+now process fold2
++ exp_dir=./exp/test01-esc50-f10-16-t10-16-b48-lr1e-4-ft_avgtok-tiny-./../../pretrain/exp/mask01-tiny-f16-t16-b64-lr5e-4-m400-e200-pretrain_mpj-librispeech360-SSAST-Tiny-Patch-400-pretrain_mpmhb-1x-noiseTrue/fold2
++ tr_data=./data/datafiles/esc_train_data_2.json
++ te_data=./data/datafiles/esc_eval_data_2.json
++ CUDA_CACHE_DISABLE=1
++ python -W ignore ../../run.py --dataset esc50 --data-train ./data/datafiles/esc_train_data_2.json --data-val ./data/datafiles/esc_eval_data_2.json --exp-dir ./exp/test01-esc50-f10-16-t10-16-b48-lr1e-4-ft_avgtok-tiny-./../../pretrain/exp/mask01-tiny-f16-t16-b64-lr5e-4-m400-e200-pretrain_mpj-librispeech360-SSAST-Tiny-Patch-400-pretrain_mpmhb-1x-noiseTrue/fold2 --label-csv ./data/esc_class_labels_indices.csv --n_class 50 --lr 1e-4 --n-epochs 50 --batch-size 48 --save_model False --freqm 24 --timem 96 --mixup 0 --bal none --tstride 10 --fstride 10 --fshape 16 --tshape 16 --warmup False --task ft_avgtok --model_size tiny --adaptschedule False --pretrained_mdl_path ././../../pretrain/exp/mask01-tiny-f16-t16-b64-lr5e-4-m400-e200-pretrain_mpj-librispeech360/models/best_audio_model.pth --dataset_mean -6.6268077 --dataset_std 5.358466 --target_length 512 --num_mel_bins 128 --head_lr 1 --noise True --lrscheduler_start 6 --lrscheduler_step 1 --lrscheduler_decay 0.85 --wa False --loss CE --metrics acc --num-workers 4
+I am process 1122286, running on scotia03.inf.ed.ac.uk: starting (Sun Jan 25 00:22:39 2026)
+balanced sampler is not used
+---------------the train dataloader---------------
+now using following mask: 24 freq, 96 time
+now using mix-up with rate 0.000000
+now process esc50
+use dataset mean -6.627 and std 5.358 to normalize the input.
+now use noise augmentation
+number of classes is 50
+---------------the evaluation dataloader---------------
+now using following mask: 0 freq, 0 time
+now using mix-up with rate 0.000000
+now process esc50
+use dataset mean -6.627 and std 5.358 to normalize the input.
+number of classes is 50
+Now train with esc50 with 1600 training samples, evaluate with 400 samples
+now load a SSL pretrained models from ././../../pretrain/exp/mask01-tiny-f16-t16-b64-lr5e-4-m400-e200-pretrain_mpj-librispeech360/models/best_audio_model.pth
+pretraining patch split stride: frequency=16, time=16
+pretraining patch shape: frequency=16, time=16
+pretraining patch array dimension: frequency=8, time=64
+pretraining number of patches=512
+Traceback (most recent call last):
+  File "/home/s2283874/ssast/src/finetune/esc50/../../run.py", line 144, in <module>
+    audio_model = ASTModel(label_dim=args.n_class, fshape=args.fshape, tshape=args.tshape, fstride=args.fstride, tstride=args.tstride,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/s2283874/ssast/src/models/ast_models.py", line 182, in __init__
+    audio_model.load_state_dict(sd, strict=False)
+  File "/home/s2283874/ssast/venvssast/lib/python3.12/site-packages/torch/nn/modules/module.py", line 2629, in load_state_dict
+    raise RuntimeError(
+RuntimeError: Error(s) in loading state_dict for DataParallel:
+	size mismatch for module.cluster_centroids: copying a param with shape torch.Size([512, 256]) from checkpoint, the shape in current model is torch.Size([512, 192]).
++ (( fold++ ))
++ (( fold<=5 ))
++ echo 'now process fold3'
+now process fold3
++ exp_dir=./exp/test01-esc50-f10-16-t10-16-b48-lr1e-4-ft_avgtok-tiny-./../../pretrain/exp/mask01-tiny-f16-t16-b64-lr5e-4-m400-e200-pretrain_mpj-librispeech360-SSAST-Tiny-Patch-400-pretrain_mpmhb-1x-noiseTrue/fold3
++ tr_data=./data/datafiles/esc_train_data_3.json
++ te_data=./data/datafiles/esc_eval_data_3.json
++ CUDA_CACHE_DISABLE=1
++ python -W ignore ../../run.py --dataset esc50 --data-train ./data/datafiles/esc_train_data_3.json --data-val ./data/datafiles/esc_eval_data_3.json --exp-dir ./exp/test01-esc50-f10-16-t10-16-b48-lr1e-4-ft_avgtok-tiny-./../../pretrain/exp/mask01-tiny-f16-t16-b64-lr5e-4-m400-e200-pretrain_mpj-librispeech360-SSAST-Tiny-Patch-400-pretrain_mpmhb-1x-noiseTrue/fold3 --label-csv ./data/esc_class_labels_indices.csv --n_class 50 --lr 1e-4 --n-epochs 50 --batch-size 48 --save_model False --freqm 24 --timem 96 --mixup 0 --bal none --tstride 10 --fstride 10 --fshape 16 --tshape 16 --warmup False --task ft_avgtok --model_size tiny --adaptschedule False --pretrained_mdl_path ././../../pretrain/exp/mask01-tiny-f16-t16-b64-lr5e-4-m400-e200-pretrain_mpj-librispeech360/models/best_audio_model.pth --dataset_mean -6.6268077 --dataset_std 5.358466 --target_length 512 --num_mel_bins 128 --head_lr 1 --noise True --lrscheduler_start 6 --lrscheduler_step 1 --lrscheduler_decay 0.85 --wa False --loss CE --metrics acc --num-workers 4
+I am process 1122321, running on scotia03.inf.ed.ac.uk: starting (Sun Jan 25 00:22:49 2026)
+balanced sampler is not used
+---------------the train dataloader---------------
+now using following mask: 24 freq, 96 time
+now using mix-up with rate 0.000000
+now process esc50
+use dataset mean -6.627 and std 5.358 to normalize the input.
+now use noise augmentation
+number of classes is 50
+---------------the evaluation dataloader---------------
+now using following mask: 0 freq, 0 time
+now using mix-up with rate 0.000000
+now process esc50
+use dataset mean -6.627 and std 5.358 to normalize the input.
+number of classes is 50
+Now train with esc50 with 1600 training samples, evaluate with 400 samples
+now load a SSL pretrained models from ././../../pretrain/exp/mask01-tiny-f16-t16-b64-lr5e-4-m400-e200-pretrain_mpj-librispeech360/models/best_audio_model.pth
+pretraining patch split stride: frequency=16, time=16
+pretraining patch shape: frequency=16, time=16
+pretraining patch array dimension: frequency=8, time=64
+pretraining number of patches=512
+Traceback (most recent call last):
+  File "/home/s2283874/ssast/src/finetune/esc50/../../run.py", line 144, in <module>
+    audio_model = ASTModel(label_dim=args.n_class, fshape=args.fshape, tshape=args.tshape, fstride=args.fstride, tstride=args.tstride,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/s2283874/ssast/src/models/ast_models.py", line 182, in __init__
+    audio_model.load_state_dict(sd, strict=False)
+  File "/home/s2283874/ssast/venvssast/lib/python3.12/site-packages/torch/nn/modules/module.py", line 2629, in load_state_dict
+    raise RuntimeError(
+RuntimeError: Error(s) in loading state_dict for DataParallel:
+	size mismatch for module.cluster_centroids: copying a param with shape torch.Size([512, 256]) from checkpoint, the shape in current model is torch.Size([512, 192]).
++ (( fold++ ))
++ (( fold<=5 ))
++ echo 'now process fold4'
+now process fold4
++ exp_dir=./exp/test01-esc50-f10-16-t10-16-b48-lr1e-4-ft_avgtok-tiny-./../../pretrain/exp/mask01-tiny-f16-t16-b64-lr5e-4-m400-e200-pretrain_mpj-librispeech360-SSAST-Tiny-Patch-400-pretrain_mpmhb-1x-noiseTrue/fold4
++ tr_data=./data/datafiles/esc_train_data_4.json
++ te_data=./data/datafiles/esc_eval_data_4.json
++ CUDA_CACHE_DISABLE=1
++ python -W ignore ../../run.py --dataset esc50 --data-train ./data/datafiles/esc_train_data_4.json --data-val ./data/datafiles/esc_eval_data_4.json --exp-dir ./exp/test01-esc50-f10-16-t10-16-b48-lr1e-4-ft_avgtok-tiny-./../../pretrain/exp/mask01-tiny-f16-t16-b64-lr5e-4-m400-e200-pretrain_mpj-librispeech360-SSAST-Tiny-Patch-400-pretrain_mpmhb-1x-noiseTrue/fold4 --label-csv ./data/esc_class_labels_indices.csv --n_class 50 --lr 1e-4 --n-epochs 50 --batch-size 48 --save_model False --freqm 24 --timem 96 --mixup 0 --bal none --tstride 10 --fstride 10 --fshape 16 --tshape 16 --warmup False --task ft_avgtok --model_size tiny --adaptschedule False --pretrained_mdl_path ././../../pretrain/exp/mask01-tiny-f16-t16-b64-lr5e-4-m400-e200-pretrain_mpj-librispeech360/models/best_audio_model.pth --dataset_mean -6.6268077 --dataset_std 5.358466 --target_length 512 --num_mel_bins 128 --head_lr 1 --noise True --lrscheduler_start 6 --lrscheduler_step 1 --lrscheduler_decay 0.85 --wa False --loss CE --metrics acc --num-workers 4
+I am process 1122351, running on scotia03.inf.ed.ac.uk: starting (Sun Jan 25 00:22:54 2026)
+balanced sampler is not used
+---------------the train dataloader---------------
+now using following mask: 24 freq, 96 time
+now using mix-up with rate 0.000000
+now process esc50
+use dataset mean -6.627 and std 5.358 to normalize the input.
+now use noise augmentation
+number of classes is 50
+---------------the evaluation dataloader---------------
+now using following mask: 0 freq, 0 time
+now using mix-up with rate 0.000000
+now process esc50
+use dataset mean -6.627 and std 5.358 to normalize the input.
+number of classes is 50
+Now train with esc50 with 1600 training samples, evaluate with 400 samples
+now load a SSL pretrained models from ././../../pretrain/exp/mask01-tiny-f16-t16-b64-lr5e-4-m400-e200-pretrain_mpj-librispeech360/models/best_audio_model.pth
+pretraining patch split stride: frequency=16, time=16
+pretraining patch shape: frequency=16, time=16
+pretraining patch array dimension: frequency=8, time=64
+pretraining number of patches=512
+Traceback (most recent call last):
+  File "/home/s2283874/ssast/src/finetune/esc50/../../run.py", line 144, in <module>
+    audio_model = ASTModel(label_dim=args.n_class, fshape=args.fshape, tshape=args.tshape, fstride=args.fstride, tstride=args.tstride,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/s2283874/ssast/src/models/ast_models.py", line 182, in __init__
+    audio_model.load_state_dict(sd, strict=False)
+  File "/home/s2283874/ssast/venvssast/lib/python3.12/site-packages/torch/nn/modules/module.py", line 2629, in load_state_dict
+    raise RuntimeError(
+RuntimeError: Error(s) in loading state_dict for DataParallel:
+	size mismatch for module.cluster_centroids: copying a param with shape torch.Size([512, 256]) from checkpoint, the shape in current model is torch.Size([512, 192]).
++ (( fold++ ))
++ (( fold<=5 ))
++ echo 'now process fold5'
+now process fold5
++ exp_dir=./exp/test01-esc50-f10-16-t10-16-b48-lr1e-4-ft_avgtok-tiny-./../../pretrain/exp/mask01-tiny-f16-t16-b64-lr5e-4-m400-e200-pretrain_mpj-librispeech360-SSAST-Tiny-Patch-400-pretrain_mpmhb-1x-noiseTrue/fold5
++ tr_data=./data/datafiles/esc_train_data_5.json
++ te_data=./data/datafiles/esc_eval_data_5.json
++ CUDA_CACHE_DISABLE=1
++ python -W ignore ../../run.py --dataset esc50 --data-train ./data/datafiles/esc_train_data_5.json --data-val ./data/datafiles/esc_eval_data_5.json --exp-dir ./exp/test01-esc50-f10-16-t10-16-b48-lr1e-4-ft_avgtok-tiny-./../../pretrain/exp/mask01-tiny-f16-t16-b64-lr5e-4-m400-e200-pretrain_mpj-librispeech360-SSAST-Tiny-Patch-400-pretrain_mpmhb-1x-noiseTrue/fold5 --label-csv ./data/esc_class_labels_indices.csv --n_class 50 --lr 1e-4 --n-epochs 50 --batch-size 48 --save_model False --freqm 24 --timem 96 --mixup 0 --bal none --tstride 10 --fstride 10 --fshape 16 --tshape 16 --warmup False --task ft_avgtok --model_size tiny --adaptschedule False --pretrained_mdl_path ././../../pretrain/exp/mask01-tiny-f16-t16-b64-lr5e-4-m400-e200-pretrain_mpj-librispeech360/models/best_audio_model.pth --dataset_mean -6.6268077 --dataset_std 5.358466 --target_length 512 --num_mel_bins 128 --head_lr 1 --noise True --lrscheduler_start 6 --lrscheduler_step 1 --lrscheduler_decay 0.85 --wa False --loss CE --metrics acc --num-workers 4
+I am process 1122385, running on scotia03.inf.ed.ac.uk: starting (Sun Jan 25 00:22:59 2026)
+balanced sampler is not used
+---------------the train dataloader---------------
+now using following mask: 24 freq, 96 time
+now using mix-up with rate 0.000000
+now process esc50
+use dataset mean -6.627 and std 5.358 to normalize the input.
+now use noise augmentation
+number of classes is 50
+---------------the evaluation dataloader---------------
+now using following mask: 0 freq, 0 time
+now using mix-up with rate 0.000000
+now process esc50
+use dataset mean -6.627 and std 5.358 to normalize the input.
+number of classes is 50
+Now train with esc50 with 1600 training samples, evaluate with 400 samples
+now load a SSL pretrained models from ././../../pretrain/exp/mask01-tiny-f16-t16-b64-lr5e-4-m400-e200-pretrain_mpj-librispeech360/models/best_audio_model.pth
+pretraining patch split stride: frequency=16, time=16
+pretraining patch shape: frequency=16, time=16
+pretraining patch array dimension: frequency=8, time=64
+pretraining number of patches=512
+Traceback (most recent call last):
+  File "/home/s2283874/ssast/src/finetune/esc50/../../run.py", line 144, in <module>
+    audio_model = ASTModel(label_dim=args.n_class, fshape=args.fshape, tshape=args.tshape, fstride=args.fstride, tstride=args.tstride,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/s2283874/ssast/src/models/ast_models.py", line 182, in __init__
+    audio_model.load_state_dict(sd, strict=False)
+  File "/home/s2283874/ssast/venvssast/lib/python3.12/site-packages/torch/nn/modules/module.py", line 2629, in load_state_dict
+    raise RuntimeError(
+RuntimeError: Error(s) in loading state_dict for DataParallel:
+	size mismatch for module.cluster_centroids: copying a param with shape torch.Size([512, 256]) from checkpoint, the shape in current model is torch.Size([512, 192]).
++ (( fold++ ))
++ (( fold<=5 ))
++ python ./get_esc_result.py --exp_path ./exp/test01-esc50-f10-16-t10-16-b48-lr1e-4-ft_avgtok-tiny-./../../pretrain/exp/mask01-tiny-f16-t16-b64-lr5e-4-m400-e200-pretrain_mpj-librispeech360-SSAST-Tiny-Patch-400-pretrain_mpmhb-1x-noiseTrue
+Traceback (most recent call last):
+  File "/home/s2283874/ssast/src/finetune/esc50/./get_esc_result.py", line 21, in <module>
+    result = np.loadtxt(args.exp_path+'/fold' + str(fold) + '/result.csv', delimiter=',')
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/s2283874/ssast/venvssast/lib/python3.12/site-packages/numpy/lib/_npyio_impl.py", line 1397, in loadtxt
+    arr = _read(fname, dtype=dtype, comment=comment, delimiter=delimiter,
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/s2283874/ssast/venvssast/lib/python3.12/site-packages/numpy/lib/_npyio_impl.py", line 1024, in _read
+    fh = np.lib._datasource.open(fname, 'rt', encoding=encoding)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/s2283874/ssast/venvssast/lib/python3.12/site-packages/numpy/lib/_datasource.py", line 192, in open
+    return ds.open(path, mode, encoding=encoding, newline=newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/s2283874/ssast/venvssast/lib/python3.12/site-packages/numpy/lib/_datasource.py", line 529, in open
+    raise FileNotFoundError(f"{path} not found.")
+FileNotFoundError: ./exp/test01-esc50-f10-16-t10-16-b48-lr1e-4-ft_avgtok-tiny-./../../pretrain/exp/mask01-tiny-f16-t16-b64-lr5e-4-m400-e200-pretrain_mpj-librispeech360-SSAST-Tiny-Patch-400-pretrain_mpmhb-1x-noiseTrue/fold1/result.csv not found.

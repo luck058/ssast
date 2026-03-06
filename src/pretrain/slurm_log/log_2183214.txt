@@ -1,0 +1,789 @@
++ . /home/htang2/toolchain-20251006/toolchain.rc
+++ ROOT=/home/htang2/toolchain-20251006
+++ export PATH=/home/htang2/toolchain-20251006/bin:/home/htang2/toolchain-20251006/opt/cuda/bin:/usr/games:/usr/local/games:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+++ PATH=/home/htang2/toolchain-20251006/bin:/home/htang2/toolchain-20251006/opt/cuda/bin:/usr/games:/usr/local/games:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+++ export LD_LIBRARY_PATH=/home/htang2/toolchain-20251006/lib:/home/htang2/toolchain-20251006/lib64:/home/htang2/toolchain-20251006/opt/cuda/lib:/home/htang2/toolchain-20251006/opt/cuda/lib64:/home/htang2/toolchain-20251006/opt/cuda/extras/CUPTI/lib64:
+++ LD_LIBRARY_PATH=/home/htang2/toolchain-20251006/lib:/home/htang2/toolchain-20251006/lib64:/home/htang2/toolchain-20251006/opt/cuda/lib:/home/htang2/toolchain-20251006/opt/cuda/lib64:/home/htang2/toolchain-20251006/opt/cuda/extras/CUPTI/lib64:
++ source /home/s2283874/ssast/venvssast/bin/activate
+++ deactivate nondestructive
+++ '[' -n '' ']'
+++ '[' -n '' ']'
+++ hash -r
+++ '[' -n '' ']'
+++ unset VIRTUAL_ENV
+++ unset VIRTUAL_ENV_PROMPT
+++ '[' '!' nondestructive = nondestructive ']'
+++ '[' linux-gnu = cygwin ']'
+++ '[' linux-gnu = msys ']'
+++ export VIRTUAL_ENV=/home/s2283874/ssast/venvssast
+++ VIRTUAL_ENV=/home/s2283874/ssast/venvssast
+++ _OLD_VIRTUAL_PATH=/home/htang2/toolchain-20251006/bin:/home/htang2/toolchain-20251006/opt/cuda/bin:/usr/games:/usr/local/games:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+++ PATH=/home/s2283874/ssast/venvssast/bin:/home/htang2/toolchain-20251006/bin:/home/htang2/toolchain-20251006/opt/cuda/bin:/usr/games:/usr/local/games:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+++ export PATH
+++ '[' -n '' ']'
+++ '[' -z '' ']'
+++ _OLD_VIRTUAL_PS1=
+++ PS1='(venvssast) '
+++ export PS1
+++ VIRTUAL_ENV_PROMPT='(venvssast) '
+++ export VIRTUAL_ENV_PROMPT
+++ hash -r
++ export TORCH_HOME=../../pretrained_models
++ TORCH_HOME=../../pretrained_models
++ mkdir exp
+mkdir: cannot create directory ‘exp’: File exists
++ mkdir slurm_log
+mkdir: cannot create directory ‘slurm_log’: File exists
++ librispeech360_dir=/home/s2283874/../../disk/scratch/s2283874/librispeech/train-clean-360
++ librispeech100_dir=/home/s2283874/../../disk/scratch/s2283874/librispeech/train-clean-100
++ '[' '!' -d /home/s2283874/../../disk/scratch/s2283874/librispeech/train-clean-360 ']'
++ mkdir -p /home/s2283874/../../disk/scratch/s2283874/librispeech/
++ echo 'LibriSpeech directory not found. Extracting archive...'
+LibriSpeech directory not found. Extracting archive...
++ tar -xzf /home/s2283874/ssast/src/prep_data/librispeech/train-clean-360.tar.gz -C /home/s2283874/../../disk/scratch/s2283874/librispeech/
++ tar -xzf /home/s2283874/ssast/src/prep_data/librispeech/train-clean-100.tar.gz -C /home/s2283874/../../disk/scratch/s2283874/librispeech/
++ json_file=/home/s2283874/../../disk/scratch/s2283874/librispeech/librispeech_tr360_cut.json
++ json_test_file=/home/s2283874/../../disk/scratch/s2283874/librispeech/librispeech_tr360_cut_test.json
++ '[' '!' -f /home/s2283874/../../disk/scratch/s2283874/librispeech/librispeech_tr360_cut.json ']'
++ '[' '!' -f /home/s2283874/../../disk/scratch/s2283874/librispeech/librispeech_tr360_cut_test.json ']'
++ echo 'JSON file not found. Running prep_librispeech.py...'
+JSON file not found. Running prep_librispeech.py...
++ python /home/s2283874/ssast/src/prep_data/librispeech/prep_librispeech.py
+find 1k .wav files, time eclipse: 0.0 seconds.
+find 2k .wav files, time eclipse: 0.0 seconds.
+find 3k .wav files, time eclipse: 0.0 seconds.
+find 4k .wav files, time eclipse: 0.0 seconds.
+find 5k .wav files, time eclipse: 0.0 seconds.
+find 6k .wav files, time eclipse: 0.0 seconds.
+find 7k .wav files, time eclipse: 0.0 seconds.
+find 8k .wav files, time eclipse: 0.0 seconds.
+find 9k .wav files, time eclipse: 0.0 seconds.
+find 10k .wav files, time eclipse: 0.0 seconds.
+file saved.
+find 11k .wav files, time eclipse: 0.0 seconds.
+find 12k .wav files, time eclipse: 0.0 seconds.
+find 13k .wav files, time eclipse: 0.0 seconds.
+find 14k .wav files, time eclipse: 0.0 seconds.
+find 15k .wav files, time eclipse: 0.0 seconds.
+find 16k .wav files, time eclipse: 0.0 seconds.
+find 17k .wav files, time eclipse: 0.0 seconds.
+find 18k .wav files, time eclipse: 0.0 seconds.
+find 19k .wav files, time eclipse: 0.0 seconds.
+find 20k .wav files, time eclipse: 0.0 seconds.
+file saved.
+find 21k .wav files, time eclipse: 0.1 seconds.
+find 22k .wav files, time eclipse: 0.0 seconds.
+find 23k .wav files, time eclipse: 0.0 seconds.
+find 24k .wav files, time eclipse: 0.0 seconds.
+find 25k .wav files, time eclipse: 0.0 seconds.
+find 26k .wav files, time eclipse: 0.0 seconds.
+find 27k .wav files, time eclipse: 0.0 seconds.
+find 28k .wav files, time eclipse: 0.0 seconds.
+find 29k .wav files, time eclipse: 0.0 seconds.
+find 30k .wav files, time eclipse: 0.0 seconds.
+file saved.
+find 31k .wav files, time eclipse: 0.1 seconds.
+find 32k .wav files, time eclipse: 0.0 seconds.
+find 33k .wav files, time eclipse: 0.0 seconds.
+find 34k .wav files, time eclipse: 0.0 seconds.
+find 35k .wav files, time eclipse: 0.0 seconds.
+find 36k .wav files, time eclipse: 0.0 seconds.
+find 37k .wav files, time eclipse: 0.0 seconds.
+find 38k .wav files, time eclipse: 0.0 seconds.
+find 39k .wav files, time eclipse: 0.0 seconds.
+find 40k .wav files, time eclipse: 0.0 seconds.
+file saved.
+find 41k .wav files, time eclipse: 0.1 seconds.
+find 42k .wav files, time eclipse: 0.0 seconds.
+find 43k .wav files, time eclipse: 0.0 seconds.
+find 44k .wav files, time eclipse: 0.0 seconds.
+find 45k .wav files, time eclipse: 0.0 seconds.
+find 46k .wav files, time eclipse: 0.0 seconds.
+find 47k .wav files, time eclipse: 0.0 seconds.
+find 48k .wav files, time eclipse: 0.0 seconds.
+find 49k .wav files, time eclipse: 0.0 seconds.
+find 50k .wav files, time eclipse: 0.0 seconds.
+file saved.
+find 51k .wav files, time eclipse: 0.2 seconds.
+find 52k .wav files, time eclipse: 0.0 seconds.
+find 53k .wav files, time eclipse: 0.0 seconds.
+find 54k .wav files, time eclipse: 0.0 seconds.
+find 55k .wav files, time eclipse: 0.0 seconds.
+find 56k .wav files, time eclipse: 0.0 seconds.
+find 57k .wav files, time eclipse: 0.0 seconds.
+find 58k .wav files, time eclipse: 0.0 seconds.
+find 59k .wav files, time eclipse: 0.0 seconds.
+find 60k .wav files, time eclipse: 0.0 seconds.
+file saved.
+find 61k .wav files, time eclipse: 0.2 seconds.
+find 62k .wav files, time eclipse: 0.0 seconds.
+find 63k .wav files, time eclipse: 0.0 seconds.
+find 64k .wav files, time eclipse: 0.0 seconds.
+find 65k .wav files, time eclipse: 0.0 seconds.
+find 66k .wav files, time eclipse: 0.0 seconds.
+find 67k .wav files, time eclipse: 0.0 seconds.
+find 68k .wav files, time eclipse: 0.0 seconds.
+find 69k .wav files, time eclipse: 0.0 seconds.
+find 70k .wav files, time eclipse: 0.0 seconds.
+file saved.
+find 71k .wav files, time eclipse: 0.2 seconds.
+find 72k .wav files, time eclipse: 0.0 seconds.
+find 73k .wav files, time eclipse: 0.0 seconds.
+find 74k .wav files, time eclipse: 0.0 seconds.
+find 75k .wav files, time eclipse: 0.0 seconds.
+find 76k .wav files, time eclipse: 0.0 seconds.
+find 77k .wav files, time eclipse: 0.0 seconds.
+find 78k .wav files, time eclipse: 0.0 seconds.
+find 79k .wav files, time eclipse: 0.0 seconds.
+find 80k .wav files, time eclipse: 0.0 seconds.
+file saved.
+find 81k .wav files, time eclipse: 0.2 seconds.
+find 82k .wav files, time eclipse: 0.0 seconds.
+find 83k .wav files, time eclipse: 0.0 seconds.
+find 84k .wav files, time eclipse: 0.0 seconds.
+find 85k .wav files, time eclipse: 0.0 seconds.
+find 86k .wav files, time eclipse: 0.0 seconds.
+find 87k .wav files, time eclipse: 0.0 seconds.
+find 88k .wav files, time eclipse: 0.0 seconds.
+find 89k .wav files, time eclipse: 0.0 seconds.
+find 90k .wav files, time eclipse: 0.0 seconds.
+file saved.
+find 91k .wav files, time eclipse: 0.3 seconds.
+find 92k .wav files, time eclipse: 0.0 seconds.
+find 93k .wav files, time eclipse: 0.0 seconds.
+find 94k .wav files, time eclipse: 0.0 seconds.
+find 95k .wav files, time eclipse: 0.0 seconds.
+find 96k .wav files, time eclipse: 0.0 seconds.
+find 97k .wav files, time eclipse: 0.0 seconds.
+find 98k .wav files, time eclipse: 0.0 seconds.
+find 99k .wav files, time eclipse: 0.0 seconds.
+find 100k .wav files, time eclipse: 0.0 seconds.
+file saved.
+find 101k .wav files, time eclipse: 0.3 seconds.
+find 102k .wav files, time eclipse: 0.0 seconds.
+find 103k .wav files, time eclipse: 0.0 seconds.
+find 104k .wav files, time eclipse: 0.0 seconds.
+find 1k .wav files, time eclipse: 0.0 seconds.
+find 2k .wav files, time eclipse: 0.0 seconds.
+find 3k .wav files, time eclipse: 0.0 seconds.
+find 4k .wav files, time eclipse: 0.0 seconds.
+find 5k .wav files, time eclipse: 0.0 seconds.
+find 6k .wav files, time eclipse: 0.0 seconds.
+find 7k .wav files, time eclipse: 0.0 seconds.
+find 8k .wav files, time eclipse: 0.0 seconds.
+find 9k .wav files, time eclipse: 0.0 seconds.
+find 10k .wav files, time eclipse: 0.0 seconds.
+file saved.
+find 11k .wav files, time eclipse: 0.0 seconds.
+find 12k .wav files, time eclipse: 0.0 seconds.
+find 13k .wav files, time eclipse: 0.0 seconds.
+find 14k .wav files, time eclipse: 0.0 seconds.
+find 15k .wav files, time eclipse: 0.0 seconds.
+find 16k .wav files, time eclipse: 0.0 seconds.
+find 17k .wav files, time eclipse: 0.0 seconds.
+find 18k .wav files, time eclipse: 0.0 seconds.
+find 19k .wav files, time eclipse: 0.0 seconds.
+find 20k .wav files, time eclipse: 0.0 seconds.
+file saved.
+find 21k .wav files, time eclipse: 0.1 seconds.
+find 22k .wav files, time eclipse: 0.0 seconds.
+find 23k .wav files, time eclipse: 0.0 seconds.
+find 24k .wav files, time eclipse: 0.0 seconds.
+find 25k .wav files, time eclipse: 0.0 seconds.
+find 26k .wav files, time eclipse: 0.0 seconds.
+find 27k .wav files, time eclipse: 0.0 seconds.
+find 28k .wav files, time eclipse: 0.0 seconds.
+Test set saved with 10275 samples to /home/s2283874/../../disk/scratch/s2283874/librispeech/librispeech_tr100_cut_test.json
++ task=pretrain_mpmhb
++ mask_patch=400
++ num_clusters=512
++ mpmhb_weight=1.0
++ mpg_weight=1.0
++ mpc_weight=1.0
++ target_layer_idx=-1
++ cluster_update_freq=-1
++ dataset=librispeech360
++ tr_data=/home/s2283874/../../disk/scratch/s2283874/librispeech/librispeech_tr360_cut.json
++ te_data=/home/s2283874/../../disk/scratch/s2283874/librispeech/librispeech_tr100_cut_test.json
++ dataset_mean=-4.2677393
++ dataset_std=4.5689974
++ target_length=1024
++ num_mel_bins=128
++ model_size=tiny
++ fshape=128
++ tshape=2
++ fstride=128
++ tstride=2
++ bal=none
++ batch_size=64
++ lr=5e-4
++ lr_patience=2
++ epoch=10
++ freqm=0
++ timem=0
++ mixup=0
++ num_workers=8
++ '[' pretrain_mpmhb = pretrain_mpmhb ']'
++ exp_dir=./exp/mask01-tiny-f128-t2-b64-lr5e-4-m400-e10-pretrain_mpmhb-librispeech360-mpmhb1.0-mpg1.0-mpc1.0
++ CUDA_CACHE_DISABLE=1
++ python -W ignore ../run.py --dataset librispeech360 --data-train /home/s2283874/../../disk/scratch/s2283874/librispeech/librispeech_tr360_cut.json --data-val /home/s2283874/../../disk/scratch/s2283874/librispeech/librispeech_tr100_cut_test.json --exp-dir ./exp/mask01-tiny-f128-t2-b64-lr5e-4-m400-e10-pretrain_mpmhb-librispeech360-mpmhb1.0-mpg1.0-mpc1.0 --label-csv ./data/class_labels_indices.csv --lr 5e-4 --n-epochs 10 --batch-size 64 --save_model False --freqm 0 --timem 0 --mixup 0 --bal none --tstride 2 --fstride 128 --fshape 128 --tshape 2 --dataset_mean -4.2677393 --dataset_std 4.5689974 --target_length 1024 --num_mel_bins 128 --model_size tiny --mask_patch 400 --n-print-steps 100 --task pretrain_mpmhb --lr_patience 2 --epoch_iter 800 --num_clusters 512 --mpmhb_weight 1.0 --mpg_weight 1.0 --mpc_weight 1.0 --target_layer_idx -1 --cluster_update_freq -1 --num-workers 8
+I am process 3167795, running on scotia01.inf.ed.ac.uk: starting (Tue Jan 27 13:04:55 2026)
+balanced sampler is not used
+---------------the train dataloader---------------
+now using following mask: 0 freq, 0 time
+now using mix-up with rate 0.000000
+now process librispeech360
+use dataset mean -4.268 and std 4.569 to normalize the input.
+number of classes is 527
+---------------the evaluation dataloader---------------
+now using following mask: 0 freq, 0 time
+now using mix-up with rate 0.000000
+now process librispeech360
+use dataset mean -4.268 and std 4.569 to normalize the input.
+number of classes is 527
+Now train with librispeech360 with 104014 training samples, evaluate with 10275 samples
+The num_mel_bins 128 and fshape 128 are same, masking a typical time frame, not using cluster masking.
+pretraining patch split stride: frequency=128, time=2
+pretraining patch shape: frequency=128, time=2
+pretraining patch array dimension: frequency=1, time=512
+pretraining number of patches=512
+
+Creating experiment directory: ./exp/mask01-tiny-f128-t2-b64-lr5e-4-m400-e10-pretrain_mpmhb-librispeech360-mpmhb1.0-mpg1.0-mpc1.0
+Now starting self-supervised pretraining for 10 epochs
+Now running on : cuda
+Total parameter number is : 6.145106000 million
+Total trainable parameter number is : 6.145104000 million
+current #steps=0, #epochs=1
+start training...
+2026-01-27 13:04:57.409590
+
+--- Epoch 1: Updating Clusters & Re-labeling Dataset ---
+Updating centroids based on Layer -1 features...
+Running K-Means on 6553600 patches...
+Centroids updated.
+Generating cluster labels for the entire dataset (Teacher Pass)...
+Labeled batch 0/813
+Labeled batch 100/813
+Labeled batch 200/813
+Labeled batch 300/813
+Labeled batch 400/813
+Labeled batch 500/813
+Labeled batch 600/813
+Labeled batch 700/813
+Labeled batch 800/813
+Finished labeling. Stored IDs shape: torch.Size([104014, 512])
+warm-up learning rate is 0.000000
+   >> MPG: 0.364, MPC: 6.041, MPMHB: 6.402
+warm-up learning rate is 0.000025
+warm-up learning rate is 0.000050
+Epoch: [1][100/1625]	Per Sample Total Time 0.04660	Per Sample Data Time 0.04112	Per Sample DNN Time 0.00548	Train Loss 12.3733	
+   >> MPG: 0.282, MPC: 5.990, MPMHB: 6.101
+warm-up learning rate is 0.000075
+warm-up learning rate is 0.000100
+Epoch: [1][200/1625]	Per Sample Total Time 0.02565	Per Sample Data Time 0.02077	Per Sample DNN Time 0.00488	Train Loss 11.9700	
+   >> MPG: 0.188, MPC: 5.959, MPMHB: 5.823
+warm-up learning rate is 0.000125
+warm-up learning rate is 0.000150
+Epoch: [1][300/1625]	Per Sample Total Time 0.01863	Per Sample Data Time 0.01394	Per Sample DNN Time 0.00468	Train Loss 11.3978	
+   >> MPG: 0.165, MPC: 5.867, MPMHB: 5.366
+warm-up learning rate is 0.000175
+warm-up learning rate is 0.000200
+Epoch: [1][400/1625]	Per Sample Total Time 0.01511	Per Sample Data Time 0.01052	Per Sample DNN Time 0.00459	Train Loss 11.2012	
+   >> MPG: 0.166, MPC: 5.874, MPMHB: 5.161
+warm-up learning rate is 0.000225
+warm-up learning rate is 0.000250
+Epoch: [1][500/1625]	Per Sample Total Time 0.01299	Per Sample Data Time 0.00846	Per Sample DNN Time 0.00453	Train Loss 11.0754	
+   >> MPG: 0.156, MPC: 5.865, MPMHB: 5.054
+warm-up learning rate is 0.000275
+warm-up learning rate is 0.000300
+Epoch: [1][600/1625]	Per Sample Total Time 0.01158	Per Sample Data Time 0.00709	Per Sample DNN Time 0.00449	Train Loss 10.8989	
+   >> MPG: 0.148, MPC: 5.852, MPMHB: 4.899
+warm-up learning rate is 0.000325
+warm-up learning rate is 0.000350
+Epoch: [1][700/1625]	Per Sample Total Time 0.01058	Per Sample Data Time 0.00611	Per Sample DNN Time 0.00446	Train Loss 10.8338	
+   >> MPG: 0.158, MPC: 5.863, MPMHB: 4.813
+warm-up learning rate is 0.000375
+---------------- step 800 evaluation ----------------
+masked acc train: 0.003711
+nce loss train: 11.165747
+masked acc eval: 0.003795
+nce loss eval: 0.154619
+# 2, step 0-800, lr: 3.750000e-04
+# 2, step 0-800, training time: 537.176
+---------------- evaluation finished ----------------
+warm-up learning rate is 0.000400
+Epoch: [1][800/1625]	Per Sample Total Time 0.53652	Per Sample Data Time 0.53274	Per Sample DNN Time 0.00379	Train Loss 10.7452	
+   >> MPG: 0.147, MPC: 5.837, MPMHB: 4.761
+warm-up learning rate is 0.000425
+warm-up learning rate is 0.000450
+Epoch: [1][900/1625]	Per Sample Total Time 0.00930	Per Sample Data Time 0.00545	Per Sample DNN Time 0.00385	Train Loss 10.7728	
+   >> MPG: 0.153, MPC: 5.845, MPMHB: 4.775
+warm-up learning rate is 0.000475
+warm-up learning rate is 0.000500
+Epoch: [1][1000/1625]	Per Sample Total Time 0.00667	Per Sample Data Time 0.00283	Per Sample DNN Time 0.00384	Train Loss 10.6670	
+   >> MPG: 0.142, MPC: 5.843, MPMHB: 4.682
+Epoch: [1][1100/1625]	Per Sample Total Time 0.00579	Per Sample Data Time 0.00195	Per Sample DNN Time 0.00384	Train Loss 10.7844	
+   >> MPG: 0.151, MPC: 5.857, MPMHB: 4.776
+Epoch: [1][1200/1625]	Per Sample Total Time 0.00559	Per Sample Data Time 0.00151	Per Sample DNN Time 0.00408	Train Loss 10.6853	
+   >> MPG: 0.141, MPC: 5.829, MPMHB: 4.716
+Epoch: [1][1300/1625]	Per Sample Total Time 0.00532	Per Sample Data Time 0.00125	Per Sample DNN Time 0.00406	Train Loss 10.5298	
+   >> MPG: 0.146, MPC: 5.752, MPMHB: 4.631
+Epoch: [1][1400/1625]	Per Sample Total Time 0.00562	Per Sample Data Time 0.00108	Per Sample DNN Time 0.00454	Train Loss 9.9652	
+   >> MPG: 0.131, MPC: 5.500, MPMHB: 4.334
+Epoch: [1][1500/1625]	Per Sample Total Time 0.00547	Per Sample Data Time 0.00096	Per Sample DNN Time 0.00451	Train Loss 8.9639	
+   >> MPG: 0.090, MPC: 4.871, MPMHB: 4.003
+---------------- step 1600 evaluation ----------------
+masked acc train: 0.101758
+nce loss train: 8.156627
+masked acc eval: 0.104473
+nce loss eval: 0.087138
+# 3, step 800-1600, lr: 5.000000e-04
+# 3, step 800-1600, training time: 273.893
+---------------- evaluation finished ----------------
+Epoch: [1][1600/1625]	Per Sample Total Time 0.53442	Per Sample Data Time 0.53065	Per Sample DNN Time 0.00377	Train Loss 8.3823	
+   >> MPG: 0.083, MPC: 4.511, MPMHB: 3.788
+2026-01-27 13:18:34.484873
+Epoch: [2][75/1625]	Per Sample Total Time 0.00937	Per Sample Data Time 0.00571	Per Sample DNN Time 0.00366	Train Loss 7.8600	
+   >> MPG: 0.074, MPC: 4.287, MPMHB: 3.499
+Epoch: [2][175/1625]	Per Sample Total Time 0.00660	Per Sample Data Time 0.00295	Per Sample DNN Time 0.00365	Train Loss 7.8101	
+   >> MPG: 0.074, MPC: 4.210, MPMHB: 3.527
+Epoch: [2][275/1625]	Per Sample Total Time 0.00568	Per Sample Data Time 0.00203	Per Sample DNN Time 0.00365	Train Loss 7.5036	
+   >> MPG: 0.072, MPC: 4.135, MPMHB: 3.296
+Epoch: [2][375/1625]	Per Sample Total Time 0.00522	Per Sample Data Time 0.00157	Per Sample DNN Time 0.00365	Train Loss 7.5027	
+   >> MPG: 0.068, MPC: 4.020, MPMHB: 3.414
+Epoch: [2][475/1625]	Per Sample Total Time 0.00494	Per Sample Data Time 0.00129	Per Sample DNN Time 0.00365	Train Loss 7.3685	
+   >> MPG: 0.068, MPC: 3.912, MPMHB: 3.389
+Epoch: [2][575/1625]	Per Sample Total Time 0.00476	Per Sample Data Time 0.00110	Per Sample DNN Time 0.00366	Train Loss 7.1986	
+   >> MPG: 0.066, MPC: 3.937, MPMHB: 3.196
+Epoch: [2][675/1625]	Per Sample Total Time 0.00463	Per Sample Data Time 0.00097	Per Sample DNN Time 0.00366	Train Loss 7.4817	
+   >> MPG: 0.072, MPC: 3.870, MPMHB: 3.539
+---------------- step 2400 evaluation ----------------
+masked acc train: 0.209883
+nce loss train: 6.990749
+masked acc eval: 0.216291
+nce loss eval: 0.065472
+# 4, step 1600-2400, lr: 5.000000e-04
+# 4, step 1600-2400, training time: 221.321
+---------------- evaluation finished ----------------
+Epoch: [2][775/1625]	Per Sample Total Time 0.46294	Per Sample Data Time 0.45905	Per Sample DNN Time 0.00389	Train Loss 6.9483	
+   >> MPG: 0.064, MPC: 3.785, MPMHB: 3.098
+Epoch: [2][875/1625]	Per Sample Total Time 0.00848	Per Sample Data Time 0.00473	Per Sample DNN Time 0.00375	Train Loss 6.7982	
+   >> MPG: 0.064, MPC: 3.632, MPMHB: 3.102
+Epoch: [2][975/1625]	Per Sample Total Time 0.00626	Per Sample Data Time 0.00247	Per Sample DNN Time 0.00379	Train Loss 6.6510	
+   >> MPG: 0.058, MPC: 3.551, MPMHB: 3.042
+Epoch: [2][1075/1625]	Per Sample Total Time 0.00549	Per Sample Data Time 0.00171	Per Sample DNN Time 0.00378	Train Loss 6.6444	
+   >> MPG: 0.059, MPC: 3.543, MPMHB: 3.043
+Epoch: [2][1175/1625]	Per Sample Total Time 0.00510	Per Sample Data Time 0.00133	Per Sample DNN Time 0.00378	Train Loss 6.5212	
+   >> MPG: 0.058, MPC: 3.559, MPMHB: 2.904
+Epoch: [2][1275/1625]	Per Sample Total Time 0.00488	Per Sample Data Time 0.00110	Per Sample DNN Time 0.00378	Train Loss 6.5828	
+   >> MPG: 0.054, MPC: 3.551, MPMHB: 2.978
+Epoch: [2][1375/1625]	Per Sample Total Time 0.00473	Per Sample Data Time 0.00095	Per Sample DNN Time 0.00378	Train Loss 6.3763	
+   >> MPG: 0.060, MPC: 3.371, MPMHB: 2.946
+Epoch: [2][1475/1625]	Per Sample Total Time 0.00461	Per Sample Data Time 0.00084	Per Sample DNN Time 0.00377	Train Loss 6.5861	
+   >> MPG: 0.062, MPC: 3.370, MPMHB: 3.154
+---------------- step 3200 evaluation ----------------
+masked acc train: 0.287187
+nce loss train: 6.321136
+masked acc eval: 0.273772
+nce loss eval: 0.059245
+# 5, step 2400-3200, lr: 5.000000e-04
+# 5, step 2400-3200, training time: 231.818
+---------------- evaluation finished ----------------
+Epoch: [2][1575/1625]	Per Sample Total Time 0.46028	Per Sample Data Time 0.45661	Per Sample DNN Time 0.00367	Train Loss 6.4177	
+   >> MPG: 0.055, MPC: 3.349, MPMHB: 3.014
+2026-01-27 13:26:19.716732
+Epoch: [3][50/1625]	Per Sample Total Time 0.00860	Per Sample Data Time 0.00496	Per Sample DNN Time 0.00364	Train Loss 6.1829	
+   >> MPG: 0.053, MPC: 3.300, MPMHB: 2.830
+Epoch: [3][150/1625]	Per Sample Total Time 0.00622	Per Sample Data Time 0.00258	Per Sample DNN Time 0.00364	Train Loss 6.1942	
+   >> MPG: 0.054, MPC: 3.362, MPMHB: 2.778
+Epoch: [3][250/1625]	Per Sample Total Time 0.00543	Per Sample Data Time 0.00178	Per Sample DNN Time 0.00365	Train Loss 6.1342	
+   >> MPG: 0.055, MPC: 3.254, MPMHB: 2.825
+Epoch: [3][350/1625]	Per Sample Total Time 0.00503	Per Sample Data Time 0.00138	Per Sample DNN Time 0.00366	Train Loss 6.1065	
+   >> MPG: 0.058, MPC: 3.140, MPMHB: 2.908
+Epoch: [3][450/1625]	Per Sample Total Time 0.00479	Per Sample Data Time 0.00114	Per Sample DNN Time 0.00365	Train Loss 6.1764	
+   >> MPG: 0.056, MPC: 3.222, MPMHB: 2.898
+Epoch: [3][550/1625]	Per Sample Total Time 0.00464	Per Sample Data Time 0.00098	Per Sample DNN Time 0.00366	Train Loss 6.0733	
+   >> MPG: 0.052, MPC: 3.249, MPMHB: 2.772
+Epoch: [3][650/1625]	Per Sample Total Time 0.00453	Per Sample Data Time 0.00087	Per Sample DNN Time 0.00366	Train Loss 5.9915	
+   >> MPG: 0.051, MPC: 3.185, MPMHB: 2.755
+---------------- step 4000 evaluation ----------------
+masked acc train: 0.303828
+nce loss train: 5.998394
+masked acc eval: 0.306485
+nce loss eval: 0.055995
+# 6, step 3200-4000, lr: 5.000000e-04
+# 6, step 3200-4000, training time: 219.706
+---------------- evaluation finished ----------------
+Epoch: [3][750/1625]	Per Sample Total Time 0.52675	Per Sample Data Time 0.52297	Per Sample DNN Time 0.00377	Train Loss 6.1273	
+   >> MPG: 0.056, MPC: 3.093, MPMHB: 2.979
+Epoch: [3][850/1625]	Per Sample Total Time 0.00902	Per Sample Data Time 0.00536	Per Sample DNN Time 0.00366	Train Loss 5.9543	
+   >> MPG: 0.052, MPC: 3.194, MPMHB: 2.708
+Epoch: [3][950/1625]	Per Sample Total Time 0.00645	Per Sample Data Time 0.00278	Per Sample DNN Time 0.00367	Train Loss 6.0422	
+   >> MPG: 0.051, MPC: 3.297, MPMHB: 2.694
+Epoch: [3][1050/1625]	Per Sample Total Time 0.00558	Per Sample Data Time 0.00192	Per Sample DNN Time 0.00366	Train Loss 5.9740	
+   >> MPG: 0.056, MPC: 3.090, MPMHB: 2.828
+Epoch: [3][1150/1625]	Per Sample Total Time 0.00514	Per Sample Data Time 0.00148	Per Sample DNN Time 0.00366	Train Loss 5.9748	
+   >> MPG: 0.050, MPC: 3.217, MPMHB: 2.707
+Epoch: [3][1250/1625]	Per Sample Total Time 0.00488	Per Sample Data Time 0.00122	Per Sample DNN Time 0.00365	Train Loss 5.8949	
+   >> MPG: 0.051, MPC: 3.130, MPMHB: 2.714
+Epoch: [3][1350/1625]	Per Sample Total Time 0.00470	Per Sample Data Time 0.00105	Per Sample DNN Time 0.00365	Train Loss 5.8966	
+   >> MPG: 0.052, MPC: 3.117, MPMHB: 2.728
+Epoch: [3][1450/1625]	Per Sample Total Time 0.00458	Per Sample Data Time 0.00093	Per Sample DNN Time 0.00365	Train Loss 5.8128	
+   >> MPG: 0.050, MPC: 3.105, MPMHB: 2.658
+---------------- step 4800 evaluation ----------------
+masked acc train: 0.319063
+nce loss train: 5.940001
+masked acc eval: 0.330673
+nce loss eval: 0.053755
+# 7, step 4000-4800, lr: 5.000000e-04
+# 7, step 4000-4800, training time: 225.408
+---------------- evaluation finished ----------------
+Epoch: [3][1550/1625]	Per Sample Total Time 0.46302	Per Sample Data Time 0.45924	Per Sample DNN Time 0.00378	Train Loss 5.8795	
+   >> MPG: 0.049, MPC: 3.156, MPMHB: 2.674
+2026-01-27 13:34:03.003876
+Epoch: [4][25/1625]	Per Sample Total Time 0.00865	Per Sample Data Time 0.00501	Per Sample DNN Time 0.00365	Train Loss 5.8511	
+   >> MPG: 0.050, MPC: 3.065, MPMHB: 2.736
+Epoch: [4][125/1625]	Per Sample Total Time 0.00625	Per Sample Data Time 0.00261	Per Sample DNN Time 0.00365	Train Loss 5.8564	
+   >> MPG: 0.053, MPC: 3.064, MPMHB: 2.739
+Epoch: [4][225/1625]	Per Sample Total Time 0.00544	Per Sample Data Time 0.00180	Per Sample DNN Time 0.00364	Train Loss 5.7411	
+   >> MPG: 0.049, MPC: 3.007, MPMHB: 2.686
+Epoch: [4][325/1625]	Per Sample Total Time 0.00504	Per Sample Data Time 0.00139	Per Sample DNN Time 0.00364	Train Loss 5.8208	
+   >> MPG: 0.052, MPC: 3.056, MPMHB: 2.713
+Epoch: [4][425/1625]	Per Sample Total Time 0.00480	Per Sample Data Time 0.00115	Per Sample DNN Time 0.00365	Train Loss 5.7931	
+   >> MPG: 0.050, MPC: 3.099, MPMHB: 2.644
+Epoch: [4][525/1625]	Per Sample Total Time 0.00464	Per Sample Data Time 0.00099	Per Sample DNN Time 0.00365	Train Loss 5.7579	
+   >> MPG: 0.049, MPC: 3.027, MPMHB: 2.682
+Epoch: [4][625/1625]	Per Sample Total Time 0.00453	Per Sample Data Time 0.00087	Per Sample DNN Time 0.00365	Train Loss 5.7195	
+   >> MPG: 0.049, MPC: 3.008, MPMHB: 2.663
+---------------- step 5600 evaluation ----------------
+masked acc train: 0.341680
+nce loss train: 5.695743
+masked acc eval: 0.342973
+nce loss eval: 0.052366
+# 8, step 4800-5600, lr: 5.000000e-04
+# 8, step 4800-5600, training time: 209.712
+---------------- evaluation finished ----------------
+Epoch: [4][725/1625]	Per Sample Total Time 0.46711	Per Sample Data Time 0.46353	Per Sample DNN Time 0.00358	Train Loss 5.8075	
+   >> MPG: 0.050, MPC: 3.041, MPMHB: 2.716
+Epoch: [4][825/1625]	Per Sample Total Time 0.00844	Per Sample Data Time 0.00477	Per Sample DNN Time 0.00367	Train Loss 5.6904	
+   >> MPG: 0.050, MPC: 2.957, MPMHB: 2.683
+Epoch: [4][925/1625]	Per Sample Total Time 0.00614	Per Sample Data Time 0.00249	Per Sample DNN Time 0.00366	Train Loss 5.8007	
+   >> MPG: 0.047, MPC: 3.146, MPMHB: 2.608
+Epoch: [4][1025/1625]	Per Sample Total Time 0.00537	Per Sample Data Time 0.00172	Per Sample DNN Time 0.00365	Train Loss 5.6446	
+   >> MPG: 0.054, MPC: 2.785, MPMHB: 2.806
+Epoch: [4][1125/1625]	Per Sample Total Time 0.00498	Per Sample Data Time 0.00134	Per Sample DNN Time 0.00365	Train Loss 5.6209	
+   >> MPG: 0.050, MPC: 2.999, MPMHB: 2.571
+Epoch: [4][1225/1625]	Per Sample Total Time 0.00475	Per Sample Data Time 0.00111	Per Sample DNN Time 0.00365	Train Loss 5.6869	
+   >> MPG: 0.052, MPC: 3.011, MPMHB: 2.624
+Epoch: [4][1325/1625]	Per Sample Total Time 0.00460	Per Sample Data Time 0.00095	Per Sample DNN Time 0.00364	Train Loss 5.6211	
+   >> MPG: 0.050, MPC: 2.955, MPMHB: 2.616
+Epoch: [4][1425/1625]	Per Sample Total Time 0.00449	Per Sample Data Time 0.00084	Per Sample DNN Time 0.00365	Train Loss 5.7744	
+   >> MPG: 0.050, MPC: 2.877, MPMHB: 2.848
+---------------- step 6400 evaluation ----------------
+masked acc train: 0.346523
+nce loss train: 5.648783
+masked acc eval: 0.356119
+nce loss eval: 0.051195
+# 9, step 5600-6400, lr: 5.000000e-04
+# 9, step 5600-6400, training time: 228.722
+---------------- evaluation finished ----------------
+Epoch: [4][1525/1625]	Per Sample Total Time 0.51133	Per Sample Data Time 0.50785	Per Sample DNN Time 0.00348	Train Loss 5.6655	
+   >> MPG: 0.051, MPC: 2.927, MPMHB: 2.688
+2026-01-27 13:41:45.850550
+Epoch: [5][0/1625]	Per Sample Total Time 0.00911	Per Sample Data Time 0.00549	Per Sample DNN Time 0.00362	Train Loss 5.6222	
+   >> MPG: 0.047, MPC: 3.014, MPMHB: 2.561
+Epoch: [5][100/1625]	Per Sample Total Time 0.00649	Per Sample Data Time 0.00285	Per Sample DNN Time 0.00365	Train Loss 5.6581	
+   >> MPG: 0.049, MPC: 2.890, MPMHB: 2.719
+Epoch: [5][200/1625]	Per Sample Total Time 0.00560	Per Sample Data Time 0.00196	Per Sample DNN Time 0.00364	Train Loss 5.7200	
+   >> MPG: 0.051, MPC: 3.090, MPMHB: 2.579
+Epoch: [5][300/1625]	Per Sample Total Time 0.00516	Per Sample Data Time 0.00152	Per Sample DNN Time 0.00365	Train Loss 5.5397	
+   >> MPG: 0.047, MPC: 2.860, MPMHB: 2.632
+Epoch: [5][400/1625]	Per Sample Total Time 0.00490	Per Sample Data Time 0.00125	Per Sample DNN Time 0.00365	Train Loss 5.6463	
+   >> MPG: 0.049, MPC: 2.967, MPMHB: 2.630
+Epoch: [5][500/1625]	Per Sample Total Time 0.00472	Per Sample Data Time 0.00107	Per Sample DNN Time 0.00365	Train Loss 5.5299	
+   >> MPG: 0.049, MPC: 2.865, MPMHB: 2.617
+Epoch: [5][600/1625]	Per Sample Total Time 0.00459	Per Sample Data Time 0.00095	Per Sample DNN Time 0.00365	Train Loss 5.5646	
+   >> MPG: 0.046, MPC: 2.876, MPMHB: 2.642
+---------------- step 7200 evaluation ----------------
+masked acc train: 0.365039
+nce loss train: 5.578026
+masked acc eval: 0.367315
+nce loss eval: 0.050741
+# 10, step 6400-7200, lr: 5.000000e-04
+# 10, step 6400-7200, training time: 202.916
+---------------- evaluation finished ----------------
+Epoch: [5][700/1625]	Per Sample Total Time 0.46215	Per Sample Data Time 0.45843	Per Sample DNN Time 0.00371	Train Loss 5.5275	
+   >> MPG: 0.048, MPC: 2.818, MPMHB: 2.661
+Epoch: [5][800/1625]	Per Sample Total Time 0.00836	Per Sample Data Time 0.00472	Per Sample DNN Time 0.00364	Train Loss 5.5177	
+   >> MPG: 0.048, MPC: 2.906, MPMHB: 2.564
+Epoch: [5][900/1625]	Per Sample Total Time 0.00611	Per Sample Data Time 0.00246	Per Sample DNN Time 0.00365	Train Loss 5.4538	
+   >> MPG: 0.049, MPC: 2.804, MPMHB: 2.601
+Epoch: [5][1000/1625]	Per Sample Total Time 0.00535	Per Sample Data Time 0.00170	Per Sample DNN Time 0.00365	Train Loss 5.4668	
+   >> MPG: 0.047, MPC: 2.895, MPMHB: 2.525
+Epoch: [5][1100/1625]	Per Sample Total Time 0.00497	Per Sample Data Time 0.00132	Per Sample DNN Time 0.00365	Train Loss 5.5347	
+   >> MPG: 0.046, MPC: 2.866, MPMHB: 2.623
+Epoch: [5][1200/1625]	Per Sample Total Time 0.00475	Per Sample Data Time 0.00110	Per Sample DNN Time 0.00365	Train Loss 5.5414	
+   >> MPG: 0.048, MPC: 2.887, MPMHB: 2.607
+Epoch: [5][1300/1625]	Per Sample Total Time 0.00460	Per Sample Data Time 0.00094	Per Sample DNN Time 0.00365	Train Loss 5.5664	
+   >> MPG: 0.050, MPC: 2.761, MPMHB: 2.756
+Epoch: [5][1400/1625]	Per Sample Total Time 0.00448	Per Sample Data Time 0.00084	Per Sample DNN Time 0.00365	Train Loss 5.5345	
+   >> MPG: 0.047, MPC: 2.852, MPMHB: 2.635
+---------------- step 8000 evaluation ----------------
+masked acc train: 0.369961
+nce loss train: 5.610868
+masked acc eval: 0.373525
+nce loss eval: 0.049699
+# 11, step 7200-8000, lr: 5.000000e-04
+# 11, step 7200-8000, training time: 225.643
+---------------- evaluation finished ----------------
+Epoch: [5][1500/1625]	Per Sample Total Time 0.46545	Per Sample Data Time 0.46184	Per Sample DNN Time 0.00361	Train Loss 5.4745	
+   >> MPG: 0.047, MPC: 2.856, MPMHB: 2.572
+Epoch: [5][1600/1625]	Per Sample Total Time 0.00840	Per Sample Data Time 0.00476	Per Sample DNN Time 0.00364	Train Loss 5.4919	
+   >> MPG: 0.047, MPC: 2.824, MPMHB: 2.621
+2026-01-27 13:49:24.955056
+Epoch: [6][75/1625]	Per Sample Total Time 0.00627	Per Sample Data Time 0.00262	Per Sample DNN Time 0.00364	Train Loss 5.4444	
+   >> MPG: 0.049, MPC: 2.713, MPMHB: 2.682
+Epoch: [6][175/1625]	Per Sample Total Time 0.00545	Per Sample Data Time 0.00181	Per Sample DNN Time 0.00364	Train Loss 5.4968	
+   >> MPG: 0.045, MPC: 2.863, MPMHB: 2.589
+Epoch: [6][275/1625]	Per Sample Total Time 0.00504	Per Sample Data Time 0.00140	Per Sample DNN Time 0.00364	Train Loss 5.5622	
+   >> MPG: 0.050, MPC: 2.808, MPMHB: 2.705
+Epoch: [6][375/1625]	Per Sample Total Time 0.00481	Per Sample Data Time 0.00116	Per Sample DNN Time 0.00365	Train Loss 5.4115	
+   >> MPG: 0.045, MPC: 2.844, MPMHB: 2.523
+Epoch: [6][475/1625]	Per Sample Total Time 0.00464	Per Sample Data Time 0.00100	Per Sample DNN Time 0.00365	Train Loss 5.4860	
+   >> MPG: 0.048, MPC: 2.871, MPMHB: 2.567
+Epoch: [6][575/1625]	Per Sample Total Time 0.00453	Per Sample Data Time 0.00088	Per Sample DNN Time 0.00365	Train Loss 5.3862	
+   >> MPG: 0.047, MPC: 2.707, MPMHB: 2.632
+---------------- step 8800 evaluation ----------------
+masked acc train: 0.375898
+nce loss train: 5.430044
+masked acc eval: 0.382075
+nce loss eval: 0.049086
+# 12, step 8000-8800, lr: 5.000000e-04
+# 12, step 8000-8800, training time: 200.478
+---------------- evaluation finished ----------------
+Epoch: [6][675/1625]	Per Sample Total Time 0.51895	Per Sample Data Time 0.51516	Per Sample DNN Time 0.00379	Train Loss 5.3555	
+   >> MPG: 0.046, MPC: 2.769, MPMHB: 2.541
+Epoch: [6][775/1625]	Per Sample Total Time 0.00892	Per Sample Data Time 0.00528	Per Sample DNN Time 0.00363	Train Loss 5.4005	
+   >> MPG: 0.044, MPC: 2.916, MPMHB: 2.440
+Epoch: [6][875/1625]	Per Sample Total Time 0.00638	Per Sample Data Time 0.00274	Per Sample DNN Time 0.00364	Train Loss 5.4896	
+   >> MPG: 0.048, MPC: 2.811, MPMHB: 2.631
+Epoch: [6][975/1625]	Per Sample Total Time 0.00554	Per Sample Data Time 0.00189	Per Sample DNN Time 0.00364	Train Loss 5.3104	
+   >> MPG: 0.047, MPC: 2.730, MPMHB: 2.534
+Epoch: [6][1075/1625]	Per Sample Total Time 0.00511	Per Sample Data Time 0.00147	Per Sample DNN Time 0.00364	Train Loss 5.3722	
+   >> MPG: 0.048, MPC: 2.717, MPMHB: 2.607
+Epoch: [6][1175/1625]	Per Sample Total Time 0.00485	Per Sample Data Time 0.00121	Per Sample DNN Time 0.00364	Train Loss 5.4762	
+   >> MPG: 0.045, MPC: 2.853, MPMHB: 2.578
+Epoch: [6][1275/1625]	Per Sample Total Time 0.00468	Per Sample Data Time 0.00104	Per Sample DNN Time 0.00364	Train Loss 5.4205	
+   >> MPG: 0.048, MPC: 2.756, MPMHB: 2.616
+Epoch: [6][1375/1625]	Per Sample Total Time 0.00456	Per Sample Data Time 0.00092	Per Sample DNN Time 0.00365	Train Loss 5.4662	
+   >> MPG: 0.046, MPC: 2.866, MPMHB: 2.554
+---------------- step 9600 evaluation ----------------
+masked acc train: 0.391016
+nce loss train: 5.425954
+masked acc eval: 0.386773
+nce loss eval: 0.048458
+# 13, step 8800-9600, lr: 5.000000e-04
+# 13, step 8800-9600, training time: 225.759
+---------------- evaluation finished ----------------
+Epoch: [6][1475/1625]	Per Sample Total Time 0.46390	Per Sample Data Time 0.46035	Per Sample DNN Time 0.00355	Train Loss 5.3308	
+   >> MPG: 0.045, MPC: 2.835, MPMHB: 2.451
+Epoch: [6][1575/1625]	Per Sample Total Time 0.00841	Per Sample Data Time 0.00475	Per Sample DNN Time 0.00367	Train Loss 5.4222	
+   >> MPG: 0.048, MPC: 2.707, MPMHB: 2.667
+2026-01-27 13:57:07.962425
+Epoch: [7][50/1625]	Per Sample Total Time 0.00628	Per Sample Data Time 0.00262	Per Sample DNN Time 0.00366	Train Loss 5.3367	
+   >> MPG: 0.044, MPC: 2.848, MPMHB: 2.445
+Epoch: [7][150/1625]	Per Sample Total Time 0.00547	Per Sample Data Time 0.00181	Per Sample DNN Time 0.00366	Train Loss 5.3246	
+   >> MPG: 0.045, MPC: 2.719, MPMHB: 2.561
+Epoch: [7][250/1625]	Per Sample Total Time 0.00506	Per Sample Data Time 0.00140	Per Sample DNN Time 0.00366	Train Loss 5.3272	
+   >> MPG: 0.044, MPC: 2.859, MPMHB: 2.424
+Epoch: [7][350/1625]	Per Sample Total Time 0.00481	Per Sample Data Time 0.00116	Per Sample DNN Time 0.00365	Train Loss 5.4415	
+   >> MPG: 0.045, MPC: 2.867, MPMHB: 2.529
+Epoch: [7][450/1625]	Per Sample Total Time 0.00465	Per Sample Data Time 0.00100	Per Sample DNN Time 0.00365	Train Loss 5.3134	
+   >> MPG: 0.044, MPC: 2.796, MPMHB: 2.473
+Epoch: [7][550/1625]	Per Sample Total Time 0.00453	Per Sample Data Time 0.00088	Per Sample DNN Time 0.00364	Train Loss 5.5080	
+   >> MPG: 0.049, MPC: 2.849, MPMHB: 2.610
+---------------- step 10400 evaluation ----------------
+masked acc train: 0.405742
+nce loss train: 5.290521
+masked acc eval: 0.392131
+nce loss eval: 0.048048
+# 14, step 9600-10400, lr: 5.000000e-04
+# 14, step 9600-10400, training time: 190.703
+---------------- evaluation finished ----------------
+Epoch: [7][650/1625]	Per Sample Total Time 0.46513	Per Sample Data Time 0.46162	Per Sample DNN Time 0.00351	Train Loss 5.3113	
+   >> MPG: 0.046, MPC: 2.723, MPMHB: 2.542
+Epoch: [7][750/1625]	Per Sample Total Time 0.00839	Per Sample Data Time 0.00475	Per Sample DNN Time 0.00364	Train Loss 5.2932	
+   >> MPG: 0.047, MPC: 2.612, MPMHB: 2.635
+Epoch: [7][850/1625]	Per Sample Total Time 0.00613	Per Sample Data Time 0.00248	Per Sample DNN Time 0.00365	Train Loss 5.2707	
+   >> MPG: 0.047, MPC: 2.640, MPMHB: 2.584
+Epoch: [7][950/1625]	Per Sample Total Time 0.00536	Per Sample Data Time 0.00171	Per Sample DNN Time 0.00364	Train Loss 5.3305	
+   >> MPG: 0.043, MPC: 2.885, MPMHB: 2.402
+Epoch: [7][1050/1625]	Per Sample Total Time 0.00497	Per Sample Data Time 0.00133	Per Sample DNN Time 0.00364	Train Loss 5.3230	
+   >> MPG: 0.047, MPC: 2.743, MPMHB: 2.533
+Epoch: [7][1150/1625]	Per Sample Total Time 0.00475	Per Sample Data Time 0.00110	Per Sample DNN Time 0.00365	Train Loss 5.2240	
+   >> MPG: 0.045, MPC: 2.702, MPMHB: 2.477
+Epoch: [7][1250/1625]	Per Sample Total Time 0.00460	Per Sample Data Time 0.00095	Per Sample DNN Time 0.00365	Train Loss 5.2526	
+   >> MPG: 0.044, MPC: 2.766, MPMHB: 2.443
+Epoch: [7][1350/1625]	Per Sample Total Time 0.00449	Per Sample Data Time 0.00084	Per Sample DNN Time 0.00365	Train Loss 5.3021	
+   >> MPG: 0.045, MPC: 2.737, MPMHB: 2.521
+---------------- step 11200 evaluation ----------------
+masked acc train: 0.390898
+nce loss train: 5.357228
+masked acc eval: 0.397265
+nce loss eval: 0.047561
+# 15, step 10400-11200, lr: 5.000000e-04
+# 15, step 10400-11200, training time: 228.759
+---------------- evaluation finished ----------------
+Epoch: [7][1450/1625]	Per Sample Total Time 0.51217	Per Sample Data Time 0.50850	Per Sample DNN Time 0.00367	Train Loss 5.2908	
+   >> MPG: 0.047, MPC: 2.669, MPMHB: 2.575
+Epoch: [7][1550/1625]	Per Sample Total Time 0.00888	Per Sample Data Time 0.00522	Per Sample DNN Time 0.00365	Train Loss 5.2455	
+   >> MPG: 0.042, MPC: 2.778, MPMHB: 2.425
+2026-01-27 14:04:50.300612
+Epoch: [8][25/1625]	Per Sample Total Time 0.00654	Per Sample Data Time 0.00288	Per Sample DNN Time 0.00365	Train Loss 5.2344	
+   >> MPG: 0.047, MPC: 2.531, MPMHB: 2.657
+Epoch: [8][125/1625]	Per Sample Total Time 0.00562	Per Sample Data Time 0.00198	Per Sample DNN Time 0.00364	Train Loss 5.2717	
+   >> MPG: 0.045, MPC: 2.698, MPMHB: 2.528
+Epoch: [8][225/1625]	Per Sample Total Time 0.00517	Per Sample Data Time 0.00153	Per Sample DNN Time 0.00364	Train Loss 5.2837	
+   >> MPG: 0.048, MPC: 2.682, MPMHB: 2.554
+Epoch: [8][325/1625]	Per Sample Total Time 0.00490	Per Sample Data Time 0.00126	Per Sample DNN Time 0.00364	Train Loss 5.2556	
+   >> MPG: 0.045, MPC: 2.764, MPMHB: 2.447
+Epoch: [8][425/1625]	Per Sample Total Time 0.00472	Per Sample Data Time 0.00108	Per Sample DNN Time 0.00364	Train Loss 5.1281	
+   >> MPG: 0.047, MPC: 2.536, MPMHB: 2.545
+Epoch: [8][525/1625]	Per Sample Total Time 0.00459	Per Sample Data Time 0.00095	Per Sample DNN Time 0.00364	Train Loss 5.2467	
+   >> MPG: 0.044, MPC: 2.641, MPMHB: 2.561
+---------------- step 12000 evaluation ----------------
+masked acc train: 0.405898
+nce loss train: 5.106507
+masked acc eval: 0.400421
+nce loss eval: 0.047184
+# 16, step 11200-12000, lr: 5.000000e-04
+# 16, step 11200-12000, training time: 184.863
+---------------- evaluation finished ----------------
+Epoch: [8][625/1625]	Per Sample Total Time 0.47095	Per Sample Data Time 0.46718	Per Sample DNN Time 0.00377	Train Loss 5.2829	
+   >> MPG: 0.046, MPC: 2.657, MPMHB: 2.580
+Epoch: [8][725/1625]	Per Sample Total Time 0.00845	Per Sample Data Time 0.00481	Per Sample DNN Time 0.00364	Train Loss 5.3573	
+   >> MPG: 0.045, MPC: 2.773, MPMHB: 2.540
+Epoch: [8][825/1625]	Per Sample Total Time 0.00615	Per Sample Data Time 0.00251	Per Sample DNN Time 0.00364	Train Loss 5.2778	
+   >> MPG: 0.046, MPC: 2.686, MPMHB: 2.546
+Epoch: [8][925/1625]	Per Sample Total Time 0.00538	Per Sample Data Time 0.00174	Per Sample DNN Time 0.00365	Train Loss 5.2067	
+   >> MPG: 0.043, MPC: 2.727, MPMHB: 2.437
+Epoch: [8][1025/1625]	Per Sample Total Time 0.00499	Per Sample Data Time 0.00135	Per Sample DNN Time 0.00364	Train Loss 5.3385	
+   >> MPG: 0.048, MPC: 2.645, MPMHB: 2.646
+Epoch: [8][1125/1625]	Per Sample Total Time 0.00476	Per Sample Data Time 0.00112	Per Sample DNN Time 0.00364	Train Loss 5.1865	
+   >> MPG: 0.046, MPC: 2.654, MPMHB: 2.486
+Epoch: [8][1225/1625]	Per Sample Total Time 0.00460	Per Sample Data Time 0.00096	Per Sample DNN Time 0.00364	Train Loss 5.2824	
+   >> MPG: 0.044, MPC: 2.809, MPMHB: 2.429
+Epoch: [8][1325/1625]	Per Sample Total Time 0.00449	Per Sample Data Time 0.00085	Per Sample DNN Time 0.00364	Train Loss 5.2375	
+   >> MPG: 0.044, MPC: 2.742, MPMHB: 2.452
+---------------- step 12800 evaluation ----------------
+masked acc train: 0.395234
+nce loss train: 5.196608
+masked acc eval: 0.403679
+nce loss eval: 0.046927
+# 17, step 12000-12800, lr: 5.000000e-04
+# 17, step 12000-12800, training time: 225.435
+---------------- evaluation finished ----------------
+Epoch: [8][1425/1625]	Per Sample Total Time 0.46173	Per Sample Data Time 0.45802	Per Sample DNN Time 0.00371	Train Loss 5.1438	
+   >> MPG: 0.046, MPC: 2.581, MPMHB: 2.517
+Epoch: [8][1525/1625]	Per Sample Total Time 0.00839	Per Sample Data Time 0.00472	Per Sample DNN Time 0.00366	Train Loss 5.1147	
+   >> MPG: 0.043, MPC: 2.634, MPMHB: 2.437
+2026-01-27 14:12:29.481880
+Epoch: [9][0/1625]	Per Sample Total Time 0.00625	Per Sample Data Time 0.00262	Per Sample DNN Time 0.00363	Train Loss 5.1664	
+   >> MPG: 0.044, MPC: 2.626, MPMHB: 2.497
+Epoch: [9][100/1625]	Per Sample Total Time 0.00546	Per Sample Data Time 0.00181	Per Sample DNN Time 0.00365	Train Loss 5.1049	
+   >> MPG: 0.043, MPC: 2.661, MPMHB: 2.401
+Epoch: [9][200/1625]	Per Sample Total Time 0.00505	Per Sample Data Time 0.00140	Per Sample DNN Time 0.00365	Train Loss 5.1708	
+   >> MPG: 0.044, MPC: 2.588, MPMHB: 2.539
+Epoch: [9][300/1625]	Per Sample Total Time 0.00482	Per Sample Data Time 0.00116	Per Sample DNN Time 0.00366	Train Loss 5.2365	
+   >> MPG: 0.044, MPC: 2.793, MPMHB: 2.399
+Epoch: [9][400/1625]	Per Sample Total Time 0.00465	Per Sample Data Time 0.00100	Per Sample DNN Time 0.00366	Train Loss 5.1946	
+   >> MPG: 0.045, MPC: 2.721, MPMHB: 2.428
+Epoch: [9][500/1625]	Per Sample Total Time 0.00454	Per Sample Data Time 0.00088	Per Sample DNN Time 0.00365	Train Loss 5.1166	
+   >> MPG: 0.043, MPC: 2.658, MPMHB: 2.415
+---------------- step 13600 evaluation ----------------
+masked acc train: 0.396992
+nce loss train: 5.056383
+masked acc eval: 0.408278
+nce loss eval: 0.046433
+# 18, step 12800-13600, lr: 5.000000e-04
+# 18, step 12800-13600, training time: 182.365
+---------------- evaluation finished ----------------
+Epoch: [9][600/1625]	Per Sample Total Time 0.51402	Per Sample Data Time 0.51049	Per Sample DNN Time 0.00353	Train Loss 5.2016	
+   >> MPG: 0.043, MPC: 2.714, MPMHB: 2.445
+Epoch: [9][700/1625]	Per Sample Total Time 0.00893	Per Sample Data Time 0.00524	Per Sample DNN Time 0.00369	Train Loss 5.2686	
+   >> MPG: 0.046, MPC: 2.691, MPMHB: 2.531
+Epoch: [9][800/1625]	Per Sample Total Time 0.00639	Per Sample Data Time 0.00272	Per Sample DNN Time 0.00366	Train Loss 5.1958	
+   >> MPG: 0.043, MPC: 2.679, MPMHB: 2.473
+Epoch: [9][900/1625]	Per Sample Total Time 0.00553	Per Sample Data Time 0.00188	Per Sample DNN Time 0.00366	Train Loss 5.1057	
+   >> MPG: 0.045, MPC: 2.610, MPMHB: 2.450
+Epoch: [9][1000/1625]	Per Sample Total Time 0.00511	Per Sample Data Time 0.00146	Per Sample DNN Time 0.00365	Train Loss 5.2314	
+   >> MPG: 0.045, MPC: 2.637, MPMHB: 2.550
+Epoch: [9][1100/1625]	Per Sample Total Time 0.00485	Per Sample Data Time 0.00120	Per Sample DNN Time 0.00365	Train Loss 5.2112	
+   >> MPG: 0.044, MPC: 2.674, MPMHB: 2.493
+Epoch: [9][1200/1625]	Per Sample Total Time 0.00468	Per Sample Data Time 0.00103	Per Sample DNN Time 0.00365	Train Loss 5.1312	
+   >> MPG: 0.046, MPC: 2.557, MPMHB: 2.529
+Epoch: [9][1300/1625]	Per Sample Total Time 0.00456	Per Sample Data Time 0.00091	Per Sample DNN Time 0.00365	Train Loss 5.1233	
+   >> MPG: 0.044, MPC: 2.578, MPMHB: 2.501
+---------------- step 14400 evaluation ----------------
+masked acc train: 0.413086
+nce loss train: 5.117536
+masked acc eval: 0.410972
+nce loss eval: 0.046360
+# 19, step 13600-14400, lr: 5.000000e-04
+# 19, step 13600-14400, training time: 225.445
+---------------- evaluation finished ----------------
+Epoch: [9][1400/1625]	Per Sample Total Time 0.46119	Per Sample Data Time 0.45772	Per Sample DNN Time 0.00348	Train Loss 5.1405	
+   >> MPG: 0.044, MPC: 2.645, MPMHB: 2.451
+Epoch: [9][1500/1625]	Per Sample Total Time 0.00834	Per Sample Data Time 0.00472	Per Sample DNN Time 0.00363	Train Loss 5.2268	
+   >> MPG: 0.045, MPC: 2.698, MPMHB: 2.484
+Epoch: [9][1600/1625]	Per Sample Total Time 0.00609	Per Sample Data Time 0.00246	Per Sample DNN Time 0.00363	Train Loss 5.0824	
+   >> MPG: 0.047, MPC: 2.553, MPMHB: 2.482
+2026-01-27 14:20:12.097381
+Epoch: [10][75/1625]	Per Sample Total Time 0.00544	Per Sample Data Time 0.00180	Per Sample DNN Time 0.00364	Train Loss 5.1072	
+   >> MPG: 0.042, MPC: 2.652, MPMHB: 2.413
+Epoch: [10][175/1625]	Per Sample Total Time 0.00503	Per Sample Data Time 0.00140	Per Sample DNN Time 0.00364	Train Loss 5.0867	
+   >> MPG: 0.043, MPC: 2.695, MPMHB: 2.349
+Epoch: [10][275/1625]	Per Sample Total Time 0.00480	Per Sample Data Time 0.00116	Per Sample DNN Time 0.00364	Train Loss 5.1619	
+   >> MPG: 0.046, MPC: 2.581, MPMHB: 2.535
+Epoch: [10][375/1625]	Per Sample Total Time 0.00464	Per Sample Data Time 0.00099	Per Sample DNN Time 0.00365	Train Loss 5.0830	
+   >> MPG: 0.044, MPC: 2.572, MPMHB: 2.468
+Epoch: [10][475/1625]	Per Sample Total Time 0.00452	Per Sample Data Time 0.00088	Per Sample DNN Time 0.00364	Train Loss 5.0982	
+   >> MPG: 0.042, MPC: 2.621, MPMHB: 2.436
+---------------- step 15200 evaluation ----------------
+masked acc train: 0.412109
+nce loss train: 5.092678
+masked acc eval: 0.413772
+nce loss eval: 0.045773
+# 20, step 14400-15200, lr: 5.000000e-04
+# 20, step 14400-15200, training time: 176.035
+---------------- evaluation finished ----------------
+Epoch: [10][575/1625]	Per Sample Total Time 0.51591	Per Sample Data Time 0.51236	Per Sample DNN Time 0.00355	Train Loss 5.1739	
+   >> MPG: 0.040, MPC: 2.838, MPMHB: 2.296
+Epoch: [10][675/1625]	Per Sample Total Time 0.00890	Per Sample Data Time 0.00526	Per Sample DNN Time 0.00364	Train Loss 5.2164	
+   >> MPG: 0.044, MPC: 2.594, MPMHB: 2.578
+Epoch: [10][775/1625]	Per Sample Total Time 0.00641	Per Sample Data Time 0.00273	Per Sample DNN Time 0.00368	Train Loss 5.0637	
+   >> MPG: 0.043, MPC: 2.605, MPMHB: 2.415
+Epoch: [10][875/1625]	Per Sample Total Time 0.00555	Per Sample Data Time 0.00189	Per Sample DNN Time 0.00366	Train Loss 5.1234	
+   >> MPG: 0.044, MPC: 2.588, MPMHB: 2.491
+Epoch: [10][975/1625]	Per Sample Total Time 0.00512	Per Sample Data Time 0.00146	Per Sample DNN Time 0.00366	Train Loss 5.1132	
+   >> MPG: 0.046, MPC: 2.473, MPMHB: 2.595
+Epoch: [10][1075/1625]	Per Sample Total Time 0.00486	Per Sample Data Time 0.00120	Per Sample DNN Time 0.00366	Train Loss 5.0505	
+   >> MPG: 0.044, MPC: 2.543, MPMHB: 2.463
+Epoch: [10][1175/1625]	Per Sample Total Time 0.00469	Per Sample Data Time 0.00103	Per Sample DNN Time 0.00365	Train Loss 5.2024	
+   >> MPG: 0.044, MPC: 2.662, MPMHB: 2.496
+Epoch: [10][1275/1625]	Per Sample Total Time 0.00456	Per Sample Data Time 0.00091	Per Sample DNN Time 0.00365	Train Loss 4.9916	
+   >> MPG: 0.044, MPC: 2.575, MPMHB: 2.373
+---------------- step 16000 evaluation ----------------
+masked acc train: 0.409453
+nce loss train: 5.212140
+masked acc eval: 0.415928
+nce loss eval: 0.045737
+# 21, step 15200-16000, lr: 5.000000e-04
+# 21, step 15200-16000, training time: 231.978
+---------------- evaluation finished ----------------
+Epoch: [10][1375/1625]	Per Sample Total Time 0.55455	Per Sample Data Time 0.55096	Per Sample DNN Time 0.00359	Train Loss 5.0859	
+   >> MPG: 0.044, MPC: 2.476, MPMHB: 2.566
+Epoch: [10][1475/1625]	Per Sample Total Time 0.00930	Per Sample Data Time 0.00564	Per Sample DNN Time 0.00366	Train Loss 5.0605	
+   >> MPG: 0.044, MPC: 2.474, MPMHB: 2.542
+Epoch: [10][1575/1625]	Per Sample Total Time 0.00658	Per Sample Data Time 0.00292	Per Sample DNN Time 0.00366	Train Loss 5.1455	
+   >> MPG: 0.043, MPC: 2.599, MPMHB: 2.503

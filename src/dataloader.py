@@ -19,11 +19,14 @@ import random
 def make_index_dict(label_csv):
     index_lookup = {}
     with open(label_csv, 'r') as f:
+        # Check if it's a simple vocab json (ASR) or a CSV (Classification)
+        if label_csv.endswith('.json'):
+            vocab = json.load(f)
+            return vocab
+            
         csv_reader = csv.DictReader(f)
-        line_count = 0
         for row in csv_reader:
             index_lookup[row['mid']] = row['index']
-            line_count += 1
     return index_lookup
 
 def make_name_dict(label_csv):
@@ -64,7 +67,9 @@ class AudioDataset(Dataset):
 
         self.data = data_json['data']
         self.audio_conf = audio_conf
+        
         print('---------------the {:s} dataloader---------------'.format(self.audio_conf.get('mode')))
+        
         self.melbins = self.audio_conf.get('num_mel_bins')
         self.freqm = self.audio_conf.get('freqm')
         self.timem = self.audio_conf.get('timem')
@@ -78,21 +83,34 @@ class AudioDataset(Dataset):
         self.norm_std = self.audio_conf.get('std')
         # skip_norm is a flag that if you want to skip normalization to compute the normalization stats using src/get_norm_stats.py, if Ture, input normalization will be skipped for correctly calculating the stats.
         # set it as True ONLY when you are getting the normalization stats.
-        self.skip_norm = self.audio_conf.get('skip_norm') if self.audio_conf.get('skip_norm') else False
+        self.skip_norm = self.audio_conf.get('skip_norm', False)
+        
         if self.skip_norm:
             print('now skip normalization (use it ONLY when you are computing the normalization stats).')
         else:
             print('use dataset mean {:.3f} and std {:.3f} to normalize the input.'.format(self.norm_mean, self.norm_std))
         # if add noise for data augmentation
-        self.noise = self.audio_conf.get('noise')
+        self.noise = self.audio_conf.get('noise', False)
         if self.noise == True:
             print('now use noise augmentation')
-
-        self.index_dict = make_index_dict(label_csv)
-        self.label_num = len(self.index_dict)
-        print('number of classes is {:d}'.format(self.label_num))
+            
+        # Determine Task Type based on labels
+        # ASR uses 'vocab.json', Classification uses 'class_labels_indices.csv'
+        if label_csv and label_csv.endswith('.json'):
+            print('ASR task detected. Using vocab from {:s}'.format(label_csv))
+            self.task_type = "ASR"
+            self.vocab = make_index_dict(label_csv)
+            # Ensure space has a unique index
+            max_idx = max(self.vocab.values()) if self.vocab else 0
+            self.space_idx = self.vocab.get("<space>", max_idx + 2)
+        else:
+            print('Classification task detected. Using labels from {:s}'.format(label_csv))
+            self.task_type = "CLS"
+            self.index_dict = make_index_dict(label_csv)
+            self.label_num = len(self.index_dict)
+            print('number of classes is {:d}'.format(self.label_num))
         
-        # Initialize Cluster ID Storage for MelHuBERT loss
+        # Initialize Cluster ID Storage for MelHuBERT loss during pretraining
         self.cluster_ids = None 
         self.use_cluster_labels = False
         
@@ -129,7 +147,8 @@ class AudioDataset(Dataset):
         model.eval()
         
         with torch.no_grad():
-            for i, (fbank, _, _) in enumerate(temp_loader):
+            for i, batch in enumerate(temp_loader):
+                fbank = batch[0]
                 fbank = fbank.to(device)
                 # Ensure input shape is [B, 1, F, T] for AST
                 if fbank.dim() == 3:
@@ -149,26 +168,22 @@ class AudioDataset(Dataset):
         # Restore original augmentation settings
         self.mixup = original_mixup
         self.noise = self.audio_conf.get('noise')
-        self.mixup = original_mixup
-        self.noise = self.audio_conf.get('noise')
         self.freqm = original_freqm
         self.timem = original_timem
         
         print(f"Finished labeling. Stored IDs shape: {self.cluster_ids.shape}")
 
     def _wav2fbank(self, filename, filename2=None):
-        # mixup
-        if filename2 == None:
-            waveform, sr = torchaudio.load(filename)
-            waveform = waveform - waveform.mean()
-        # mixup
-        else:
-            waveform1, sr = torchaudio.load(filename)
+        waveform, sr = torchaudio.load(filename)
+        waveform = waveform - waveform.mean()
+        
+        mix_lambda = 0.0
+        if filename2:
+            waveform1 = waveform
             waveform2, _ = torchaudio.load(filename2)
-
-            waveform1 = waveform1 - waveform1.mean()
             waveform2 = waveform2 - waveform2.mean()
-
+            
+            # Match lengths
             if waveform1.shape[1] != waveform2.shape[1]:
                 if waveform1.shape[1] > waveform2.shape[1]:
                     # padding
@@ -177,19 +192,21 @@ class AudioDataset(Dataset):
                     waveform2 = temp_wav
                 else:
                     # cutting
-                    waveform2 = waveform2[0, 0:waveform1.shape[1]]
-
+                    waveform2 = waveform2[:, 0:waveform1.shape[1]]
+                
             # sample lambda from uniform distribution
             #mix_lambda = random.random()
             # sample lambda from beta distribtion
             mix_lambda = np.random.beta(10, 10)
-
-            mix_waveform = mix_lambda * waveform1 + (1 - mix_lambda) * waveform2
-            waveform = mix_waveform - mix_waveform.mean()
+            waveform = mix_lambda * waveform1 + (1 - mix_lambda) * waveform2
+            waveform = waveform - waveform.mean()
 
         fbank = torchaudio.compliance.kaldi.fbank(waveform, htk_compat=True, sample_frequency=sr, use_energy=False,
                                                   window_type='hanning', num_mel_bins=self.melbins, dither=0.0, frame_shift=10)
-
+        # Normalize
+        if not self.skip_norm:
+            fbank = (fbank - self.norm_mean) / (self.norm_std * 2)
+            
         target_length = self.audio_conf.get('target_length')
         n_frames = fbank.shape[0]
 
@@ -197,16 +214,24 @@ class AudioDataset(Dataset):
 
         # cut and pad
         if p > 0:
-            m = torch.nn.ZeroPad2d((0, 0, 0, p))
-            fbank = m(fbank)
+            fbank = torch.nn.functional.pad(fbank, (0, 0, 0, p))
+            valid_length = n_frames
         elif p < 0:
             fbank = fbank[0:target_length, :]
-
-        if filename2 == None:
-            return fbank, 0
+            valid_length = target_length
         else:
-            return fbank, mix_lambda
+            valid_length = n_frames
 
+        return fbank, mix_lambda, valid_length
+
+    def text_to_tensor(self, text):
+        indices = []
+        for c in text:
+            if c == " ": indices.append(self.space_idx)
+            elif c in self.vocab: indices.append(self.vocab[c])
+        # Changed: Updated to modern tensor constructor
+        return torch.tensor(indices, dtype=torch.long)
+    
     def __getitem__(self, index):
         """
         returns: image, audio, nframes
@@ -214,76 +239,106 @@ class AudioDataset(Dataset):
         audio is a FloatTensor of size (N_freq, N_frames) for spectrogram, or (N_frames) for waveform
         nframes is an integer
         """
-        # do mix-up for this sample (controlled by the given mixup rate)
-        if random.random() < self.mixup:
-            datum = self.data[index]
-            # find another sample to mix, also do balance sampling
-            # sample the other sample from the multinomial distribution, will make the performance worse
-            # mix_sample_idx = np.random.choice(len(self.data), p=self.sample_weight_file)
-            # sample the other sample from the uniform distribution
-            mix_sample_idx = random.randint(0, len(self.data)-1)
-            mix_datum = self.data[mix_sample_idx]
-            # get the mixed fbank
-            fbank, mix_lambda = self._wav2fbank(datum['wav'], mix_datum['wav'])
-            # initialize the label
-            label_indices = np.zeros(self.label_num)
-            # add sample 1 labels
-            for label_str in datum['labels'].split(','):
-                label_indices[int(self.index_dict[label_str])] += mix_lambda
-            # add sample 2 labels
-            for label_str in mix_datum['labels'].split(','):
-                label_indices[int(self.index_dict[label_str])] += (1.0-mix_lambda)
-            label_indices = torch.FloatTensor(label_indices)
-        # if not do mixup
-        else:
-            datum = self.data[index]
-            label_indices = np.zeros(self.label_num)
-            fbank, mix_lambda = self._wav2fbank(datum['wav'])
-            for label_str in datum['labels'].split(','):
-                label_indices[int(self.index_dict[label_str])] = 1.0
-
-            label_indices = torch.FloatTensor(label_indices)
-
-        # SpecAug, not do for eval set
-        freqm = torchaudio.transforms.FrequencyMasking(self.freqm)
-        timem = torchaudio.transforms.TimeMasking(self.timem)
-        fbank = torch.transpose(fbank, 0, 1)
-        # this is just to satisfy new torchaudio version.
-        fbank = fbank.unsqueeze(0)
-        if self.freqm != 0:
-            fbank = freqm(fbank)
-        if self.timem != 0:
-            fbank = timem(fbank)
-        # squeeze back
-        fbank = fbank.squeeze(0)
-        fbank = torch.transpose(fbank, 0, 1)
-
-        # normalize the input for both training and test
-        if not self.skip_norm:
-            fbank = (fbank - self.norm_mean) / (self.norm_std * 2)
-        # skip normalization the input if you are trying to get the normalization stats.
-        else:
-            pass
-
-        if self.noise == True:
-            fbank = fbank + torch.rand(fbank.shape[0], fbank.shape[1]) * np.random.rand() / 10
-            if not self.use_cluster_labels:
-                # Only apply roll when not using cluster labels to ensure consistency as cluster labels are precomputed
-                fbank = torch.roll(fbank, np.random.randint(-10, 10), 0)
-            else:
-                print("Warning: Noise augmentation is enabled but cluster labels are being used. Disabled torch.roll but keeps additive noise.")
+        datum = self.data[index]
+        
+        if self.task_type == "ASR":
+            # No Mixup for ASR
+            # Changed: Fixed unpacking error (3 values returned)
+            fbank, _, valid_len = self._wav2fbank(datum['wav'])
             
-        # Get pre-computed cluster ID if available
-        cluster_target = -1 # Default placeholder
-        if self.use_cluster_labels and self.cluster_ids is not None:
-            # We map the index directly. Note: if mixup is active, this ID corresponds 
-            # to the primary sample. Standard HuBERT does not mixup targets.
-            cluster_target = self.cluster_ids[index]
-            if self.mixup > 0:
-                print("Warning: Mixup is enabled but cluster targets correspond only to primary samples.")
+            # SpecAugment
+            if self.freqm > 0:
+                fbank = torchaudio.transforms.FrequencyMasking(self.freqm)(fbank.unsqueeze(0).transpose(1,2)).transpose(1,2).squeeze(0)
+            if self.timem > 0:
+                fbank = torchaudio.transforms.TimeMasking(self.timem)(fbank.unsqueeze(0).transpose(1,2)).transpose(1,2).squeeze(0)
 
-        # the output fbank shape is [time_frame_num, frequency_bins], e.g., [1024, 128]
-        return fbank, label_indices, cluster_target
+            # Label Processing
+            label_tensor = self.text_to_tensor(datum['labels'])
+            
+            # Pad Labels for Batching
+            max_label_len = 400
+            label_len = len(label_tensor)
+            if label_len > max_label_len:
+                label_tensor = label_tensor[:max_label_len]
+                label_len = max_label_len
+            padded_label = torch.full((max_label_len,), 0, dtype=torch.long)
+            padded_label[:label_len] = label_tensor
+
+            return fbank, padded_label, valid_len, label_len
+        
+        # Classification Task with optional Mixup
+        else:
+            # do mix-up for this sample (controlled by the given mixup rate)
+            if random.random() < self.mixup:
+                datum = self.data[index]
+                # find another sample to mix, also do balance sampling
+                # sample the other sample from the multinomial distribution, will make the performance worse
+                # mix_sample_idx = np.random.choice(len(self.data), p=self.sample_weight_file)
+                # sample the other sample from the uniform distribution
+                mix_sample_idx = random.randint(0, len(self.data)-1)
+                mix_datum = self.data[mix_sample_idx]
+                # get the mixed fbank
+                # Changed: Fixed unpacking error (3 values returned)
+                fbank, mix_lambda, _ = self._wav2fbank(datum['wav'], mix_datum['wav'])
+                # initialize the label
+                label_indices = np.zeros(self.label_num)
+                # add sample 1 labels
+                for label_str in datum['labels'].split(','):
+                    label_indices[int(self.index_dict[label_str])] += mix_lambda
+                # add sample 2 labels
+                for label_str in mix_datum['labels'].split(','):
+                    label_indices[int(self.index_dict[label_str])] += (1.0-mix_lambda)
+                # Changed: Updated to modern tensor constructor
+                label_indices = torch.tensor(label_indices, dtype=torch.float32)
+            # if not do mixup
+            else:
+                datum = self.data[index]
+                label_indices = np.zeros(self.label_num)
+                # Changed: Fixed unpacking error (3 values returned)
+                fbank, mix_lambda, _ = self._wav2fbank(datum['wav'])
+                for label_str in datum['labels'].split(','):
+                    label_indices[int(self.index_dict[label_str])] = 1.0
+
+                # Changed: Updated to modern tensor constructor
+                label_indices = torch.tensor(label_indices, dtype=torch.float32)
+
+            # SpecAug, not do for eval set
+            freqm = torchaudio.transforms.FrequencyMasking(self.freqm)
+            timem = torchaudio.transforms.TimeMasking(self.timem)
+            fbank = torch.transpose(fbank, 0, 1)
+            # this is just to satisfy new torchaudio version.
+            fbank = fbank.unsqueeze(0)
+            if self.freqm != 0:
+                fbank = freqm(fbank)
+            if self.timem != 0:
+                fbank = timem(fbank)
+            # squeeze back
+            fbank = fbank.squeeze(0)
+            fbank = torch.transpose(fbank, 0, 1)
+
+            # normalize the input for both training and test
+            # NOTE: normalization is already applied inside _wav2fbank(),
+            # so we do NOT normalize again here.
+
+            if self.noise == True:
+                fbank = fbank + torch.rand(fbank.shape[0], fbank.shape[1]) * np.random.rand() / 10
+                if not self.use_cluster_labels:
+                    # Only apply roll when not using cluster labels to ensure consistency as cluster labels are precomputed
+                    fbank = torch.roll(fbank, np.random.randint(-10, 10), 0)
+                else:
+                    print("Warning: Noise augmentation is enabled but cluster labels are being used. Disabled torch.roll but keeps additive noise.")
+                
+            # Get pre-computed cluster ID if available
+            cluster_target = -1 # Default placeholder
+            if self.use_cluster_labels and self.cluster_ids is not None:
+                # We map the index directly. Note: if mixup is active, this ID corresponds 
+                # to the primary sample. Standard HuBERT does not mixup targets.
+                cluster_target = self.cluster_ids[index]
+                if self.mixup > 0:
+                    print("Warning: Mixup is enabled but cluster targets correspond only to primary samples.")
+
+            # the output fbank shape is [time_frame_num, frequency_bins], e.g., [1024, 128]
+            return fbank, label_indices, cluster_target
 
     def __len__(self):
         return len(self.data)

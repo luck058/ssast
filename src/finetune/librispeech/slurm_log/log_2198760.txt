@@ -1,0 +1,90 @@
++ . /home/htang2/toolchain-20251006/toolchain.rc
+++ ROOT=/home/htang2/toolchain-20251006
+++ export PATH=/home/htang2/toolchain-20251006/bin:/home/htang2/toolchain-20251006/opt/cuda/bin:/usr/games:/usr/local/games:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+++ PATH=/home/htang2/toolchain-20251006/bin:/home/htang2/toolchain-20251006/opt/cuda/bin:/usr/games:/usr/local/games:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+++ export LD_LIBRARY_PATH=/home/htang2/toolchain-20251006/lib:/home/htang2/toolchain-20251006/lib64:/home/htang2/toolchain-20251006/opt/cuda/lib:/home/htang2/toolchain-20251006/opt/cuda/lib64:/home/htang2/toolchain-20251006/opt/cuda/extras/CUPTI/lib64:
+++ LD_LIBRARY_PATH=/home/htang2/toolchain-20251006/lib:/home/htang2/toolchain-20251006/lib64:/home/htang2/toolchain-20251006/opt/cuda/lib:/home/htang2/toolchain-20251006/opt/cuda/lib64:/home/htang2/toolchain-20251006/opt/cuda/extras/CUPTI/lib64:
++ source ../../../venvssast/bin/activate
+++ deactivate nondestructive
+++ '[' -n '' ']'
+++ '[' -n '' ']'
+++ hash -r
+++ '[' -n '' ']'
+++ unset VIRTUAL_ENV
+++ unset VIRTUAL_ENV_PROMPT
+++ '[' '!' nondestructive = nondestructive ']'
+++ '[' linux-gnu = cygwin ']'
+++ '[' linux-gnu = msys ']'
+++ export VIRTUAL_ENV=/home/s2283874/ssast/venvssast
+++ VIRTUAL_ENV=/home/s2283874/ssast/venvssast
+++ _OLD_VIRTUAL_PATH=/home/htang2/toolchain-20251006/bin:/home/htang2/toolchain-20251006/opt/cuda/bin:/usr/games:/usr/local/games:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+++ PATH=/home/s2283874/ssast/venvssast/bin:/home/htang2/toolchain-20251006/bin:/home/htang2/toolchain-20251006/opt/cuda/bin:/usr/games:/usr/local/games:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+++ export PATH
+++ '[' -n '' ']'
+++ '[' -z '' ']'
+++ _OLD_VIRTUAL_PS1=
+++ PS1='(venvssast) '
+++ export PS1
+++ VIRTUAL_ENV_PROMPT='(venvssast) '
+++ export VIRTUAL_ENV_PROMPT
+++ hash -r
++ export TORCH_HOME=../../pretrained_models
++ TORCH_HOME=../../pretrained_models
++ mkdir -p ./exp
++ mkdir -p ./slurm_log
++ SOURCE_TAR=/home/s2283874/ssast/src/prep_data/librispeech/train-clean-100.tar.gz
++ SCRATCH_ROOT=/disk/scratch/s2283874/librispeech100
++ echo 'Source: /home/s2283874/ssast/src/prep_data/librispeech/train-clean-100.tar.gz'
+Source: /home/s2283874/ssast/src/prep_data/librispeech/train-clean-100.tar.gz
++ echo 'Scratch Target: /disk/scratch/s2283874/librispeech100'
+Scratch Target: /disk/scratch/s2283874/librispeech100
++ '[' -d /disk/scratch/s2283874/librispeech100/LibriSpeech ']'
++ echo 'Data directory /disk/scratch/s2283874/librispeech100/LibriSpeech already exists. Skipping unzip.'
+Data directory /disk/scratch/s2283874/librispeech100/LibriSpeech already exists. Skipping unzip.
++ echo 'Generating JSON files and Label CSV...'
+Generating JSON files and Label CSV...
++ python prep_ls.py --dataset_path /disk/scratch/s2283874/librispeech100/LibriSpeech
+Traceback (most recent call last):
+  File "/home/s2283874/ssast/src/finetune/librispeech/prep_ls.py", line 8, in <module>
+    import torchaudio
+ModuleNotFoundError: No module named 'torchaudio'
++ pretrain_exp=./../../pretrain/exp/
++ pretrain_model=mask01-tiny-f128-t2-b64-lr5e-4-m400-e75-pretrain_mpmhb-librispeech360-mpmhb0.0-mpg0.0-mpc1.0
++ pretrain_path=././../../pretrain/exp//mask01-tiny-f128-t2-b64-lr5e-4-m400-e75-pretrain_mpmhb-librispeech360-mpmhb0.0-mpg0.0-mpc1.0/models/best_audio_model.pth
++ '[' '!' -f ././../../pretrain/exp//mask01-tiny-f128-t2-b64-lr5e-4-m400-e75-pretrain_mpmhb-librispeech360-mpmhb0.0-mpg0.0-mpc1.0/models/best_audio_model.pth ']'
++ dataset=librispeech
++ dataset_mean=-4.2677393
++ dataset_std=4.5689974
++ target_length=1024
++ noise=False
++ tr_data=./data/datafiles/librispeech_train_data.json
++ val_data=./data/datafiles/librispeech_validation_data.json
++ eval_data=./data/datafiles/librispeech_eval_data.json
++ label_csv=./data/datafiles/vocab.json
++ bal=none
++ lr=1e-4
++ freqm=48
++ timem=48
++ mixup=0.5
++ epoch=30
++ batch_size=24
++ fshape=128
++ tshape=2
++ fstride=10
++ tstride=10
++ task=ft_asr
++ model_size=tiny
++ head_lr=10
+++ python -c 'import json; print(len(json.load(open('\''./data/datafiles/vocab.json'\''))))'
++ n_class=29
++ echo 'Detected 29 classes (vocab size).'
+Detected 29 classes (vocab size).
++ exp_dir=./exp/test-ls100-f10-t10-b24-lr1e-4-ft_asr-tiny-noiseFalse
++ echo 'Starting Training...'
+Starting Training...
++ CUDA_CACHE_DISABLE=1
++ python -W ignore ../../run.py --dataset librispeech --data-train ./data/datafiles/librispeech_train_data.json --data-val ./data/datafiles/librispeech_validation_data.json --data-eval ./data/datafiles/librispeech_eval_data.json --exp-dir ./exp/test-ls100-f10-t10-b24-lr1e-4-ft_asr-tiny-noiseFalse --label-csv ./data/datafiles/vocab.json --n_class 29 --lr 1e-4 --n-epochs 30 --batch-size 24 --save_model True --freqm 48 --timem 48 --mixup 0.5 --bal none --tstride 10 --fstride 10 --fshape 128 --tshape 2 --warmup True --task ft_asr --model_size tiny --adaptschedule True --pretrained_mdl_path ././../../pretrain/exp//mask01-tiny-f128-t2-b64-lr5e-4-m400-e75-pretrain_mpmhb-librispeech360-mpmhb0.0-mpg0.0-mpc1.0/models/best_audio_model.pth --dataset_mean -4.2677393 --dataset_std 4.5689974 --target_length 1024 --num_mel_bins 128 --head_lr 10 --noise False --lrscheduler_start 5 --lrscheduler_step 1 --lrscheduler_decay 0.85 --wa False --loss CTC --metrics wer
+Traceback (most recent call last):
+  File "/home/s2283874/ssast/src/finetune/librispeech/../../run.py", line 14, in <module>
+    import torch
+ModuleNotFoundError: No module named 'torch'

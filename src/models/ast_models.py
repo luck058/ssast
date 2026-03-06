@@ -12,7 +12,6 @@ import torch
 import sys
 sys.path.append("/data/sls/scratch/yuangong/aed-trans/src/models/")
 sys.path.append("/data/sls/scratch/yuangong/aed-trans/src/")
-from timm.models.layers import trunc_normal_
 import timm
 import numpy as np
 from timm.models.layers import to_2tuple
@@ -21,23 +20,42 @@ from matplotlib import pyplot as plt
 import random
 from torch.nn import functional as F
 
+try:
+    # timm >= 0.9.x moves layers to timm.layers
+    from timm.layers import trunc_normal_, PatchEmbed
+except ImportError:
+    # timm < 0.9.x keeps them in timm.models.layers
+    from timm.models.layers import trunc_normal_
+    try:
+        from timm.models.layers import PatchEmbed
+    except ImportError:
+        # Fallback for very old timm versions
+        from timm.models.vision_transformer import PatchEmbed
+# -----------------------------------------------
+
 # override the timm package to relax the input shape constraint.
 class PatchEmbed(nn.Module):
     """ Image to Patch Embedding
     """
-    def __init__(self, img_size=224, patch_size=16, in_chans=3, embed_dim=768):
+    def __init__(self, img_size=224, patch_size=16, in_chans=3, embed_dim=768, norm_layer=None, flatten=True, **kwargs):
         super().__init__()
         img_size = to_2tuple(img_size)
         patch_size = to_2tuple(patch_size)
-        num_patches = (img_size[1] // patch_size[1]) * (img_size[0] // patch_size[0])
         self.img_size = img_size
         self.patch_size = patch_size
-        self.num_patches = num_patches
+        self.grid_size = (img_size[0] // patch_size[0], img_size[1] // patch_size[1])
+        self.num_patches = self.grid_size[0] * self.grid_size[1]
+        self.flatten = flatten
 
         self.proj = nn.Conv2d(in_chans, embed_dim, kernel_size=patch_size, stride=patch_size)
-
+        self.norm = norm_layer(embed_dim) if norm_layer else nn.Identity()
+        
     def forward(self, x):
-        x = self.proj(x).flatten(2).transpose(1, 2)
+        # B, C, H, W = x.shape
+        x = self.proj(x)
+        if self.flatten:
+            x = x.flatten(2).transpose(1, 2) # BCHW -> BNC
+        x = self.norm(x)
         return x
 
 def get_sinusoid_encoding(n_position, d_hid):
@@ -57,13 +75,17 @@ class ASTModel(nn.Module):
                  fshape=128, tshape=2, fstride=128, tstride=2,
                  input_fdim=128, input_tdim=1024, model_size='base',
                  pretrain_stage=True, load_pretrained_mdl_path=None,
-                 num_clusters=512, target_layer_idx=6):
+                 num_clusters=512, target_layer_idx=6, vocab_size=30):
 
         super(ASTModel, self).__init__()
-        assert timm.__version__ == '0.4.5', 'Please use timm == 0.4.5, the code might not be compatible with newer versions.'
-
         # override timm input shape restriction
-        timm.models.vision_transformer.PatchEmbed = PatchEmbed
+        if hasattr(timm.models.vision_transformer, 'PatchEmbed'):
+            timm.models.vision_transformer.PatchEmbed = PatchEmbed
+        
+        # Update timm.layers if it exists (timm >= 0.9.x)
+        if hasattr(timm, 'layers') and hasattr(timm.layers, 'PatchEmbed'):
+            timm.layers.PatchEmbed = PatchEmbed
+        # -----------------------------------------------
 
         # pretrain the AST models
         if pretrain_stage == True:
@@ -194,6 +216,28 @@ class ASTModel(nn.Module):
             # mlp head for fine-tuning
             self.mlp_head = nn.Sequential(nn.LayerNorm(self.original_embedding_dim),
                                           nn.Linear(self.original_embedding_dim, label_dim))
+            
+            # ASR head for fine-tuning
+            self.f_dim_out = (input_fdim - fshape) // fstride + 1
+            self.t_dim_out = (input_tdim - tshape) // tstride + 1
+            lstm_input_dim = self.original_embedding_dim * self.f_dim_out
+            
+            # Tiny: 1 layer = ~0.6M params in LSTM layer
+            # Tiny: 2 layers = ~1.8M params in LSTM layers
+            # Base: 2 layer = ~20M params in LSTM layers
+            if model_size == 'tiny':
+                lstm_layers = 1
+            else:
+                lstm_layers = 2
+            
+            self.lstm = nn.LSTM(
+                input_size=lstm_input_dim,
+                hidden_size=self.original_embedding_dim,  # 192 for tiny, 768 for base
+                num_layers=lstm_layers,
+                batch_first=True,
+                bidirectional=True
+            )
+            self.asr_head = nn.Linear(self.original_embedding_dim * 2, vocab_size)
 
             f_dim, t_dim = self.get_shape(fstride, tstride, input_fdim, input_tdim, fshape, tshape)
             # patch array dimension during pretraining
@@ -223,9 +267,9 @@ class ASTModel(nn.Module):
             if t_dim < p_t_dim:
                 new_pos_embed = new_pos_embed[:, :, :, int(p_t_dim/2) - int(t_dim / 2): int(p_t_dim/2) - int(t_dim / 2) + t_dim]
             else:
-                new_pos_embed = torch.nn.functional.interpolate(new_pos_embed, size=(8, t_dim), mode='bilinear')
+                new_pos_embed = torch.nn.functional.interpolate(new_pos_embed, size=(p_f_dim, t_dim), mode='bilinear')
             if f_dim < p_f_dim:
-                new_pos_embed = new_pos_embed[:, :, int(p_f_dim/2) - int(f_dim / 2): int(p_f_dim/2) - int(f_dim / 2) + t_dim, :]
+                new_pos_embed = new_pos_embed[:, :, int(p_f_dim/2) - int(f_dim / 2): int(p_f_dim/2) - int(f_dim / 2) + f_dim, :]
             else:
                 new_pos_embed = torch.nn.functional.interpolate(new_pos_embed, size=(f_dim, t_dim), mode='bilinear')
 
@@ -317,6 +361,35 @@ class ASTModel(nn.Module):
         x = self.mlp_head(x)
         return x
 
+    def finetuningasr(self, x):
+        x = self.v.patch_embed(x)
+        B, N, D = x.shape
+        
+        # Add tokens & Pos Embed
+        if self.cls_token_num == 2:
+            cls_tokens = self.v.cls_token.expand(B, -1, -1)
+            dist_token = self.v.dist_token.expand(B, -1, -1)
+            x = torch.cat((cls_tokens, dist_token, x), dim=1)
+        else:
+            cls_tokens = self.v.cls_token.expand(B, -1, -1)
+            x = torch.cat((cls_tokens, x), dim=1)
+        x = x + self.v.pos_embed
+        x = self.v.pos_drop(x)
+        
+        for blk in self.v.blocks: x = blk(x)
+        x = self.v.norm(x)
+        
+        # Reshape for LSTM
+        x = x[:, self.cls_token_num:, :] # Remove CLS
+        x = x.transpose(1, 2).view(B, D, self.f_dim_out, self.t_dim_out)
+        x = x.permute(0, 3, 2, 1).contiguous() # [Batch, Time, Freq, Dim]
+        x = x.view(B, self.t_dim_out, self.f_dim_out * D)
+        
+        self.lstm.flatten_parameters()
+        x, _ = self.lstm(x)
+        return self.asr_head(x)
+        
+
     def get_intermediate_layers(self, x, layer_idx):
         """
         Extract Unmasked Features from Transformer Layer 'layer_idx'
@@ -341,8 +414,11 @@ class ASTModel(nn.Module):
             B = x.shape[0]
             # Add cls and dist tokens
             cls_tokens = self.v.cls_token.expand(B, -1, -1)
-            dist_token = self.v.dist_token.expand(B, -1, -1)
-            x = torch.cat((cls_tokens, dist_token, x), dim=1)
+            if self.cls_token_num == 2:
+                dist_token = self.v.dist_token.expand(B, -1, -1)
+                x = torch.cat((cls_tokens, dist_token, x), dim=1)
+            else:
+                x = torch.cat((cls_tokens, x), dim=1)
             # Add positional embeddings
             x = x + self.v.pos_embed
             # Apply dropout
@@ -406,8 +482,11 @@ class ASTModel(nn.Module):
 
         # Pass through the Transformer layers
         cls_tokens = self.v.cls_token.expand(B, -1, -1)
-        dist_token = self.v.dist_token.expand(B, -1, -1)
-        x = torch.cat((cls_tokens, dist_token, x), dim=1)
+        if self.cls_token_num == 2:
+            dist_token = self.v.dist_token.expand(B, -1, -1)
+            x = torch.cat((cls_tokens, dist_token, x), dim=1)
+        else:
+            x = torch.cat((cls_tokens, x), dim=1)
         x = x + self.v.pos_embed
         x = self.v.pos_drop(x)
         for blk in self.v.blocks:
@@ -512,7 +591,7 @@ class ASTModel(nn.Module):
         x, input_patches, mask_index = self._masked_encoding_body(x, mask_patch, cluster)
         # MPC Head Logic
         # If show_mask is True, return the visualization of masked area instead of loss/accuracy
-        nce, acc = self._mpc_head(x, input_patches, mask_index, mask_patch, show_mask)
+        acc, nce = self._mpc_head(x, input_patches, mask_index, mask_patch, show_mask)
         return nce, acc
         
     # Masked patch pretraining with generative objective
@@ -585,6 +664,8 @@ class ASTModel(nn.Module):
         # alternatively, use the [cls] token output as clip-level representation.
         elif task == 'ft_cls':
             return self.finetuningcls(x)
+        elif task == 'ft_asr':
+            return self.finetuningasr(x)
         # pretraining, masked patch classification (discriminative objective)
         elif task == 'pretrain_mpc':
             return self.mpc(x, mask_patch=mask_patch, cluster=cluster)
@@ -669,3 +750,4 @@ if __name__ == '__main__':
     # pred, masked = ast_mdl(test_input, task='visualize_mask', mask_patch=100)
     # plt.imshow(masked[0,0])
     # plt.show()
+    

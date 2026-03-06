@@ -1,0 +1,19 @@
++ source ../../../venvssast/bin/activate
+/var/spool/slurmd/job2188913/slurm_script: line 13: ../../../venvssast/bin/activate: No such file or directory
++ export TORCH_HOME=../../pretrained_models
++ TORCH_HOME=../../pretrained_models
++ ZIP_PATH=../datasets/speech_commands_v0.01.zip
++ SCRATCH_ROOT=/disk/scratch/s2283874/data
++ mkdir -p /disk/scratch/s2283874/data
++ DATA_DIR=/disk/scratch/s2283874/data/speech_commands_v0.01
++ '[' '!' -d /disk/scratch/s2283874/data/speech_commands_v0.01 ']'
++ echo 'Unzipping data to /disk/scratch/s2283874/data...'
+Unzipping data to /disk/scratch/s2283874/data...
++ unzip -q ../datasets/speech_commands_v0.01.zip -d /disk/scratch/s2283874/data
++ mdl=ssast_frame_base_1s
++ lr=5e-5
++ expname=ks_ssast_frame_base_1s_5e-5
++ expdir=./exp/ks_ssast_frame_base_1s_5e-5
++ mkdir -p ./exp/ks_ssast_frame_base_1s_5e-5
++ python3 run_downstream.py -m train --expdir ./exp/ks_ssast_frame_base_1s_5e-5 -n speech_commands -u ssast_frame_base_1s -d speech_commands -c config_ks.yaml -s hidden_states -o 'config.optimizer.lr=5e-5,config.downstream_expert.datarc.speech_commands_root='\''/disk/scratch/s2283874/data/speech_commands_v0.01'\''' -f
+python3: can't open file '/home/s2283874/ssast/src/finetune/superb/speechcommands_v1/run_downstream.py': [Errno 2] No such file or directory

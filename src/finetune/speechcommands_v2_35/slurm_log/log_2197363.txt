@@ -1,0 +1,120 @@
++ . /home/htang2/toolchain-20251006/toolchain.rc
+++ ROOT=/home/htang2/toolchain-20251006
+++ export PATH=/home/htang2/toolchain-20251006/bin:/home/htang2/toolchain-20251006/opt/cuda/bin:/usr/games:/usr/local/games:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+++ PATH=/home/htang2/toolchain-20251006/bin:/home/htang2/toolchain-20251006/opt/cuda/bin:/usr/games:/usr/local/games:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+++ export LD_LIBRARY_PATH=/home/htang2/toolchain-20251006/lib:/home/htang2/toolchain-20251006/lib64:/home/htang2/toolchain-20251006/opt/cuda/lib:/home/htang2/toolchain-20251006/opt/cuda/lib64:/home/htang2/toolchain-20251006/opt/cuda/extras/CUPTI/lib64:
+++ LD_LIBRARY_PATH=/home/htang2/toolchain-20251006/lib:/home/htang2/toolchain-20251006/lib64:/home/htang2/toolchain-20251006/opt/cuda/lib:/home/htang2/toolchain-20251006/opt/cuda/lib64:/home/htang2/toolchain-20251006/opt/cuda/extras/CUPTI/lib64:
++ source ../../../venvssast/bin/activate
+++ deactivate nondestructive
+++ '[' -n '' ']'
+++ '[' -n '' ']'
+++ hash -r
+++ '[' -n '' ']'
+++ unset VIRTUAL_ENV
+++ unset VIRTUAL_ENV_PROMPT
+++ '[' '!' nondestructive = nondestructive ']'
+++ '[' linux-gnu = cygwin ']'
+++ '[' linux-gnu = msys ']'
+++ export VIRTUAL_ENV=/home/s2283874/ssast/venvssast
+++ VIRTUAL_ENV=/home/s2283874/ssast/venvssast
+++ _OLD_VIRTUAL_PATH=/home/htang2/toolchain-20251006/bin:/home/htang2/toolchain-20251006/opt/cuda/bin:/usr/games:/usr/local/games:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+++ PATH=/home/s2283874/ssast/venvssast/bin:/home/htang2/toolchain-20251006/bin:/home/htang2/toolchain-20251006/opt/cuda/bin:/usr/games:/usr/local/games:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+++ export PATH
+++ '[' -n '' ']'
+++ '[' -z '' ']'
+++ _OLD_VIRTUAL_PS1=
+++ PS1='(venvssast) '
+++ export PS1
+++ VIRTUAL_ENV_PROMPT='(venvssast) '
+++ export VIRTUAL_ENV_PROMPT
+++ hash -r
++ export TORCH_HOME=../../pretrained_models
++ TORCH_HOME=../../pretrained_models
++ mkdir -p ./exp
++ AFS_ROOT=/home/s2283874/ssast/datasets/speech_commands_v0.02
++ SCRATCH_ROOT=/disk/scratch/s2283874/speech_commands_v0.02
++ echo 'AFS Path: /home/s2283874/ssast/datasets/speech_commands_v0.02'
+AFS Path: /home/s2283874/ssast/datasets/speech_commands_v0.02
++ echo 'Scratch Path: /disk/scratch/s2283874/speech_commands_v0.02'
+Scratch Path: /disk/scratch/s2283874/speech_commands_v0.02
++ mkdir -p /home/s2283874/ssast/datasets/speech_commands_v0.02
++ '[' '!' -f /home/s2283874/ssast/datasets/speech_commands_v0.02/speech_commands_v0.02.tar.gz ']'
++ echo 'Dataset found on AFS.'
+Dataset found on AFS.
++ echo 'Extracting data to Scratch...'
+Extracting data to Scratch...
++ mkdir -p /disk/scratch/s2283874/speech_commands_v0.02
++ tar -xzf /home/s2283874/ssast/datasets/speech_commands_v0.02/speech_commands_v0.02.tar.gz -C /disk/scratch/s2283874/speech_commands_v0.02
++ echo 'Generating JSON files pointing to Scratch...'
+Generating JSON files pointing to Scratch...
++ rm -rf ./data/datafiles
++ python prep_sc.py --dataset_path /disk/scratch/s2283874/speech_commands_v0.02
+Processing data from: /disk/scratch/s2283874/speech_commands_v0.02/
+{'backward': np.str_('0'), 'follow': np.str_('1'), 'five': np.str_('2'), 'bed': np.str_('3'), 'zero': np.str_('4'), 'on': np.str_('5'), 'learn': np.str_('6'), 'two': np.str_('7'), 'house': np.str_('8'), 'tree': np.str_('9'), 'dog': np.str_('10'), 'stop': np.str_('11'), 'seven': np.str_('12'), 'eight': np.str_('13'), 'down': np.str_('14'), 'six': np.str_('15'), 'forward': np.str_('16'), 'cat': np.str_('17'), 'right': np.str_('18'), 'visual': np.str_('19'), 'four': np.str_('20'), 'wow': np.str_('21'), 'no': np.str_('22'), 'nine': np.str_('23'), 'off': np.str_('24'), 'three': np.str_('25'), 'left': np.str_('26'), 'marvin': np.str_('27'), 'yes': np.str_('28'), 'up': np.str_('29'), 'sheila': np.str_('30'), 'happy': np.str_('31'), 'bird': np.str_('32'), 'go': np.str_('33'), 'one': np.str_('34')}
+testing data processing finished, total 11005 samples
+validation data processing finished, total 9981 samples
+train data processing finished, total 84843 samples
+Speechcommands dataset processing finished.
++ pretrain_exp=./../../pretrain/exp/
++ pretrain_model=mask01-tiny-f128-t2-b64-lr5e-4-m400-e75-pretrain_mpmhb-librispeech360-mpmhb0.0-mpg0.0-mpc1.
++ pretrain_path=././../../pretrain/exp//mask01-tiny-f128-t2-b64-lr5e-4-m400-e75-pretrain_mpmhb-librispeech360-mpmhb0.0-mpg0.0-mpc1./models/best_audio_model.pth
++ dataset=speechcommands
++ dataset_mean=-6.845978
++ dataset_std=5.5654526
++ target_length=128
++ noise=True
++ tr_data=./data/datafiles/speechcommand_train_data.json
++ val_data=./data/datafiles/speechcommand_valid_data.json
++ eval_data=./data/datafiles/speechcommand_eval_data.json
++ bal=none
++ lr=2.5e-4
++ freqm=48
++ timem=48
++ mixup=0.6
++ epoch=30
++ batch_size=128
++ fshape=128
++ tshape=2
++ fstride=128
++ tstride=1
++ task=ft_avgtok
++ model_size=tiny
++ head_lr=1
++ exp_dir=./exp/test01-speechcommands-f128-t1-b128-lr2.5e-4-ft_avgtok-tiny-./../../pretrain/exp/-mask01-tiny-f128-t2-b64-lr5e-4-m400-e75-pretrain_mpmhb-librispeech360-mpmhb0.0-mpg0.0-mpc1.-1x-noiseTrue
++ CUDA_CACHE_DISABLE=1
++ python -W ignore ../../run.py --dataset speechcommands --data-train ./data/datafiles/speechcommand_train_data.json --data-val ./data/datafiles/speechcommand_valid_data.json --data-eval ./data/datafiles/speechcommand_eval_data.json --exp-dir ./exp/test01-speechcommands-f128-t1-b128-lr2.5e-4-ft_avgtok-tiny-./../../pretrain/exp/-mask01-tiny-f128-t2-b64-lr5e-4-m400-e75-pretrain_mpmhb-librispeech360-mpmhb0.0-mpg0.0-mpc1.-1x-noiseTrue --label-csv ./data/speechcommands_class_labels_indices.csv --n_class 35 --lr 2.5e-4 --n-epochs 30 --batch-size 128 --save_model False --freqm 48 --timem 48 --mixup 0.6 --bal none --tstride 1 --fstride 128 --fshape 128 --tshape 2 --warmup True --task ft_avgtok --model_size tiny --adaptschedule False --pretrained_mdl_path ././../../pretrain/exp//mask01-tiny-f128-t2-b64-lr5e-4-m400-e75-pretrain_mpmhb-librispeech360-mpmhb0.0-mpg0.0-mpc1./models/best_audio_model.pth --dataset_mean -6.845978 --dataset_std 5.5654526 --target_length 128 --num_mel_bins 128 --head_lr 1 --noise True --lrscheduler_start 5 --lrscheduler_step 1 --lrscheduler_decay 0.85 --wa False --loss BCE --metrics acc
+I am process 1191329, running on herman.inf.ed.ac.uk: starting (Sat Feb 14 16:55:21 2026)
+balanced sampler is not used
+---------------the train dataloader---------------
+now using following mask: 48 freq, 48 time
+now using mix-up with rate 0.600000
+now process speechcommands
+use dataset mean -6.846 and std 5.565 to normalize the input.
+now use noise augmentation
+Classification task detected. Using labels from ./data/speechcommands_class_labels_indices.csv
+number of classes is 35
+---------------the evaluation dataloader---------------
+now using following mask: 0 freq, 0 time
+now using mix-up with rate 0.000000
+now process speechcommands
+use dataset mean -6.846 and std 5.565 to normalize the input.
+Classification task detected. Using labels from ./data/speechcommands_class_labels_indices.csv
+number of classes is 35
+Now train with speechcommands with 84843 training samples, evaluate with 9981 samples
+Traceback (most recent call last):
+  File "/home/s2283874/ssast/src/finetune/speechcommands_v2_35/../../run.py", line 146, in <module>
+    audio_model = ASTModel(label_dim=args.n_class, fshape=args.fshape, tshape=args.tshape, fstride=args.fstride, tstride=args.tstride,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/s2283874/ssast/src/models/ast_models.py", line 165, in __init__
+    sd = torch.load(load_pretrained_mdl_path, map_location=device)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/s2283874/ssast/venvssast/lib/python3.12/site-packages/torch/serialization.py", line 1484, in load
+    with _open_file_like(f, "rb") as opened_file:
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/s2283874/ssast/venvssast/lib/python3.12/site-packages/torch/serialization.py", line 759, in _open_file_like
+    return _open_file(name_or_buffer, mode)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/s2283874/ssast/venvssast/lib/python3.12/site-packages/torch/serialization.py", line 740, in __init__
+    super().__init__(open(name, mode))
+                     ^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '././../../pretrain/exp//mask01-tiny-f128-t2-b64-lr5e-4-m400-e75-pretrain_mpmhb-librispeech360-mpmhb0.0-mpg0.0-mpc1./models/best_audio_model.pth'

@@ -1,0 +1,45 @@
+[1mdiff --git a/src/pretrain/run_mask_frame_tiny.sh b/src/pretrain/run_mask_frame_tiny.sh[m
+[1mindex 3635ee8..b413f32 100644[m
+[1m--- a/src/pretrain/run_mask_frame_tiny.sh[m
+[1m+++ b/src/pretrain/run_mask_frame_tiny.sh[m
+[36m@@ -1,5 +1,5 @@[m
+ #!/bin/bash[m
+[31m-#SBATCH --job-name="ssast-pretrain-maskframe-tiny"[m
+[32m+[m[32m#SBATCH --job-name="ssast-pretrain-frame-base"[m
+ #SBATCH --nodes=1[m
+ #SBATCH --gres=gpu:1[m
+ #SBATCH --exclude=damnii[07-12],landonia[01-08,21-25][m
+[36m@@ -44,7 +44,7 @@[m [mmask_patch=400[m
+ [m
+ # MHB Arguments[m
+ num_clusters=512        # Number of K-means clusters[m
+[31m-mpmhb_weight=0.0        # Weight for the cluster ID prediction loss[m
+[32m+[m[32mmpmhb_weight=1.0        # Weight for the cluster ID prediction loss[m
+ mpg_weight=0.0          # Weight for the reconstruction loss[m
+ mpc_weight=0.0          # Weight for the contrastive loss[m
+ target_layer_idx=-1     # Teacher layer (Tiny model has 12 layers, 6 is middle). -1 indicates using raw patch features[m
+[36m@@ -60,7 +60,7 @@[m [mdataset_std=4.5689974[m
+ target_length=1024[m
+ num_mel_bins=128[m
+ [m
+[31m-model_size=tiny[m
+[32m+[m[32mmodel_size=base[m
+ # no frame split overlap[m
+ fshape=128[m
+ tshape=2[m
+[36m@@ -74,7 +74,7 @@[m [mlr=5e-4[m
+ # learning rate decreases if the pretext task performance does not improve on the validation set[m
+ lr_patience=2[m
+ # epoch=10[m
+[31m-epoch=5[m
+[32m+[m[32mepoch=200[m
+ # no spectrogram masking[m
+ freqm=0[m
+ timem=0[m
+[36m@@ -99,4 +99,4 @@[m [mCUDA_CACHE_DISABLE=1 python -W ignore ../run.py --dataset ${dataset} \[m
+ --model_size ${model_size} --mask_patch ${mask_patch} --n-print-steps 100 \[m
+ --task ${task} --lr_patience ${lr_patience} --epoch_iter 800 \[m
+ --num_clusters ${num_clusters} --mpmhb_weight ${mpmhb_weight} --mpg_weight ${mpg_weight} --mpc_weight ${mpc_weight} \[m
+[31m---target_layer_idx ${target_layer_idx} --cluster_update_freq ${cluster_update_freq} --num-workers ${num_workers}[m
+\ No newline at end of file[m
+[32m+[m[32m--target_layer_idx ${target_layer_idx} --cluster_update_freq ${cluster_update_freq} --num-workers ${num_workers}[m
