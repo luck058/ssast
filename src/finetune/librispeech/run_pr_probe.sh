@@ -27,6 +27,9 @@ else
     tar -xzf "$SOURCE_TAR" -C "$SCRATCH_ROOT"
 fi
 
+echo "Downloading NLTK data for g2p-en..."
+python -c "import nltk; nltk.download('averaged_perceptron_tagger_eng')"
+
 echo "Generating phoneme JSON files..."
 python prep_pr.py --dataset_path "$SCRATCH_ROOT/LibriSpeech"
 

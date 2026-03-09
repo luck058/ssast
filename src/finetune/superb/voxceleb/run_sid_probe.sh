@@ -2,7 +2,8 @@
 #SBATCH --job-name="ssast-sid-probe"
 #SBATCH --nodes=1
 #SBATCH --gres=gpu:1
-#SBATCH --cpus-per-task=4
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=1
 #SBATCH --mem=30G
 #SBATCH --output=./log_sid_probe_%j.txt
 
