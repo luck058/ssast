@@ -85,6 +85,7 @@ parser.add_argument("--cluster_update_freq", type=int, default=5, help="Update c
 
 # fine-tuning arguments
 parser.add_argument("--pretrained_mdl_path", type=str, default=None, help="the ssl pretrained models path")
+parser.add_argument('--blank_model', help='train from random init (no pretrained checkpoint)', type=ast.literal_eval, default='False')
 parser.add_argument("--head_lr", type=int, default=1, help="the factor of mlp-head_lr/lr, used in some fine-tuning experiments only")
 parser.add_argument("--noise", help='if augment noise in finetuning', type=ast.literal_eval)
 parser.add_argument("--metrics", type=str, default="mAP", help="the main evaluation metrics in finetuning", choices=["mAP", "acc", "wer"])
@@ -148,7 +149,7 @@ elif args.task.startswith('probe_'):
     ast_model = ASTModel(label_dim=args.n_class, fshape=args.fshape, tshape=args.tshape, fstride=args.fstride, tstride=args.tstride,
                          input_fdim=args.num_mel_bins, input_tdim=args.target_length, model_size=args.model_size, pretrain_stage=False,
                          load_pretrained_mdl_path=args.pretrained_mdl_path,
-                         num_clusters=args.num_clusters, vocab_size=args.n_class)
+                         num_clusters=args.num_clusters, vocab_size=args.n_class, blank_model=args.blank_model)
     audio_model = ProbingModel(
         frozen_ast_model=ast_model,
         task=args.task,
@@ -161,7 +162,7 @@ else:
     audio_model = ASTModel(label_dim=args.n_class, fshape=args.fshape, tshape=args.tshape, fstride=args.fstride, tstride=args.tstride,
                        input_fdim=args.num_mel_bins, input_tdim=args.target_length, model_size=args.model_size, pretrain_stage=False,
                        load_pretrained_mdl_path=args.pretrained_mdl_path,
-                       num_clusters=args.num_clusters, vocab_size=args.n_class)
+                       num_clusters=args.num_clusters, vocab_size=args.n_class, blank_model=args.blank_model)
 
 if not isinstance(audio_model, torch.nn.DataParallel):
     audio_model = torch.nn.DataParallel(audio_model)
