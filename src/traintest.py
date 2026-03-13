@@ -158,6 +158,7 @@ def train(audio_model, train_loader, test_loader, args):
         print("current #epochs=%s, #steps=%s" % (epoch, global_step))
 
         for i, batch_data in enumerate(train_loader):
+            valid_t_patches = None
             if args.task in ('ft_asr', 'probe_asr', 'probe_pr'):
                 audio_input, labels, input_len, label_len = batch_data
                 input_len = input_len.to(device, non_blocking=True)
@@ -173,7 +174,9 @@ def train(audio_model, train_loader, test_loader, args):
                     max_t_dim = audio_model.t_dim_out
                 input_len = torch.clamp(input_len, min=1, max=max_t_dim)
             else:
-                audio_input, labels, _ = batch_data
+                audio_input, labels, _, valid_length = batch_data
+                valid_t_patches = ((valid_length - args.tshape) // args.tstride + 1).long()
+                valid_t_patches = torch.clamp(valid_t_patches, min=1)
 
             B = audio_input.size(0)
             audio_input = audio_input.to(device, non_blocking=True)
@@ -190,7 +193,7 @@ def train(audio_model, train_loader, test_loader, args):
                     param_group['lr'] = warm_lr
                     print('warm-up learning rate is {:f}'.format(param_group['lr']))
 
-            audio_output = audio_model(audio_input, args.task)
+            audio_output = audio_model(audio_input, args.task, valid_t_patches=valid_t_patches)
             if args.loss == 'CTC':
                 # CTC expects [Time, Batch, Vocab]
                 loss = loss_fn(audio_output.log_softmax(2).transpose(0,1), labels, input_len, label_len)
@@ -402,6 +405,7 @@ def validate(audio_model, val_loader, args, epoch):
     
     with torch.no_grad():
         for i, batch_data in enumerate(val_loader):
+            valid_t_patches = None
             if args.task in ('ft_asr', 'probe_asr', 'probe_pr'):
                 audio_input, labels, input_len, label_len = batch_data
                 input_len = input_len.to(device, non_blocking=True)
@@ -417,10 +421,12 @@ def validate(audio_model, val_loader, args, epoch):
                 # Ensure lengths are at least 1 and at most max_t_dim to prevent CTC errors
                 input_len = torch.clamp(input_len, min=1, max=max_t_dim)
             else:
-                audio_input, labels, _ = batch_data
-                
+                audio_input, labels, _, valid_length = batch_data
+                valid_t_patches = ((valid_length - args.tshape) // args.tstride + 1).long()
+                valid_t_patches = torch.clamp(valid_t_patches, min=1)
+
             audio_input = audio_input.to(device)
-            audio_output = audio_model(audio_input, args.task)
+            audio_output = audio_model(audio_input, args.task, valid_t_patches=valid_t_patches)
             labels = labels.to(device)
             
             # Metrics & Loss

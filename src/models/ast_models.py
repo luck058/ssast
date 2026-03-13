@@ -352,7 +352,7 @@ class ASTModel(nn.Module):
         mask_id = random.sample(range(0, effective_len), mask_size)
         return torch.tensor(mask_id)
 
-    def finetuningavgtok(self, x):
+    def finetuningavgtok(self, x, valid_t_patches=None):
         B = x.shape[0]
         x = self.v.patch_embed(x)
         if self.cls_token_num == 2:
@@ -369,12 +369,22 @@ class ASTModel(nn.Module):
             x = blk(x)
         x = self.v.norm(x)
 
-        # average output of all tokens except cls token(s)
-        x = torch.mean(x[:, self.cls_token_num:, :], dim=1)
+        # average output of all tokens except cls token(s), ignoring zero-padded patches
+        patches = x[:, self.cls_token_num:, :]  # [B, N, D]
+        if valid_t_patches is not None:
+            N = patches.shape[1]
+            # patch index j has time column j % t_dim_out; valid if < valid_t_patches[i]
+            t_indices = torch.arange(N, device=patches.device) % self.t_dim_out  # [N]
+            mask = (t_indices.unsqueeze(0) < valid_t_patches.to(patches.device).unsqueeze(1)).float()  # [B, N]
+            x = (patches * mask.unsqueeze(-1)).sum(dim=1) / mask.sum(dim=1, keepdim=True)
+        else:
+            x = patches.mean(dim=1)
         x = self.mlp_head(x)
         return x
 
-    def finetuningcls(self, x):
+    def finetuningcls(self, x, valid_t_patches=None):
+        # valid_t_patches is unused here: the CLS token aggregates via self-attention over all
+        # positions, so padded patches cannot be excluded without modifying timm's attention layers.
         B = x.shape[0]
         x = self.v.patch_embed(x)
         if self.cls_token_num == 2:
@@ -725,10 +735,10 @@ class ASTModel(nn.Module):
         # finetuning (ft), use the mean of all token (patch) output as clip-level representation.
         # this is default for SSAST fine-tuning as during pretraining, supervision signal is given to each token, not the [cls] token
         if task == 'ft_avgtok':
-            return self.finetuningavgtok(x)
+            return self.finetuningavgtok(x, valid_t_patches=valid_t_patches)
         # alternatively, use the [cls] token output as clip-level representation.
         elif task == 'ft_cls':
-            return self.finetuningcls(x)
+            return self.finetuningcls(x, valid_t_patches=valid_t_patches)
         elif task == 'ft_asr':
             return self.finetuningasr(x)
         # pretraining, masked patch classification (discriminative objective)
