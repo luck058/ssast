@@ -286,7 +286,7 @@ class ASTModel(nn.Module):
         return f_dim, t_dim
 
     # generate mask for 16*16 patch
-    def gen_maskid_patch(self, sequence_len=512, mask_size=100, cluster=3):
+    def gen_maskid_patch(self, sequence_len=512, mask_size=100, cluster=3, valid_t_dim=None):
         mask_id = []
 
         # randomize clutering factor in [3,6)
@@ -304,14 +304,18 @@ class ASTModel(nn.Module):
                 for j in range(0, cur_clus):
                     mask_cand = start_id + self.p_t_dim * i + j
                     if mask_cand > 0 and mask_cand < sequence_len:
-                        cur_mask.append(mask_cand)
+                        # skip candidates that fall in the zero-padded time region
+                        if valid_t_dim is None or mask_cand % self.p_t_dim < valid_t_dim:
+                            cur_mask.append(mask_cand)
             mask_id = mask_id + cur_mask
         mask_id = list(set(mask_id))[:mask_size]
         return torch.tensor(mask_id)
 
     # using cluster for frame masking hurts the performance, so just use the naive random sampling
-    def gen_maskid_frame(self, sequence_len=512, mask_size=100):
-        mask_id = random.sample(range(0, sequence_len), mask_size)
+    def gen_maskid_frame(self, sequence_len=512, mask_size=100, valid_seq_len=None):
+        effective_len = valid_seq_len if valid_seq_len is not None else sequence_len
+        effective_len = max(effective_len, mask_size)  # ensure enough patches to sample
+        mask_id = random.sample(range(0, effective_len), mask_size)
         return torch.tensor(mask_id)
 
     def finetuningavgtok(self, x):
@@ -447,7 +451,7 @@ class ASTModel(nn.Module):
         return flat_target_ids.view(x.shape[0], -1).cpu()
     
     # General model body: handles patch embedding, masking, and transformer encoding
-    def _masked_encoding_body(self, x, mask_patch, cluster):
+    def _masked_encoding_body(self, x, mask_patch, cluster, valid_t_patches=None):
         # Unfold input to get raw patches (ground truth targets)
         # x shape: (batch_size, sequence_len, embedding dim)
         input_patches = self.unfold(x).transpose(1, 2)
@@ -464,13 +468,15 @@ class ASTModel(nn.Module):
 
         # Generate masks for each audio clip in the batch
         for i in range(B):
+            # valid_t_patches[i]: number of valid (non-padded) time patch columns for sample i
+            vtp = int(valid_t_patches[i].item()) if valid_t_patches is not None else None
             # Randomly generate #mask_patch mask indexes without duplicate
             if cluster == True:
                 # Use this if you are masking e.g. 16*16 patches
-                mask_index[i] = self.gen_maskid_patch(self.num_patches, mask_patch)
+                mask_index[i] = self.gen_maskid_patch(self.num_patches, mask_patch, valid_t_dim=vtp)
             else:
                 # Use this if you are masking frame, i.e., 128*2 patches
-                mask_index[i] = self.gen_maskid_frame(self.num_patches, mask_patch)
+                mask_index[i] = self.gen_maskid_frame(self.num_patches, mask_patch, valid_seq_len=vtp)
             
             # Mask the dense tensor (set masked areas to 0)
             mask_dense[i, mask_index[i], :] = 0
@@ -585,46 +591,46 @@ class ASTModel(nn.Module):
         return F.cross_entropy(logits.view(-1, self.num_clusters), batch_target_ids.view(-1))
     
     # Masked patch pretraining with discriminative objective
-    def mpc(self, x, mask_patch, cluster, show_mask=False):
+    def mpc(self, x, mask_patch, cluster, show_mask=False, valid_t_patches=None):
         """Masked patch pretraining with discriminative objective"""
         # General Model Body
-        x, input_patches, mask_index = self._masked_encoding_body(x, mask_patch, cluster)
+        x, input_patches, mask_index = self._masked_encoding_body(x, mask_patch, cluster, valid_t_patches)
         # MPC Head Logic
         # If show_mask is True, return the visualization of masked area instead of loss/accuracy
         acc, nce = self._mpc_head(x, input_patches, mask_index, mask_patch, show_mask)
         return nce, acc
-        
+
     # Masked patch pretraining with generative objective
-    def mpg(self, x, mask_patch, cluster):
+    def mpg(self, x, mask_patch, cluster, valid_t_patches=None):
         """Masked patch pretraining with generative objective"""
         # General Model Body
-        x, input_patches, mask_index = self._masked_encoding_body(x, mask_patch, cluster)
+        x, input_patches, mask_index = self._masked_encoding_body(x, mask_patch, cluster, valid_t_patches)
         # MPG Head Logic
         mse = self._mpg_head(x, input_patches, mask_index, mask_patch)
 
         return mse
-    
+
     # Masked patch joint pretraining with generative and discriminative objective
-    def mpj(self, x, mask_patch, cluster, mpg_weight=10):
+    def mpj(self, x, mask_patch, cluster, mpg_weight=10, valid_t_patches=None):
         """Masked patch joint pretraining with generative and discriminative objective. Loss = mpc_loss + mpg_weight * mpg_loss
         """
         # General Model Body
-        x, input_patches, mask_index = self._masked_encoding_body(x, mask_patch, cluster)
+        x, input_patches, mask_index = self._masked_encoding_body(x, mask_patch, cluster, valid_t_patches)
         # Both MPC and MPG Head Logic
         mse = self._mpg_head(x, input_patches, mask_index, mask_patch)
         acc, nce = self._mpc_head(x, input_patches, mask_index, mask_patch, show_mask=False)
         combined_loss = nce + (mpg_weight * mse)
         return combined_loss, acc
-    
-    def mpmhb(self, x, mask_patch, cluster, target_ids=None, args=None):
+
+    def mpmhb(self, x, mask_patch, cluster, target_ids=None, args=None, valid_t_patches=None):
         """Masked patch joint pretraining with MelHuBERT objective, discriminative and generative objective."""
         if args is None:
             raise ValueError("args must be provided for mpmhb to specify mpg_weight and mpmhb_weight")
         if args['mpg_weight'] == 0 and args['mpmhb_weight'] == 0 and args['mpc_weight'] == 0:
             raise ValueError("At least one of mpg_weight, mhb_weight, or mpc_weight must be non-zero")
-        
+
         # General Model Body
-        x_masked, input_patches, mask_index = self._masked_encoding_body(x, mask_patch, cluster)
+        x_masked, input_patches, mask_index = self._masked_encoding_body(x, mask_patch, cluster, valid_t_patches)
         
         # Run MPC loss
         if args["mpc_weight"] != 0:
@@ -652,7 +658,7 @@ class ASTModel(nn.Module):
         
         return total_loss, acc_mpc, loss_mpg, loss_mpc, loss_mpmhb
     
-    def forward(self, x, task, cluster=True, mask_patch=400, target_ids=None, args=None):
+    def forward(self, x, task, cluster=True, mask_patch=400, target_ids=None, args=None, valid_t_patches=None):
         # expect input x = (batch_size, time_frame_num, frequency_bins), e.g., (12, 1024, 128)
         x = x.unsqueeze(1)
         x = x.transpose(2, 3)
@@ -668,18 +674,18 @@ class ASTModel(nn.Module):
             return self.finetuningasr(x)
         # pretraining, masked patch classification (discriminative objective)
         elif task == 'pretrain_mpc':
-            return self.mpc(x, mask_patch=mask_patch, cluster=cluster)
+            return self.mpc(x, mask_patch=mask_patch, cluster=cluster, valid_t_patches=valid_t_patches)
         # pretraining, masked patch reconstruction (generative objective)
         elif task == 'pretrain_mpg':
-            return self.mpg(x, mask_patch=mask_patch, cluster=cluster)
+            return self.mpg(x, mask_patch=mask_patch, cluster=cluster, valid_t_patches=valid_t_patches)
         elif task == 'pretrain_mpj':
             if args is not None and 'mpg_weight' in args:
                 mpg_weight = args['mpg_weight']
             else:
                 mpg_weight = 10
-            return self.mpj(x, mask_patch=mask_patch, cluster=cluster, mpg_weight=mpg_weight)
+            return self.mpj(x, mask_patch=mask_patch, cluster=cluster, mpg_weight=mpg_weight, valid_t_patches=valid_t_patches)
         elif task == 'pretrain_mpmhb':
-            return self.mpmhb(x, mask_patch=mask_patch, cluster=cluster, target_ids=target_ids, args=args)
+            return self.mpmhb(x, mask_patch=mask_patch, cluster=cluster, target_ids=target_ids, args=args, valid_t_patches=valid_t_patches)
         elif task == 'visualize_mask':
             return self.mpc(x, mask_patch=mask_patch, cluster=cluster, show_mask=True)
         else:

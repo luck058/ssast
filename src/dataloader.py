@@ -279,7 +279,7 @@ class AudioDataset(Dataset):
                 mix_datum = self.data[mix_sample_idx]
                 # get the mixed fbank
                 # Changed: Fixed unpacking error (3 values returned)
-                fbank, mix_lambda, _ = self._wav2fbank(datum['wav'], mix_datum['wav'])
+                fbank, mix_lambda, valid_length = self._wav2fbank(datum['wav'], mix_datum['wav'])
                 # initialize the label
                 label_indices = np.zeros(self.label_num)
                 # add sample 1 labels
@@ -295,7 +295,7 @@ class AudioDataset(Dataset):
                 datum = self.data[index]
                 label_indices = np.zeros(self.label_num)
                 # Changed: Fixed unpacking error (3 values returned)
-                fbank, mix_lambda, _ = self._wav2fbank(datum['wav'])
+                fbank, mix_lambda, valid_length = self._wav2fbank(datum['wav'])
                 for label_str in datum['labels'].split(','):
                     label_indices[int(self.index_dict[label_str])] = 1.0
 
@@ -338,7 +338,7 @@ class AudioDataset(Dataset):
                     print("Warning: Mixup is enabled but cluster targets correspond only to primary samples.")
 
             # the output fbank shape is [time_frame_num, frequency_bins], e.g., [1024, 128]
-            return fbank, label_indices, cluster_target
+            return fbank, label_indices, cluster_target, valid_length
 
     def __len__(self):
         return len(self.data)

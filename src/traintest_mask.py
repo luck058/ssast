@@ -154,8 +154,10 @@ def trainmask(audio_model, train_loader, test_loader, args):
             if args.task == 'ft_asr':
                 audio_input, _, _, _ = batch_data
                 cluster_target = None
+                valid_t_patches = None
             else:
-                audio_input, _, cluster_target = batch_data
+                audio_input, _, cluster_target, valid_length = batch_data
+                valid_t_patches = (valid_length // args.tshape).long()
                 
             # measure data loading time
             B = audio_input.size(0)
@@ -176,26 +178,26 @@ def trainmask(audio_model, train_loader, test_loader, args):
             cluster = (args.num_mel_bins != args.fshape)
             # if pretrain with discriminative objective
             if args.task == 'pretrain_mpc':
-                acc, loss = audio_model(audio_input, args.task, mask_patch=args.mask_patch, cluster=cluster)
+                acc, loss = audio_model(audio_input, args.task, mask_patch=args.mask_patch, cluster=cluster, valid_t_patches=valid_t_patches)
                 # this is for multi-gpu support, in our code, loss is calculated in the model
                 # pytorch concatenates the output of each gpu, we thus get mean of the losses of each gpu
                 acc, loss = acc.mean(), loss.mean()
             # if pretrain with generative objective
             elif args.task == 'pretrain_mpg':
-                loss = audio_model(audio_input, args.task, mask_patch=args.mask_patch, cluster=cluster)
+                loss = audio_model(audio_input, args.task, mask_patch=args.mask_patch, cluster=cluster, valid_t_patches=valid_t_patches)
                 loss = loss.mean()
                 # dirty code to make the code report mse loss for generative objective
                 acc = loss
             elif args.task == 'pretrain_mpj':
-                loss, acc = audio_model(audio_input, args.task, mask_patch=args.mask_patch, cluster=cluster, args={'mpg_weight': 10})
+                loss, acc = audio_model(audio_input, args.task, mask_patch=args.mask_patch, cluster=cluster, args={'mpg_weight': 10}, valid_t_patches=valid_t_patches)
                 loss = loss.mean()
                 # dirty code to make the code report the combined loss for joint objective
                 acc = acc.mean()
             # if pretrain with joint discriminative and generative objective
             elif args.task == 'pretrain_joint':
-                acc, loss1 = audio_model(audio_input, 'pretrain_mpc', mask_patch=args.mask_patch, cluster=cluster)
+                acc, loss1 = audio_model(audio_input, 'pretrain_mpc', mask_patch=args.mask_patch, cluster=cluster, valid_t_patches=valid_t_patches)
                 acc, loss1 = acc.mean(), loss1.mean()
-                loss2 = audio_model(audio_input, 'pretrain_mpg', mask_patch=args.mask_patch, cluster=cluster)
+                loss2 = audio_model(audio_input, 'pretrain_mpg', mask_patch=args.mask_patch, cluster=cluster, valid_t_patches=valid_t_patches)
                 loss2 = loss2.mean()
                 loss = loss1 + 10 * loss2
             elif args.task == 'pretrain_mpmhb':
@@ -206,8 +208,9 @@ def trainmask(audio_model, train_loader, test_loader, args):
                 
                 # Pass 'target_ids' explicitly to the model
                 total_loss, acc_mpc, loss_mpg, loss_mpc, loss_mpmhb = audio_model(
-                    audio_input, args.task, mask_patch=args.mask_patch, 
-                    cluster=cluster, target_ids=cluster_target, args=loss_args
+                    audio_input, args.task, mask_patch=args.mask_patch,
+                    cluster=cluster, target_ids=cluster_target, args=loss_args,
+                    valid_t_patches=valid_t_patches
                 )
                 
                 # Mean across GPUs
