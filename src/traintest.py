@@ -63,32 +63,38 @@ def train(audio_model, train_loader, test_loader, args):
     print('Total parameter number is : {:.3f} million'.format(sum(p.numel() for p in audio_model.parameters()) / 1e6))
     print('Total trainable parameter number is : {:.3f} million'.format(sum(p.numel() for p in trainables) / 1e6))
 
-    # Define prefixes for all "head" layers (Classification and ASR)
-    head_prefixes = ['mlp_head', 'asr_head', 'lstm']
+    if args.task.startswith('probe_'):
+        # Encoder is frozen; only head + layer_weights are trainable — single LR
+        optimizer = torch.optim.Adam(trainables, lr=args.lr, weight_decay=5e-7, betas=(0.95, 0.999))
+        lr_list = [args.lr]
+        print('Probe task: single LR optimizer for all trainable params.')
+    else:
+        # Define prefixes for all "head" layers (Classification and ASR)
+        head_prefixes = ['mlp_head', 'asr_head', 'lstm']
 
-    # Filter parameters based on whether their name starts with one of the prefixes
-    head_params_pairs = list(filter(lambda kv: any(kv[0].startswith(p) for p in head_prefixes), audio_model.module.named_parameters()))
-    base_params_pairs = list(filter(lambda kv: not any(kv[0].startswith(p) for p in head_prefixes), audio_model.module.named_parameters()))
+        # Filter parameters based on whether their name starts with one of the prefixes
+        head_params_pairs = list(filter(lambda kv: any(kv[0].startswith(p) for p in head_prefixes), audio_model.module.named_parameters()))
+        base_params_pairs = list(filter(lambda kv: not any(kv[0].startswith(p) for p in head_prefixes), audio_model.module.named_parameters()))
 
-    # Extract the parameters (tensors) from the (name, param) pairs
-    head_params = [i[1] for i in head_params_pairs]
-    base_params = [i[1] for i in base_params_pairs]
+        # Extract the parameters (tensors) from the (name, param) pairs
+        head_params = [i[1] for i in head_params_pairs]
+        base_params = [i[1] for i in base_params_pairs]
 
-    print('The head layers (mlp, asr, lstm) use {:d} x larger lr'.format(args.head_lr))
-    
-    # Create optimizer with parameter groups
-    optimizer = torch.optim.Adam(
-        [{'params': base_params, 'lr': args.lr}, 
-         {'params': head_params, 'lr': args.lr * args.head_lr}], 
-        weight_decay=5e-7, betas=(0.95, 0.999)
-    )
+        print('The head layers (mlp, asr, lstm) use {:d} x larger lr'.format(args.head_lr))
+        
+        # Create optimizer with parameter groups
+        optimizer = torch.optim.Adam(
+            [{'params': base_params, 'lr': args.lr}, 
+             {'params': head_params, 'lr': args.lr * args.head_lr}], 
+            weight_decay=5e-7, betas=(0.95, 0.999)
+        )
 
-    # Update lr_list for scheduler warm-up
-    mlp_lr = optimizer.param_groups[1]['lr']
-    lr_list = [args.lr, mlp_lr]
+        # Update lr_list for scheduler warm-up
+        mlp_lr = optimizer.param_groups[1]['lr']
+        lr_list = [args.lr, mlp_lr]
 
-    print('Total head parameter number is : {:.3f} million'.format(sum(p.numel() for p in head_params) / 1e6))
-    print('Total base parameter number is : {:.3f} million'.format(sum(p.numel() for p in base_params) / 1e6))
+        print('Total head parameter number is : {:.3f} million'.format(sum(p.numel() for p in head_params) / 1e6))
+        print('Total base parameter number is : {:.3f} million'.format(sum(p.numel() for p in base_params) / 1e6))
     
     # # dataset specific settings
     # if args.dataset == 'audioset':
@@ -152,7 +158,7 @@ def train(audio_model, train_loader, test_loader, args):
         print("current #epochs=%s, #steps=%s" % (epoch, global_step))
 
         for i, batch_data in enumerate(train_loader):
-            if args.task == 'ft_asr':
+            if args.task in ('ft_asr', 'probe_asr', 'probe_pr'):
                 audio_input, labels, input_len, label_len = batch_data
                 input_len = input_len.to(device, non_blocking=True)
                 label_len = label_len.to(device, non_blocking=True)
@@ -233,7 +239,7 @@ def train(audio_model, train_loader, test_loader, args):
         print('start validation')
         stats, valid_loss = validate(audio_model, test_loader, args, epoch)
 
-        if args.task != 'ft_asr':
+        if args.task not in ('ft_asr', 'probe_asr', 'probe_pr'):
             # ensemble results
             cum_stats = validate_ensemble(args, epoch)
             cum_mAP = np.mean([stat['AP'] for stat in cum_stats])
@@ -242,7 +248,7 @@ def train(audio_model, train_loader, test_loader, args):
         else:
             cum_mAP, cum_mAUC, cum_acc = 0, 0, 0
             
-        if args.task != 'ft_asr':
+        if args.task not in ('ft_asr', 'probe_asr', 'probe_pr'):
             mAP = np.mean([stat['AP'] for stat in stats])
             mAUC = np.mean([stat['auc'] for stat in stats])
             acc = stats[0]['acc']
@@ -283,7 +289,7 @@ def train(audio_model, train_loader, test_loader, args):
         print('validation finished')
 
         # Track Best WER for ASR
-        if args.task == 'ft_asr':
+        if args.task in ('ft_asr', 'probe_asr', 'probe_pr'):
             if stats[0]['wer'] < best_wer:
                 best_wer = stats[0]['wer']
                 if main_metrics == 'wer':
@@ -328,7 +334,8 @@ def train(audio_model, train_loader, test_loader, args):
             scheduler.step()
 
         print('Epoch-{0} lr: {1}'.format(epoch, optimizer.param_groups[0]['lr']))
-        print('Epoch-{0} lr: {1}'.format(epoch, optimizer.param_groups[1]['lr']))
+        if len(optimizer.param_groups) > 1:
+            print('Epoch-{0} lr: {1}'.format(epoch, optimizer.param_groups[1]['lr']))
 
         with open(exp_dir + '/stats_' + str(epoch) +'.pickle', 'wb') as handle:
             pickle.dump(stats, handle, protocol=pickle.HIGHEST_PROTOCOL)
@@ -395,7 +402,7 @@ def validate(audio_model, val_loader, args, epoch):
     
     with torch.no_grad():
         for i, batch_data in enumerate(val_loader):
-            if args.task == 'ft_asr':
+            if args.task in ('ft_asr', 'probe_asr', 'probe_pr'):
                 audio_input, labels, input_len, label_len = batch_data
                 input_len = input_len.to(device, non_blocking=True)
                 label_len = label_len.to(device, non_blocking=True)

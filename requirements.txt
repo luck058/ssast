@@ -8,3 +8,4 @@ wget
 zipp
 torchaudio
 torchcodec
+g2p-en

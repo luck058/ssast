@@ -1,8 +1,8 @@
 #!/bin/bash
 #SBATCH --job-name="s3p-sid"
 #SBATCH --gres=gpu:1
-#SBATCH -c 4
-#SBATCH -n 1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=1
 #SBATCH --mem=30000
 #SBATCH --output=./log_sid_%j.txt
 

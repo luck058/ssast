@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name="ssast-esc50"
+#SBATCH --job-name="ssast-esc50-blank"
 #SBATCH --nodes=1
 #SBATCH --gres=gpu:1
 #SBATCH --exclude=damnii[07-12],landonia[01-08,21-25]
@@ -10,34 +10,19 @@
 
 set -x
 
-# comment this line if not running on sls cluster
-# . /data/sls/scratch/share-201907/slstoolchainrc
 . /home/htang2/toolchain-20251006/toolchain.rc
 source ../../../venvssast/bin/activate
 export LD_LIBRARY_PATH=""
 export TORCH_HOME=../../pretrained_models
 mkdir exp
 
-# prep esc50 dataset and download the pretrained model
+# prep esc50 dataset
 if [ -e data/datafiles ]
 then
     echo "esc-50 already downloaded and processed."
 else
     python prep_esc50.py
 fi
-# if [ -e SSAST-Tiny-Patch-400.pth ]
-# then
-#     echo "pretrained model already downloaded."
-# else
-#     wget https://www.dropbox.com/s/ewrzpco95n9jdz6/SSAST-Tiny-Patch-400.pth?dl=1 -O SSAST-Tiny-Patch-400.pth
-# fi
-
-pretrain_model="${1:-mask01-tiny-f16-t16-b64-lr5e-4-m400-pretrain_mpmhb-librispeech360}"
-pretrain_path=./${pretrain_exp}/${pretrain_model}/models/best_audio_model.pth
-
-pretrain_exp=./../../pretrain/exp/
-pretrain_model="$1"
-pretrain_path=./${pretrain_exp}/${pretrain_model}/models/best_audio_model.pth
 
 num_workers=4
 
@@ -60,10 +45,10 @@ fstride=10
 tstride=1
 
 task=ft_avgtok
-model_size="${2:-tiny}"
+model_size="${1:-tiny}"
 head_lr=10
 
-base_exp_dir=./exp/test01-${dataset}-f$fstride-t$tstride-b$batch_size-lr${lr}-${task}-${model_size}-${pretrain_model}-${head_lr}-noise${noise}
+base_exp_dir=./exp/test01-${dataset}-f$fstride-t$tstride-b$batch_size-lr${lr}-${task}-${model_size}-blank-${head_lr}-noise${noise}
 
 for((fold=1;fold<=5;fold++));
 do
@@ -81,7 +66,7 @@ do
   --freqm $freqm --timem $timem --mixup ${mixup} --bal ${bal} \
   --tstride $tstride --fstride $fstride --fshape ${fshape} --tshape ${tshape} --warmup False --task ${task} \
   --model_size ${model_size} --adaptschedule False \
-  --pretrained_mdl_path ${pretrain_path} \
+  --blank_model True \
   --dataset_mean ${dataset_mean} --dataset_std ${dataset_std} --target_length ${target_length} \
   --num_mel_bins 128 --head_lr ${head_lr} --noise ${noise} \
   --lrscheduler_start 6 --lrscheduler_step 1 --lrscheduler_decay 0.85 --wa False --loss CE --metrics acc --num-workers ${num_workers}
