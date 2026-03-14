@@ -3,7 +3,7 @@
 #SBATCH --nodes=1
 #SBATCH --gres=gpu:1
 #SBATCH --exclude=damnii[07-12],landonia[01-08,21-25]
-#SBATCH --cpus-per-task=8
+#SBATCH --cpus-per-task=1
 #SBATCH --mem=16G
 #SBATCH --output=./slurm_log/log_%j.txt
 
