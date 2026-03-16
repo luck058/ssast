@@ -12,10 +12,11 @@ set -x
 # comment this line if not running on sls cluster
 # . /data/sls/scratch/share-201907/slstoolchainrc
 . /home/htang2/toolchain-20251006/toolchain.rc
-source ../../../venvssast/bin/activate
+source ~/ssast/venvssast/bin/activate
 export LD_LIBRARY_PATH=""
 export TORCH_HOME=../../pretrained_models
 mkdir -p ./exp
+mkdir -p ./slurm_log
 
 AFS_ROOT="/home/s2283874/ssast/datasets/speech_commands_v0.02"
 # Use SLURM_TMPDIR if available, otherwise a temp path

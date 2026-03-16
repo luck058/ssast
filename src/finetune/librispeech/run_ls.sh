@@ -12,7 +12,7 @@ set -x
 # Load environment (Modify these paths as needed for your specific cluster setup)
 # . /data/sls/scratch/share-201907/slstoolchainrc
 . /home/htang2/toolchain-20251006/toolchain.rc
-source ../../../venvssast/bin/activate
+source ~/ssast/venvssast/bin/activate
 export LD_LIBRARY_PATH=""
 export TORCH_HOME=../../pretrained_models
 mkdir -p ./exp

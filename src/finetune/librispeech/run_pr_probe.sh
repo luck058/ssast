@@ -10,7 +10,7 @@
 
 set -x
 . /home/htang2/toolchain-20251006/toolchain.rc
-source ../../../venvssast/bin/activate
+source ~/ssast/venvssast/bin/activate
 export LD_LIBRARY_PATH=""
 export TORCH_HOME=../../pretrained_models
 mkdir -p ./exp

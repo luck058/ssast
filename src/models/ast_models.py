@@ -239,6 +239,10 @@ class ASTModel(nn.Module):
                 except:
                     raise  ValueError('The model loaded is not from a torch.nn.Dataparallel object. Wrap it with torch.nn.Dataparallel and try again.')
 
+                # Infer num_clusters from checkpoint to avoid size mismatch
+                if 'module.mhb_pred_layer.weight' in sd:
+                    num_clusters = sd['module.mhb_pred_layer.weight'].shape[0]
+
                 print('now load a SSL pretrained models from ' + load_pretrained_mdl_path)
                 audio_model = ASTModel(fstride=p_fshape, tstride=p_tshape, fshape=p_fshape, tshape=p_tshape,
                                        input_fdim=p_input_fdim, input_tdim=p_input_tdim, pretrain_stage=True, model_size=model_size,

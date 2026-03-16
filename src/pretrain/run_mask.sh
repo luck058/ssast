@@ -72,7 +72,7 @@ bal=none
 batch_size=32
 lr=1e-4
 # learning rate decreases if the pretext task performance does not improve on the validation set
-lr_patience=5
+lr_patience=99999
 epoch=75
 # no spectrogram masking
 freqm=0

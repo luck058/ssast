@@ -13,10 +13,11 @@ set -x
 # comment this line if not running on sls cluster
 # . /data/sls/scratch/share-201907/slstoolchainrc
 . /home/htang2/toolchain-20251006/toolchain.rc
-source ../../../venvssast/bin/activate
+source ~/ssast/venvssast/bin/activate
 export LD_LIBRARY_PATH=""
 export TORCH_HOME=../../pretrained_models
-mkdir exp
+mkdir -p ./exp
+mkdir -p ./slurm_log
 
 # prep esc50 dataset and download the pretrained model
 if [ -e data/datafiles ]
@@ -25,15 +26,6 @@ then
 else
     python prep_esc50.py
 fi
-# if [ -e SSAST-Tiny-Patch-400.pth ]
-# then
-#     echo "pretrained model already downloaded."
-# else
-#     wget https://www.dropbox.com/s/ewrzpco95n9jdz6/SSAST-Tiny-Patch-400.pth?dl=1 -O SSAST-Tiny-Patch-400.pth
-# fi
-
-pretrain_model="${1:-mask01-tiny-f16-t16-b64-lr5e-4-m400-pretrain_mpmhb-librispeech360}"
-pretrain_path=./${pretrain_exp}/${pretrain_model}/models/best_audio_model.pth
 
 pretrain_exp=./../../pretrain/exp/
 pretrain_model="$1"
