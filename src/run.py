@@ -154,9 +154,6 @@ elif args.task.startswith('probe_'):
         frozen_ast_model=ast_model,
         task=args.task,
         n_class=args.n_class,
-        f_dim_out=ast_model.f_dim_out,
-        t_dim_out=ast_model.t_dim_out,
-        embed_dim=ast_model.original_embedding_dim,
     )
 else:
     audio_model = ASTModel(label_dim=args.n_class, fshape=args.fshape, tshape=args.tshape, fstride=args.fstride, tstride=args.tstride,

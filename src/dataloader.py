@@ -226,10 +226,19 @@ class AudioDataset(Dataset):
 
     def text_to_tensor(self, text):
         indices = []
-        for c in text:
-            if c == " ": indices.append(self.space_idx)
-            elif c in self.vocab: indices.append(self.vocab[c])
-        # Changed: Updated to modern tensor constructor
+        # Phoneme vocabs have multi-char keys (e.g. "HH", "AH"); ASR vocabs are char-level.
+        # Detect by checking if any non-special key has length > 1.
+        is_token_level = any(len(k) > 1 for k in self.vocab if not k.startswith('<'))
+        if is_token_level:
+            # Token-level: labels are space-separated tokens e.g. "HH AH L OW <space> W ER"
+            for token in text.split():
+                if token in self.vocab:
+                    indices.append(self.vocab[token])
+        else:
+            # Char-level: labels are raw text e.g. "HELLO WORLD"
+            for c in text:
+                if c == " ": indices.append(self.space_idx)
+                elif c in self.vocab: indices.append(self.vocab[c])
         return torch.tensor(indices, dtype=torch.long)
     
     def __getitem__(self, index):

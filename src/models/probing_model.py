@@ -1,26 +1,27 @@
 # -*- coding: utf-8 -*-
 # probing_model.py
-# SUPERB-style probing wrapper: frozen encoder + learned weighted sum + linear head.
+# SUPERB-style probing wrapper: frozen encoder + learned weighted sum + LSTM/linear head.
 
 import torch
 import torch.nn as nn
 
 
 class ProbingModel(nn.Module):
-    def __init__(self, frozen_ast_model, task, n_class, f_dim_out, t_dim_out, embed_dim, n_layers=13):
+    def __init__(self, frozen_ast_model, task, n_class, n_layers=13):
         super().__init__()
         self.encoder = frozen_ast_model
-        self.encoder.v.requires_grad_(False)  # freeze entire ViT backbone
+        self.encoder.v.requires_grad_(False)   # freeze ViT backbone
         self.task = task
-        self.f_dim_out = f_dim_out
-        self.t_dim_out = t_dim_out
-        self.embed_dim = embed_dim
-        self.layer_weights = nn.Parameter(torch.ones(n_layers))  # 13 scalar weights
+        self.t_dim_out = self.encoder.t_dim_out  # exposed for traintest.py
+        self.layer_weights = nn.Parameter(torch.ones(n_layers))
 
         if task in ("probe_asr", "probe_pr"):
-            self.probe_head = nn.Linear(f_dim_out * embed_dim, n_class)
+            # Freeze the classification head (unused for ASR/PR probing)
+            self.encoder.mlp_head.requires_grad_(False)
+            # encoder.lstm and encoder.asr_head remain trainable
         elif task == "probe_sid":
-            self.probe_head = nn.Linear(embed_dim, n_class)
+            self.encoder.requires_grad_(False)
+            self.probe_head = nn.Linear(self.encoder.original_embedding_dim, n_class)
         else:
             raise ValueError(f"Unknown probe task: {task}")
 
@@ -36,12 +37,16 @@ class ProbingModel(nn.Module):
         weighted = sum(w * h for w, h in zip(weights, all_layers))  # [B, N_patches, D]
 
         if self.task in ("probe_asr", "probe_pr"):
+            f = self.encoder.f_dim_out
+            t = self.encoder.t_dim_out
+            D = self.encoder.original_embedding_dim
             # Reshape patches to temporal sequence: [B, t_dim, f_dim*D]
-            weighted = weighted.view(B, self.f_dim_out, self.t_dim_out, self.embed_dim)
-            weighted = weighted.permute(0, 2, 1, 3).contiguous()  # [B, t, f, D]
-            weighted = weighted.view(B, self.t_dim_out, self.f_dim_out * self.embed_dim)
-            return self.probe_head(weighted)  # [B, t_dim, n_class]
+            weighted = weighted.view(B, f, t, D).permute(0, 2, 1, 3).contiguous()
+            weighted = weighted.view(B, t, f * D)
+            self.encoder.lstm.flatten_parameters()
+            weighted, _ = self.encoder.lstm(weighted)      # [B, t_dim, embed_dim*2]
+            return self.encoder.asr_head(weighted)         # [B, t_dim, n_class]
 
         elif self.task == "probe_sid":
-            weighted = weighted.mean(dim=1)   # [B, D] — mean pool over all patches
-            return self.probe_head(weighted)  # [B, n_class]
+            weighted = weighted.mean(dim=1)    # [B, D] — mean pool over all patches
+            return self.probe_head(weighted)   # [B, n_class]
