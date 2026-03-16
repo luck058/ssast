@@ -1,0 +1,67 @@
++ . /home/htang2/toolchain-20251006/toolchain.rc
+++ ROOT=/home/htang2/toolchain-20251006
+++ export PATH=/home/htang2/toolchain-20251006/bin:/home/htang2/toolchain-20251006/opt/cuda/bin:/usr/games:/usr/local/games:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+++ PATH=/home/htang2/toolchain-20251006/bin:/home/htang2/toolchain-20251006/opt/cuda/bin:/usr/games:/usr/local/games:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+++ export LD_LIBRARY_PATH=/home/htang2/toolchain-20251006/lib:/home/htang2/toolchain-20251006/lib64:/home/htang2/toolchain-20251006/opt/cuda/lib:/home/htang2/toolchain-20251006/opt/cuda/lib64:/home/htang2/toolchain-20251006/opt/cuda/extras/CUPTI/lib64:
+++ LD_LIBRARY_PATH=/home/htang2/toolchain-20251006/lib:/home/htang2/toolchain-20251006/lib64:/home/htang2/toolchain-20251006/opt/cuda/lib:/home/htang2/toolchain-20251006/opt/cuda/lib64:/home/htang2/toolchain-20251006/opt/cuda/extras/CUPTI/lib64:
++ source ../../../venvssast/bin/activate
+/var/spool/slurmd/job2218535/slurm_script: line 12: ../../../venvssast/bin/activate: No such file or directory
++ export LD_LIBRARY_PATH=
++ LD_LIBRARY_PATH=
++ export TORCH_HOME=../../pretrained_models
++ TORCH_HOME=../../pretrained_models
++ mkdir -p ./exp
++ mkdir -p ./data/datafiles
++ ZIP_PATH=./datasets/voxceleb1.zip
++ SCRATCH_ROOT=/disk/scratch/s2283874/data/voxceleb1
++ mkdir -p /disk/scratch/s2283874/data/voxceleb1
++ '[' '!' -d /disk/scratch/s2283874/data/voxceleb1/dev ']'
++ echo 'Unzipping VoxCeleb1 to /disk/scratch/s2283874/data/voxceleb1...'
+Unzipping VoxCeleb1 to /disk/scratch/s2283874/data/voxceleb1...
++ unzip -q ./datasets/voxceleb1.zip -d /disk/scratch/s2283874/data/voxceleb1
+unzip:  cannot find or open ./datasets/voxceleb1.zip, ./datasets/voxceleb1.zip.zip or ./datasets/voxceleb1.zip.ZIP.
++ echo 'Generating VoxCeleb1 JSON files...'
+Generating VoxCeleb1 JSON files...
++ python prep_sid.py --vox1_root /disk/scratch/s2283874/data/voxceleb1
+Warning: /disk/scratch/s2283874/data/voxceleb1/dev/wav not found, skipping dev
+Warning: /disk/scratch/s2283874/data/voxceleb1/test/wav not found, skipping test
+Traceback (most recent call last):
+  File "/home/s2283874/ssast/src/finetune/superb/voxceleb/prep_sid.py", line 91, in <module>
+    main()
+  File "/home/s2283874/ssast/src/finetune/superb/voxceleb/prep_sid.py", line 49, in main
+    raise RuntimeError(f'No utterances found under {dev_dir}/wav/')
+RuntimeError: No utterances found under /disk/scratch/s2283874/data/voxceleb1/dev/wav/
++ pretrain_exp=./../../pretrain/exp/
++ pretrain_model=mask01-tiny-f128-t2-b64-lr5e-4-m400-e10-pretrain_mpmhb-librispeech360-mpmhb1.0-mpg0.0-mpc0.0
++ pretrain_path=././../../pretrain/exp//mask01-tiny-f128-t2-b64-lr5e-4-m400-e10-pretrain_mpmhb-librispeech360-mpmhb1.0-mpg0.0-mpc0.0/models/best_audio_model.pth
++ '[' '!' -f ././../../pretrain/exp//mask01-tiny-f128-t2-b64-lr5e-4-m400-e10-pretrain_mpmhb-librispeech360-mpmhb1.0-mpg0.0-mpc0.0/models/best_audio_model.pth ']'
++ echo 'Warning: Pretrained model not found at ././../../pretrain/exp//mask01-tiny-f128-t2-b64-lr5e-4-m400-e10-pretrain_mpmhb-librispeech360-mpmhb1.0-mpg0.0-mpc0.0/models/best_audio_model.pth'
+Warning: Pretrained model not found at ././../../pretrain/exp//mask01-tiny-f128-t2-b64-lr5e-4-m400-e10-pretrain_mpmhb-librispeech360-mpmhb1.0-mpg0.0-mpc0.0/models/best_audio_model.pth
++ dataset=voxceleb1
++ dataset_mean=-4.2677393
++ dataset_std=4.5689974
++ target_length=300
++ noise=False
++ tr_data=./data/datafiles/voxceleb1_train_data.json
++ val_data=./data/datafiles/voxceleb1_val_data.json
++ label_csv=./data/datafiles/speakers.csv
++ bal=none
++ lr=1e-3
++ freqm=0
++ timem=0
++ mixup=0
++ epoch=50
++ batch_size=32
++ fshape=128
++ tshape=2
++ fstride=10
++ tstride=1
++ task=probe_sid
++ model_size=tiny
++ n_class=1251
++ exp_dir=./exp/probe-sid-f10-t1-b32-lr1e-3-probe_sid-tiny-mask01-tiny-f128-t2-b64-lr5e-4-m400-e10-pretrain_mpmhb-librispeech360-mpmhb1.0-mpg0.0-mpc0.0
++ echo 'Starting Probe SID Training...'
+Starting Probe SID Training...
++ CUDA_CACHE_DISABLE=1
++ python -W ignore ../../run.py --dataset voxceleb1 n--data-train ./data/datafiles/voxceleb1_train_data.json --data-val ./data/datafiles/voxceleb1_val_data.json --exp-dir ./exp/probe-sid-f10-t1-b32-lr1e-3-probe_sid-tiny-mask01-tiny-f128-t2-b64-lr5e-4-m400-e10-pretrain_mpmhb-librispeech360-mpmhb1.0-mpg0.0-mpc0.0 n--label-csv ./data/datafiles/speakers.csv --n_class 1251 n--lr 1e-3 --n-epochs 50 --batch-size 32 --save_model True n--freqm 0 --timem 0 --mixup 0 --bal none n--tstride 1 --fstride 10 --fshape 128 --tshape 2 --warmup True --task probe_sid n--model_size tiny --adaptschedule True n--pretrained_mdl_path ././../../pretrain/exp//mask01-tiny-f128-t2-b64-lr5e-4-m400-e10-pretrain_mpmhb-librispeech360-mpmhb1.0-mpg0.0-mpc0.0/models/best_audio_model.pth n--dataset_mean -4.2677393 --dataset_std 4.5689974 --target_length 300 n--num_mel_bins 128 --head_lr 1 --noise False n--lrscheduler_start 5 --lrscheduler_step 1 --lrscheduler_decay 0.85 --wa False n--loss CE --metrics acc
+python: can't open file '/home/s2283874/ssast/src/finetune/superb/voxceleb/../../run.py': [Errno 2] No such file or directory

@@ -45,8 +45,8 @@ mask_patch=250
 # MHB Arguments
 num_clusters=100        # Number of K-means clusters
 mpmhb_weight=0.0        # Weight for the cluster ID prediction loss
-mpg_weight=0.0          # Weight for the reconstruction loss
-mpc_weight=0.0          # Weight for the contrastive loss
+mpg_weight=10.0          # Weight for the reconstruction loss
+mpc_weight=1.0          # Weight for the contrastive loss
 target_layer_idx=-1     # Teacher layer (Tiny model has 12 layers, 6 is middle). -1 indicates using raw patch features
 cluster_update_freq=-1   # Re-label dataset every n epochs. If -1, only label once at start
 
