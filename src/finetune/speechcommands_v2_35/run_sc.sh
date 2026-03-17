@@ -70,7 +70,7 @@ val_data=./data/datafiles/speechcommand_valid_data.json
 eval_data=./data/datafiles/speechcommand_eval_data.json
 
 bal=none
-lr=2.5e-5
+lr=2.5e-4
 freqm=48
 timem=48
 mixup=0.6
@@ -83,7 +83,7 @@ tstride=1
 
 task=ft_avgtok
 model_size="${2:-tiny}"
-head_lr=10
+head_lr=1
 
 exp_dir=./exp/test01-${dataset}-f$fstride-t$tstride-b$batch_size-lr${lr}-${task}-${model_size}-${pretrain_model}-${head_lr}x-noise${noise}
 
@@ -93,7 +93,7 @@ CUDA_CACHE_DISABLE=1 python -W ignore ../../run.py --dataset ${dataset} \
 --lr $lr --n-epochs ${epoch} --batch-size $batch_size --save_model False \
 --freqm $freqm --timem $timem --mixup ${mixup} --bal ${bal} \
 --tstride $tstride --fstride $fstride --fshape ${fshape} --tshape ${tshape} --warmup True --task ${task} \
---model_size ${model_size} --adaptschedule False \
+--model_size ${model_size} --adaptschedule True \
 --pretrained_mdl_path ${pretrain_path} \
 --dataset_mean ${dataset_mean} --dataset_std ${dataset_std} --target_length ${target_length} \
 --num_mel_bins 128 --head_lr ${head_lr} --noise ${noise} \
