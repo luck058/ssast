@@ -11,6 +11,7 @@ class ProbingModel(nn.Module):
         super().__init__()
         self.encoder = frozen_ast_model
         self.encoder.v.requires_grad_(False)   # freeze ViT backbone
+        self.encoder.layer_weights.requires_grad_(False)  # not used in probing; freeze to keep param count clean
         self.task = task
         self.t_dim_out = self.encoder.t_dim_out  # exposed for traintest.py
         self.layer_weights = nn.Parameter(torch.ones(n_layers))

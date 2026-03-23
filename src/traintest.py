@@ -159,7 +159,7 @@ def train(audio_model, train_loader, test_loader, args):
 
         for i, batch_data in enumerate(train_loader):
             valid_t_patches = None
-            if args.task in ('ft_asr', 'probe_asr', 'probe_pr'):
+            if args.task in ('ft_asr', 'probe_asr', 'probe_pr', 'ft_asr_weighted', 'ft_pr_weighted'):
                 audio_input, labels, input_len, label_len = batch_data
                 input_len = input_len.to(device, non_blocking=True)
                 label_len = label_len.to(device, non_blocking=True)
@@ -242,7 +242,7 @@ def train(audio_model, train_loader, test_loader, args):
         print('start validation')
         stats, valid_loss = validate(audio_model, test_loader, args, epoch)
 
-        if args.task not in ('ft_asr', 'probe_asr', 'probe_pr'):
+        if args.task not in ('ft_asr', 'probe_asr', 'probe_pr', 'ft_asr_weighted', 'ft_pr_weighted'):
             # ensemble results
             cum_stats = validate_ensemble(args, epoch)
             cum_mAP = np.mean([stat['AP'] for stat in cum_stats])
@@ -251,7 +251,7 @@ def train(audio_model, train_loader, test_loader, args):
         else:
             cum_mAP, cum_mAUC, cum_acc = 0, 0, 0
             
-        if args.task not in ('ft_asr', 'probe_asr', 'probe_pr'):
+        if args.task not in ('ft_asr', 'probe_asr', 'probe_pr', 'ft_asr_weighted', 'ft_pr_weighted'):
             mAP = np.mean([stat['AP'] for stat in stats])
             mAUC = np.mean([stat['auc'] for stat in stats])
             acc = stats[0]['acc']
@@ -292,7 +292,7 @@ def train(audio_model, train_loader, test_loader, args):
         print('validation finished')
 
         # Track Best WER for ASR
-        if args.task in ('ft_asr', 'probe_asr', 'probe_pr'):
+        if args.task in ('ft_asr', 'probe_asr', 'probe_pr', 'ft_asr_weighted', 'ft_pr_weighted'):
             if stats[0]['wer'] < best_wer:
                 best_wer = stats[0]['wer']
                 if main_metrics == 'wer':
@@ -406,7 +406,7 @@ def validate(audio_model, val_loader, args, epoch):
     with torch.no_grad():
         for i, batch_data in enumerate(val_loader):
             valid_t_patches = None
-            if args.task in ('ft_asr', 'probe_asr', 'probe_pr'):
+            if args.task in ('ft_asr', 'probe_asr', 'probe_pr', 'ft_asr_weighted', 'ft_pr_weighted'):
                 audio_input, labels, input_len, label_len = batch_data
                 input_len = input_len.to(device, non_blocking=True)
                 label_len = label_len.to(device, non_blocking=True)

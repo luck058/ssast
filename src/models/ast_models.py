@@ -314,6 +314,10 @@ class ASTModel(nn.Module):
             )
             self.asr_head = nn.Linear(self.original_embedding_dim * 2, vocab_size)
 
+            # Learnable per-layer weights for weighted-sum finetuning tasks.
+            # len(self.v.blocks)+1 = 13 layers: patch embed output + 12 transformer block outputs.
+            self.layer_weights = nn.Parameter(torch.ones(len(self.v.blocks) + 1))
+
     # get the shape of intermediate representation.
     def get_shape(self, fstride, tstride, input_fdim, input_tdim, fshape, tshape):
         test_input = torch.randn(1, 1, input_fdim, input_tdim)
@@ -441,6 +445,37 @@ class ASTModel(nn.Module):
         x, _ = self.lstm(x)
         return self.asr_head(x)
         
+
+    def finetuningavgtok_weighted(self, x, valid_t_patches=None):
+        """Full finetuning with softmax-weighted sum across all 13 layers, then avg-pool + MLP head."""
+        B = x.shape[0]
+        all_layers = self.get_all_intermediate_layers(x)  # list of 13 [B, N, D]
+        weights = torch.softmax(self.layer_weights, dim=0)
+        weighted = sum(w * h for w, h in zip(weights, all_layers))  # [B, N, D]
+
+        if valid_t_patches is not None:
+            N = weighted.shape[1]
+            t_indices = torch.arange(N, device=weighted.device) % self.t_dim_out
+            mask = (t_indices.unsqueeze(0) < valid_t_patches.to(weighted.device).unsqueeze(1)).float()
+            x = (weighted * mask.unsqueeze(-1)).sum(dim=1) / mask.sum(dim=1, keepdim=True)
+        else:
+            x = weighted.mean(dim=1)
+        return self.mlp_head(x)
+
+    def finetuningasr_weighted(self, x):
+        """Full finetuning with softmax-weighted sum across all 13 layers, then LSTM + ASR head."""
+        B = x.shape[0]
+        D = self.original_embedding_dim
+        all_layers = self.get_all_intermediate_layers(x)  # list of 13 [B, N, D]
+        weights = torch.softmax(self.layer_weights, dim=0)
+        weighted = sum(w * h for w, h in zip(weights, all_layers))  # [B, N, D]
+
+        # Reshape patches to temporal sequence: [B, t_dim, f_dim*D]
+        weighted = weighted.view(B, self.f_dim_out, self.t_dim_out, D).permute(0, 2, 1, 3).contiguous()
+        weighted = weighted.view(B, self.t_dim_out, self.f_dim_out * D)
+        self.lstm.flatten_parameters()
+        weighted, _ = self.lstm(weighted)
+        return self.asr_head(weighted)
 
     def get_intermediate_layers(self, x, layer_idx):
         """
@@ -745,6 +780,10 @@ class ASTModel(nn.Module):
             return self.finetuningcls(x, valid_t_patches=valid_t_patches)
         elif task == 'ft_asr':
             return self.finetuningasr(x)
+        elif task == 'ft_avgtok_weighted':
+            return self.finetuningavgtok_weighted(x, valid_t_patches=valid_t_patches)
+        elif task in ('ft_asr_weighted', 'ft_pr_weighted'):
+            return self.finetuningasr_weighted(x)
         # pretraining, masked patch classification (discriminative objective)
         elif task == 'pretrain_mpc':
             return self.mpc(x, mask_patch=mask_patch, cluster=cluster, valid_t_patches=valid_t_patches)
