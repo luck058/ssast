@@ -90,7 +90,7 @@ def trainmask(audio_model, train_loader, test_loader, args):
     train_acc_meter = AverageMeter()
     train_nce_meter = AverageMeter()
     progress = []
-    best_epoch, best_acc = 0, -np.inf
+    best_epoch, best_val_loss = 0, np.inf
     global_step, epoch = 0, 0
     start_time = time.time()
     exp_dir = args.exp_dir
@@ -268,8 +268,8 @@ def trainmask(audio_model, train_loader, test_loader, args):
                 result.append([train_acc_meter.avg, train_nce_meter.avg, acc_eval, nce_eval, optimizer.param_groups[0]['lr']])
                 np.savetxt(exp_dir + '/result.csv', result, delimiter=',')
 
-                if acc > best_acc:
-                    best_acc = acc
+                if nce_eval < best_val_loss:
+                    best_val_loss = nce_eval
                     torch.save(audio_model.state_dict(), "%s/models/best_audio_model.pth" % (exp_dir))
 
                 torch.save(audio_model.state_dict(), "%s/models/audio_model.%d.pth" % (exp_dir, equ_epoch))
@@ -345,10 +345,14 @@ def validatemask(audio_model, val_loader, args, epoch):
                 A_acc.append(torch.mean(acc).cpu())
                 A_nce.append(torch.mean(mse).cpu()) # Tracking MSE in the 'nce' slot for reporting
             elif args.task == 'pretrain_mpmhb':
-                acc, _ = audio_model(audio_input, 'pretrain_mpc', mask_patch=400, cluster=cluster)
-                mse = audio_model(audio_input, 'pretrain_mpg', mask_patch=400, cluster=cluster)
-                A_acc.append(torch.mean(acc).cpu())
-                A_nce.append(torch.mean(mse).cpu()) # Tracking MSE in the 'nce' slot for reporting
+                cluster_target = batch[2].to(device)
+                loss_args = {'mpg_weight': args.mpg_weight, 'mpmhb_weight': args.mpmhb_weight, 'mpc_weight': args.mpc_weight}
+                total_loss, acc_mpc, loss_mpg, loss_mpc, loss_mpmhb = audio_model(
+                    audio_input, args.task, mask_patch=400, cluster=cluster,
+                    target_ids=cluster_target, args=loss_args
+                )
+                A_acc.append(torch.mean(acc_mpc).cpu())
+                A_nce.append(torch.mean(total_loss).cpu())  # total weighted val loss
             else:
                 raise Exception("No such pretraining task {}".format(args.task))
 
