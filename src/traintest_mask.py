@@ -345,7 +345,10 @@ def validatemask(audio_model, val_loader, args, epoch):
                 A_acc.append(torch.mean(acc).cpu())
                 A_nce.append(torch.mean(mse).cpu()) # Tracking MSE in the 'nce' slot for reporting
             elif args.task == 'pretrain_mpmhb':
-                cluster_target = batch[2].to(device)
+                # Val dataset has no pre-computed cluster labels; compute on-the-fly
+                model = audio_model.module if isinstance(audio_model, nn.DataParallel) else audio_model
+                x_for_labels = audio_input.unsqueeze(1).transpose(2, 3)  # [B, T, F] -> [B, 1, F, T]
+                cluster_target = model.get_cluster_labels(x_for_labels).to(device)
                 loss_args = {'mpg_weight': args.mpg_weight, 'mpmhb_weight': args.mpmhb_weight, 'mpc_weight': args.mpc_weight}
                 total_loss, acc_mpc, loss_mpg, loss_mpc, loss_mpmhb = audio_model(
                     audio_input, args.task, mask_patch=400, cluster=cluster,
