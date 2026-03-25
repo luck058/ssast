@@ -20,7 +20,7 @@ class ProbingModel(nn.Module):
             # Freeze the classification head (unused for ASR/PR probing)
             self.encoder.mlp_head.requires_grad_(False)
             # encoder.lstm and encoder.asr_head remain trainable
-        elif task == "probe_sid":
+        elif task in ("probe_cls", "probe_sid"):
             self.encoder.requires_grad_(False)
             self.probe_head = nn.Linear(self.encoder.original_embedding_dim, n_class)
         else:
@@ -48,6 +48,6 @@ class ProbingModel(nn.Module):
             weighted, _ = self.encoder.lstm(weighted)      # [B, t_dim, embed_dim*2]
             return self.encoder.asr_head(weighted)         # [B, t_dim, n_class]
 
-        elif self.task == "probe_sid":
+        elif self.task in ("probe_cls", "probe_sid"):
             weighted = weighted.mean(dim=1)    # [B, D] — mean pool over all patches
             return self.probe_head(weighted)   # [B, n_class]

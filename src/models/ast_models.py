@@ -778,7 +778,7 @@ class ASTModel(nn.Module):
         # alternatively, use the [cls] token output as clip-level representation.
         elif task == 'ft_cls':
             return self.finetuningcls(x, valid_t_patches=valid_t_patches)
-        elif task == 'ft_asr':
+        elif task in ('ft_asr', 'ft_pr'):
             return self.finetuningasr(x)
         elif task == 'ft_avgtok_weighted':
             return self.finetuningavgtok_weighted(x, valid_t_patches=valid_t_patches)
