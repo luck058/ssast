@@ -1,0 +1,78 @@
+#!/bin/bash
+#SBATCH --job-name="ssast-esc50-weighted"
+#SBATCH --nodes=1
+#SBATCH --gres=gpu:1
+#SBATCH --exclude=damnii[07-12],landonia[01-08,21-25]
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=16G
+#SBATCH --output=./slurm_log/log_%j.txt
+
+set -x
+. /home/htang2/toolchain-20251006/toolchain.rc
+source ~/ssast/venvssast/bin/activate
+export LD_LIBRARY_PATH=""
+export TORCH_HOME=../../pretrained_models
+mkdir -p ./exp
+mkdir -p ./slurm_log
+
+if [ -e data/datafiles ]
+then
+    echo "esc-50 already downloaded and processed."
+else
+    python prep_esc50.py
+fi
+
+pretrain_exp=./../../pretrain/exp/
+pretrain_model="$1"
+pretrain_path=./${pretrain_exp}/${pretrain_model}/models/best_audio_model.pth
+
+num_workers=4
+
+dataset=esc50
+dataset_mean=-6.6268077
+dataset_std=5.358466
+target_length=512
+noise=True
+
+bal=none
+lr=1e-4
+freqm=24
+timem=96
+mixup=0
+epoch=50
+batch_size=48
+fshape=128
+tshape=2
+fstride=10
+tstride=1
+
+task=ft_avgtok_weighted
+model_size="${2:-tiny}"
+head_lr=1
+
+base_exp_dir=./exp/test01-${dataset}-f$fstride-t$tstride-b$batch_size-lr${lr}-${task}-${model_size}-${pretrain_model}-${head_lr}-noise${noise}
+
+for((fold=1;fold<=5;fold++));
+do
+  echo 'now process fold'${fold}
+
+  exp_dir=${base_exp_dir}/fold${fold}
+
+  tr_data=./data/datafiles/esc_train_data_${fold}.json
+  te_data=./data/datafiles/esc_eval_data_${fold}.json
+
+  CUDA_CACHE_DISABLE=1 python -W ignore ../../run.py --dataset ${dataset} \
+  --data-train ${tr_data} --data-val ${te_data} --exp-dir $exp_dir \
+  --label-csv ./data/esc_class_labels_indices.csv --n_class 50 \
+  --lr $lr --n-epochs ${epoch} --batch-size $batch_size --save_model False \
+  --freqm $freqm --timem $timem --mixup ${mixup} --bal ${bal} \
+  --tstride $tstride --fstride $fstride --fshape ${fshape} --tshape ${tshape} --warmup True --task ${task} \
+  --model_size ${model_size} --adaptschedule True \
+  --pretrained_mdl_path ${pretrain_path} \
+  --dataset_mean ${dataset_mean} --dataset_std ${dataset_std} --target_length ${target_length} \
+  --num_mel_bins 128 --head_lr ${head_lr} --noise ${noise} \
+  --lrscheduler_start 5 --lrscheduler_step 1 --lrscheduler_decay 0.85 --wa False --loss CE --metrics acc --num-workers ${num_workers}
+done
+
+python ./get_esc_result.py --exp_path ${base_exp_dir}

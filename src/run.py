@@ -67,7 +67,7 @@ parser.add_argument("--fshape", type=int, help="shape of patch on the frequency 
 parser.add_argument("--tshape", type=int, help="shape of patch on the time dimension")
 parser.add_argument('--model_size', help='the size of AST models', type=str, default='base384')
 
-parser.add_argument("--task", type=str, default='ft_cls', help="pretraining or fine-tuning task", choices=["ft_avgtok", "ft_cls", "ft_asr", "pretrain_mpc", "pretrain_mpg", "pretrain_joint", "pretrain_mpj", "pretrain_mpmhb", "probe_asr", "probe_pr", "probe_sid"])
+parser.add_argument("--task", type=str, default='ft_cls', help="pretraining or fine-tuning task", choices=["ft_avgtok", "ft_cls", "ft_asr", "ft_pr", "ft_avgtok_weighted", "ft_asr_weighted", "ft_pr_weighted", "pretrain_mpc", "pretrain_mpg", "pretrain_joint", "pretrain_mpj", "pretrain_mpmhb", "probe_asr", "probe_pr", "probe_cls", "probe_sid"])
 
 # pretraining augments
 #parser.add_argument('--pretrain_stage', help='True for self-supervised pretraining stage, False for fine-tuning stage', type=ast.literal_eval, default='False')
@@ -190,7 +190,7 @@ if args.data_eval != None:
     stats, _ = validate(audio_model, val_loader, args, 'valid_set')
 
     print('---------------evaluate on the validation set---------------')
-    if args.task in ('ft_asr', 'probe_asr', 'probe_pr'):
+    if args.task in ('ft_asr', 'ft_pr', 'probe_asr', 'probe_pr', 'ft_asr_weighted', 'ft_pr_weighted'):
         # Assuming validate returns 'wer' in stats for ASR task
         val_acc = 0 # Not applicable
         val_mAUC = 0 # Not applicable
@@ -209,7 +209,7 @@ if args.data_eval != None:
     stats, _ = validate(audio_model, eval_loader, args, 'eval_set')
 
     print('---------------evaluate on the test set---------------')
-    if args.task in ('ft_asr', 'probe_asr', 'probe_pr'):
+    if args.task in ('ft_asr', 'ft_pr', 'probe_asr', 'probe_pr', 'ft_asr_weighted', 'ft_pr_weighted'):
         eval_acc = 0
         eval_mAUC = 0
         eval_wer = stats[0]['wer']
