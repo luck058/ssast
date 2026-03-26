@@ -14,6 +14,7 @@ source ../../../venvssast/bin/activate
 export LD_LIBRARY_PATH=""
 export TORCH_HOME=../../pretrained_models
 mkdir -p ./exp
+mkdir -p ./slurm_log
 
 AFS_ROOT="/home/s2283874/ssast/datasets/speech_commands_v0.02"
 SCRATCH_ROOT="/disk/scratch/${USER}/speech_commands_v0.02"
@@ -47,7 +48,7 @@ val_data=./data/datafiles/speechcommand_valid_data.json
 eval_data=./data/datafiles/speechcommand_eval_data.json
 
 bal=none
-lr=2.5e-5
+lr=2.5e-4
 freqm=48
 timem=48
 mixup=0.6

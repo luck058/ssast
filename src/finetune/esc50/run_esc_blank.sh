@@ -14,7 +14,8 @@ set -x
 source ../../../venvssast/bin/activate
 export LD_LIBRARY_PATH=""
 export TORCH_HOME=../../pretrained_models
-mkdir exp
+mkdir -p ./exp
+mkdir -p ./slurm_log
 
 # prep esc50 dataset
 if [ -e data/datafiles ]
