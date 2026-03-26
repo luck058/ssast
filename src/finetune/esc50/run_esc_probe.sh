@@ -65,7 +65,7 @@ do
   CUDA_CACHE_DISABLE=1 python -W ignore ../../run.py --dataset ${dataset} \
   --data-train ${tr_data} --data-val ${te_data} --exp-dir $exp_dir \
   --label-csv ./data/esc_class_labels_indices.csv --n_class 50 \
-  --lr $lr --n-epochs ${epoch} --batch-size $batch_size --save_model False \
+  --lr $lr --n-epochs ${epoch} --batch-size $batch_size --save_model True \
   --freqm $freqm --timem $timem --mixup ${mixup} --bal ${bal} \
   --tstride $tstride --fstride $fstride --fshape ${fshape} --tshape ${tshape} --warmup True --task ${task} \
   --model_size ${model_size} --adaptschedule True \
