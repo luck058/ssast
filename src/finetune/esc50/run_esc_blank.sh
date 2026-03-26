@@ -34,7 +34,7 @@ target_length=512
 noise=True
 
 bal=none
-lr=1e-5
+lr=1e-4
 freqm=24
 timem=96
 mixup=0
@@ -47,7 +47,7 @@ tstride=1
 
 task=ft_avgtok
 model_size="${1:-tiny}"
-head_lr=10
+head_lr=1
 
 base_exp_dir=./exp/test01-${dataset}-f$fstride-t$tstride-b$batch_size-lr${lr}-${task}-${model_size}-blank-${head_lr}-noise${noise}
 
@@ -65,12 +65,12 @@ do
   --label-csv ./data/esc_class_labels_indices.csv --n_class 50 \
   --lr $lr --n-epochs ${epoch} --batch-size $batch_size --save_model False \
   --freqm $freqm --timem $timem --mixup ${mixup} --bal ${bal} \
-  --tstride $tstride --fstride $fstride --fshape ${fshape} --tshape ${tshape} --warmup False --task ${task} \
-  --model_size ${model_size} --adaptschedule False \
+  --tstride $tstride --fstride $fstride --fshape ${fshape} --tshape ${tshape} --warmup True --task ${task} \
+  --model_size ${model_size} --adaptschedule True \
   --blank_model True \
   --dataset_mean ${dataset_mean} --dataset_std ${dataset_std} --target_length ${target_length} \
   --num_mel_bins 128 --head_lr ${head_lr} --noise ${noise} \
-  --lrscheduler_start 6 --lrscheduler_step 1 --lrscheduler_decay 0.85 --wa False --loss CE --metrics acc --num-workers ${num_workers}
+  --lrscheduler_start 5 --lrscheduler_step 1 --lrscheduler_decay 0.85 --wa False --loss CE --metrics acc --num-workers ${num_workers}
 done
 
 python ./get_esc_result.py --exp_path ${base_exp_dir}

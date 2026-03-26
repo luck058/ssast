@@ -58,7 +58,7 @@ eval_data=./data/datafiles/librispeech_eval_data.json
 label_csv=./data/datafiles/vocab.json
 
 bal=none
-lr=1e-5
+lr=1e-4
 freqm=0
 timem=30
 mixup=0
@@ -71,7 +71,7 @@ tstride=1
 
 task=ft_asr
 model_size="${1:-tiny}"
-head_lr=10
+head_lr=1
 
 n_class=$(python -c "import json; print(len(json.load(open('$label_csv'))))")
 echo "Detected $n_class classes (vocab size)."
