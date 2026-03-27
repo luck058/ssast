@@ -37,12 +37,15 @@ def load_weights(path):
         print(f"Error loading {path}: {e}", file=sys.stderr)
         sys.exit(1)
 
-    if 'layer_weights' not in sd:
+    # Handle DataParallel checkpoints (keys prefixed with 'module.')
+    key = 'module.layer_weights' if 'module.layer_weights' in sd else 'layer_weights'
+
+    if key not in sd:
         print(f"Error: 'layer_weights' key not found in {path}.", file=sys.stderr)
         print(f"Available keys: {[k for k in sd.keys() if 'weight' in k.lower()]}", file=sys.stderr)
         sys.exit(1)
 
-    return sd['layer_weights'].float().numpy()
+    return sd[key].float().numpy()
 
 
 def main():
