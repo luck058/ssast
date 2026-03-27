@@ -142,6 +142,16 @@ def trainmask(audio_model, train_loader, test_loader, args):
             result = loaded.tolist()
             best_val_loss = float(np.min(loaded[:, 3]))
         print('Resuming from epoch %d, global_step %d, best_val_loss %.6f' % (epoch, global_step, best_val_loss))
+        # Cluster labels live only in memory and must be regenerated on resume.
+        # Centroids are restored from the model checkpoint so K-means is not re-run.
+        if args.task == 'pretrain_mpmhb':
+            print('Regenerating cluster labels for resumed CLP run...')
+            train_loader.dataset.generate_cluster_labels(
+                audio_model,
+                batch_size=args.batch_size * 2,
+                num_workers=args.num_workers
+            )
+            audio_model.train()
     else:
         epoch += 1
 
