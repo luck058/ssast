@@ -2,7 +2,7 @@
 #SBATCH --job-name="ssast-ls-ft-asr-weighted"
 #SBATCH --nodes=1
 #SBATCH --gres=gpu:1
-#SBATCH --exclude=damnii[07-12],landonia[01-08,21-25]
+#SBATCH --exclude=damnii[07-12],landonia[01-08,21-25],saxa
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=24G
