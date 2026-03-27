@@ -13,6 +13,8 @@ set -x
 source ~/ssast/venvssast/bin/activate
 export LD_LIBRARY_PATH=""
 export TORCH_HOME=../../pretrained_models
+export TMPDIR=/disk/scratch/${USER}/tmp
+mkdir -p $TMPDIR
 mkdir -p ./exp
 mkdir -p ./slurm_log
 
