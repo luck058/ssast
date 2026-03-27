@@ -85,6 +85,7 @@ parser.add_argument("--cluster_update_freq", type=int, default=5, help="Update c
 
 # fine-tuning arguments
 parser.add_argument("--pretrained_mdl_path", type=str, default=None, help="the ssl pretrained models path")
+parser.add_argument('--resume', action='store_true', default=False, help='resume pretraining from the latest checkpoint in exp_dir')
 parser.add_argument('--blank_model', help='train from random init (no pretrained checkpoint)', type=ast.literal_eval, default='False')
 parser.add_argument("--head_lr", type=int, default=1, help="the factor of mlp-head_lr/lr, used in some fine-tuning experiments only")
 parser.add_argument("--noise", help='if augment noise in finetuning', type=ast.literal_eval)

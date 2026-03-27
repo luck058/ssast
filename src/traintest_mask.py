@@ -113,12 +113,41 @@ def trainmask(audio_model, train_loader, test_loader, args):
 
     # LR scheduler
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='max', factor=0.5, patience=args.lr_patience)
-    epoch += 1
+    result = []
+    # Resume from checkpoint if --resume flag is set
+    resume_progress_path = '%s/progress.pkl' % exp_dir
+    if getattr(args, 'resume', False) and os.path.isfile(resume_progress_path):
+        with open(resume_progress_path, 'rb') as f:
+            progress = pickle.load(f)
+        last = progress[-1]
+        epoch = int(last[0])
+        global_step = int(last[1])
+        best_epoch = int(last[2])
+        equ_epoch = int(global_step / args.epoch_iter) + 1
+        mdl_path = '%s/models/audio_model.%d.pth' % (exp_dir, equ_epoch)
+        if os.path.isfile(mdl_path):
+            audio_model.load_state_dict(torch.load(mdl_path, map_location=device))
+            print('Resumed model weights from %s' % mdl_path)
+        optim_path = '%s/models/optim_state.pth' % exp_dir
+        if os.path.isfile(optim_path):
+            optimizer.load_state_dict(torch.load(optim_path, map_location=device))
+        sched_path = '%s/models/scheduler_state.pth' % exp_dir
+        if os.path.isfile(sched_path):
+            scheduler.load_state_dict(torch.load(sched_path))
+        result_csv_path = '%s/result.csv' % exp_dir
+        if os.path.isfile(result_csv_path):
+            loaded = np.loadtxt(result_csv_path, delimiter=',')
+            if loaded.ndim == 1:
+                loaded = loaded[np.newaxis, :]
+            result = loaded.tolist()
+            best_val_loss = float(np.min(loaded[:, 3]))
+        print('Resuming from epoch %d, global_step %d, best_val_loss %.6f' % (epoch, global_step, best_val_loss))
+    else:
+        epoch += 1
 
     print("current #steps=%s, #epochs=%s" % (global_step, epoch))
     print("start training...")
 
-    result = []
     audio_model.train()
 
     # training until break
@@ -276,6 +305,7 @@ def trainmask(audio_model, train_loader, test_loader, args):
                 # if len(train_loader.dataset) > 2e5:
                 # Save optimiser state for all dataset sizes
                 torch.save(optimizer.state_dict(), "%s/models/optim_state.pth" % (exp_dir))
+                torch.save(scheduler.state_dict(), "%s/models/scheduler_state.pth" % (exp_dir))
 
                 # if the task is generation, stop after eval mse loss stop improve
                 if args.task == 'pretrain_mpg':
