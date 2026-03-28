@@ -74,7 +74,7 @@ exp_dir=./exp/test01-${dataset}-f$fstride-t$tstride-b$batch_size-lr${lr}-${task}
 CUDA_CACHE_DISABLE=1 python -W ignore ../../run.py --dataset ${dataset} \
 --data-train ${tr_data} --data-val ${val_data} --data-eval ${eval_data} --exp-dir $exp_dir \
 --label-csv ./data/speechcommands_class_labels_indices.csv --n_class 35 \
---lr $lr --n-epochs ${epoch} --batch-size $batch_size --save_model False \
+--lr $lr --n-epochs ${epoch} --batch-size $batch_size --save_model True \
 --freqm $freqm --timem $timem --mixup ${mixup} --bal ${bal} \
 --tstride $tstride --fstride $fstride --fshape ${fshape} --tshape ${tshape} --warmup True --task ${task} \
 --model_size ${model_size} --adaptschedule True \
