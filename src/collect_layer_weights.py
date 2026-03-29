@@ -20,22 +20,22 @@ import numpy as np
 # ---------------------------------------------------------------------------
 # CONFIGURE: map pretrain experiment directory name -> short label for CSV
 # ---------------------------------------------------------------------------
-# MODELS = {
-#     "mask03-tiny-f128-t2-b32-lr1e-4-m250-e75-pretrain_mpmhb-librispeech360-mpmhb0.0-mpg0.0-mpc1.0":  "mpc",
-#     "mask03-tiny-f128-t2-b32-lr1e-4-m250-e75-pretrain_mpmhb-librispeech360-mpmhb0.0-mpg1.0-mpc0.0":  "mpg",
-#     "mask03-tiny-f128-t2-b32-lr1e-4-m250-e75-pretrain_mpmhb-librispeech360-mpmhb0.0-mpg10.0-mpc1.0": "mpg_mpc",    # MPG+MPC 10:1
-#     "mask03-tiny-f128-t2-b32-lr1e-4-m250-e75-pretrain_mpmhb-librispeech360-mpmhb1.0-mpg0.0-mpc0.0":  "clp",
-#     "mask03-tiny-f128-t2-b32-lr1e-4-m250-e75-pretrain_mpmhb-librispeech360-mpmhb1.0-mpg0.0-mpc1.0":  "clp_mpc",
-#     "mask03-tiny-f128-t2-b32-lr1e-4-m250-e75-pretrain_mpmhb-librispeech360-mpmhb1.0-mpg1.0-mpc0.0":  "clp_mpg",    # CLP+MPG 1:1
-#     "mask03-tiny-f128-t2-b32-lr1e-4-m250-e75-pretrain_mpmhb-librispeech360-mpmhb1.0-mpg1.0-mpc1.0":  "all",        # MPG+MPC+CLP 1:1:1
-# }
 MODELS = {
-    "mask03-base-f128-t2-b32-lr1e-4-m250-e200-pretrain_mpmhb-librispeech360-mpmhb0.0-mpg0.0-mpc1.0":  "mpc",
-    "mask03-base-f128-t2-b32-lr1e-4-m250-e200-pretrain_mpmhb-librispeech360-mpmhb0.0-mpg10.0-mpc1.0": "mpg_mpc",
-    "mask03-base-f128-t2-b32-lr1e-4-m250-e200-pretrain_mpmhb-librispeech360-mpmhb0.0-mpg1.0-mpc0.0":  "mpg",
-    "mask03-base-f128-t2-b32-lr1e-4-m250-e200-pretrain_mpmhb-librispeech360-mpmhb1.0-mpg0.0-mpc0.0":  "clp",
-    "mask03-base-f128-t2-b32-lr1e-4-m250-e200-pretrain_mpmhb-librispeech360-mpmhb1.0-mpg1.0-mpc1.0":  "all",
+    "mask03-tiny-f128-t2-b32-lr1e-4-m250-e75-pretrain_mpmhb-librispeech360-mpmhb0.0-mpg0.0-mpc1.0":  "mpc",
+    "mask03-tiny-f128-t2-b32-lr1e-4-m250-e75-pretrain_mpmhb-librispeech360-mpmhb0.0-mpg1.0-mpc0.0":  "mpg",
+    "mask03-tiny-f128-t2-b32-lr1e-4-m250-e75-pretrain_mpmhb-librispeech360-mpmhb0.0-mpg10.0-mpc1.0": "mpg_mpc",    # MPG+MPC 10:1
+    "mask03-tiny-f128-t2-b32-lr1e-4-m250-e75-pretrain_mpmhb-librispeech360-mpmhb1.0-mpg0.0-mpc0.0":  "clp",
+    "mask03-tiny-f128-t2-b32-lr1e-4-m250-e75-pretrain_mpmhb-librispeech360-mpmhb1.0-mpg0.0-mpc1.0":  "clp_mpc",
+    "mask03-tiny-f128-t2-b32-lr1e-4-m250-e75-pretrain_mpmhb-librispeech360-mpmhb1.0-mpg1.0-mpc0.0":  "clp_mpg",    # CLP+MPG 1:1
+    "mask03-tiny-f128-t2-b32-lr1e-4-m250-e75-pretrain_mpmhb-librispeech360-mpmhb1.0-mpg1.0-mpc1.0":  "all",        # MPG+MPC+CLP 1:1:1
 }
+# MODELS = {
+#     "mask03-base-f128-t2-b32-lr1e-4-m250-e200-pretrain_mpmhb-librispeech360-mpmhb0.0-mpg0.0-mpc1.0":  "mpc",
+#     "mask03-base-f128-t2-b32-lr1e-4-m250-e200-pretrain_mpmhb-librispeech360-mpmhb0.0-mpg10.0-mpc1.0": "mpg_mpc",
+#     "mask03-base-f128-t2-b32-lr1e-4-m250-e200-pretrain_mpmhb-librispeech360-mpmhb0.0-mpg1.0-mpc0.0":  "mpg",
+#     "mask03-base-f128-t2-b32-lr1e-4-m250-e200-pretrain_mpmhb-librispeech360-mpmhb1.0-mpg0.0-mpc0.0":  "clp",
+#     "mask03-base-f128-t2-b32-lr1e-4-m250-e200-pretrain_mpmhb-librispeech360-mpmhb1.0-mpg1.0-mpc1.0":  "all",
+# }
 
 # Base path for finetune directories, relative to this script (i.e. src/)
 FINETUNE_ROOT = os.path.join(os.path.dirname(__file__), "finetune")
